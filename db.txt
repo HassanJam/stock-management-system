@@ -1,0 +1,22 @@
+CREATE DATABASE stock_management;
+
+
+USE stock_management;
+
+CREATE TABLE stocks (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    itemName VARCHAR(255) NOT NULL,
+    itemType VARCHAR(255) NOT NULL,
+    category ENUM('Camera', 'Wire', 'Landline Phone', 'Video Phone') NOT NULL,
+    quantity INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    department VARCHAR(255) NOT NULL
+);
+INSERT INTO users (username, password, department) VALUES
+('procurement_user', 'procurement123', 'procurement'), 
+('sales_user', 'sales123', 'sales'); 
