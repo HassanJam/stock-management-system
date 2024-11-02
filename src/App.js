@@ -6,6 +6,8 @@ import LoginPage from './pages/LoginPage';
 import Dashboard from './pages/Dashboard';
 import AddStockPage from './components/AddStock';
 import ViewStockPage from './components/ViewStock';
+import EditStockPage from './components/EditStock';
+
 import ProtectedRoute from './components/ProtectedRoute';
 
 const App = () => {
@@ -26,7 +28,11 @@ const App = () => {
                             path="view-stock" 
                             element={<ProtectedRoute element={<ViewStockPage />} />} 
                         />
-                    </Route>
+                        <Route 
+                            path="edit-stock/:id" 
+                            element={<ProtectedRoute element={<EditStockPage />} />} 
+                        />
+                        </Route>
                     {/* More routes can be added here */}
                 </Routes>
             </Router>

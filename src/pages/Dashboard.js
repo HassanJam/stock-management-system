@@ -1,6 +1,6 @@
 // src/pages/Dashboard.js
 import React from 'react';
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route, Link, useNavigate } from 'react-router-dom';
 import { useUser } from '../context/UserContext';
 import AddStock from '../components/AddStock';
 import ViewStock from '../components/ViewStock';
@@ -8,11 +8,17 @@ import EditStock from '../components/EditStock';
 import { Container, Typography, Button, Box } from '@mui/material';
 
 const Dashboard = () => {
-    const { user } = useUser();
+    const { user, logout } = useUser();
+    const navigate = useNavigate(); // Use the useNavigate hook to programmatically navigate
 
     if (!user) {
         return <Typography variant="h6" color="error">Please log in to view the dashboard.</Typography>;
     }
+
+    const handleLogout = () => {
+        logout(); // Call the logout function from context
+        navigate('/'); // Redirect to the login page
+    };
 
     return (
         <Container>
@@ -39,11 +45,16 @@ const Dashboard = () => {
                     </>
                 )}
             </Box>
+            <Button variant="contained" color="error" onClick={handleLogout}>
+                Logout
+            </Button>
             <Routes>
                 {user.department === 'procurement' && (
                     <>
                         <Route path="add-stock" element={<AddStock />} />
                         <Route path="view-stock" element={<ViewStock />} />
+                        <Route path="edit-stock/:id" element={<EditStock />} />
+                        
                     </>
                 )}
                 {user.department === 'sales' && (

@@ -72,14 +72,15 @@ const ViewStock = () => {
                                     Category: {stock.category} - Quantity: {stock.quantity}
                                 </Typography>
                                 <Box mt={2} display="flex" justifyContent="space-between">
-                                    <Button
+                                <Button
                                         variant="contained"
                                         color="primary"
                                         component={Link}
-                                        to={`/dashboard/edit-stock/${stock.id}`}
+                                        to={`/dashboard/edit-stock/${stock.id}`} // This line should be correct
                                     >
                                         Edit
-                                    </Button>
+                                </Button>
+
                                     <Button
                                         variant="contained"
                                         color="secondary"
