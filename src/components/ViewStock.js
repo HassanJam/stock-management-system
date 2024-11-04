@@ -1,23 +1,22 @@
-// src/components/ViewStock.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
-import { Typography, Select, MenuItem, FormControl, InputLabel, Card, CardContent, Button, Box } from '@mui/material';
-import api from '../api/api.js'
-const { stocks_api } = api; // Destructure stocks_api from the imported object
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Box, Button } from '@mui/material';
+import api from '../api/api.js';
+import { useNavigate } from 'react-router-dom';
+
+const { stocks_api } = api;
 
 const ViewStock = () => {
     const [stocks, setStocks] = useState([]);
-    const [filter, setFilter] = useState('');
-    const categories = ['Camera', 'Wire', 'Landline Phone', 'Video Phone'];
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchStocks = async () => {
             try {
-                const response = await axios.get(`${stocks_api}`);
+                const response = await axios.get(stocks_api);
                 setStocks(response.data);
             } catch (error) {
-                console.error("Failed to fetch stocks.", error);
+                console.error('Error fetching stocks:', error);
             }
         };
 
@@ -27,75 +26,59 @@ const ViewStock = () => {
     const handleDelete = async (id) => {
         try {
             await axios.delete(`${stocks_api}/${id}`);
-            setStocks(stocks.filter(stock => stock.id !== id));
+            setStocks(stocks.filter(stock => stock.id !== id)); // Remove the deleted stock from the state
         } catch (error) {
-            console.error("Failed to delete stock.", error);
+            console.error('Error deleting stock:', error);
         }
     };
-
-    const filteredStocks = filter ? stocks.filter(stock => stock.category === filter) : stocks;
 
     return (
         <Box sx={{ p: 3 }}>
             <Typography variant="h4" align="center" gutterBottom>
-                View Stocks
+                View Stock
             </Typography>
-            <FormControl fullWidth variant="outlined" sx={{ mb: 3 }}>
-                <InputLabel>Filter by Category</InputLabel>
-                <Select
-                    value={filter}
-                    onChange={(e) => setFilter(e.target.value)}
-                    label="Filter by Category"
-                >
-                    <MenuItem value="">
-                        <em>All</em>
-                    </MenuItem>
-                    {categories.map((cat, index) => (
-                        <MenuItem key={index} value={cat}>
-                            {cat}
-                        </MenuItem>
-                    ))}
-                </Select>
-            </FormControl>
-
-            {filteredStocks.length === 0 ? (
-                <Typography variant="body1" align="center">
-                    No stocks available.
-                </Typography>
-            ) : (
-                <Box display="flex" flexDirection="column" gap={2}>
-                    {filteredStocks.map((stock) => (
-                        <Card key={stock.id} variant="outlined">
-                            <CardContent>
-                                <Typography variant="h6">
-                                    {stock.itemName} - {stock.itemType}
-                                </Typography>
-                                <Typography variant="body2">
-                                    Category: {stock.category} - Quantity: {stock.quantity}
-                                </Typography>
-                                <Box mt={2} display="flex" justifyContent="space-between">
-                                <Button
+            <TableContainer component={Paper}>
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>Item Name</TableCell>
+                            <TableCell>Item Type</TableCell>
+                            <TableCell>Category</TableCell>
+                            <TableCell>Supplier</TableCell>
+                            <TableCell>Quantity</TableCell>
+                            <TableCell>Actions</TableCell> {/* Add actions header */}
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {stocks.map((stock) => (
+                            <TableRow key={stock.id}>
+                                <TableCell>{stock.item_name}</TableCell>
+                                <TableCell>{stock.item_type}</TableCell>
+                                <TableCell>{stock.category_name}</TableCell>
+                                <TableCell>{stock.supplier_name}</TableCell>
+                                <TableCell>{stock.quantity}</TableCell>
+                                <TableCell>
+                                    <Button
                                         variant="contained"
                                         color="primary"
-                                        component={Link}
-                                        to={`/dashboard/edit-stock/${stock.id}`} // This line should be correct
+                                        onClick={() => navigate(`/dashboard/edit-stock/${stock.id}`)} // Navigate to edit page
                                     >
                                         Edit
-                                </Button>
-
+                                    </Button>
                                     <Button
                                         variant="contained"
                                         color="secondary"
-                                        onClick={() => handleDelete(stock.id)}
+                                        onClick={() => handleDelete(stock.id)} // Handle deletion
+                                        sx={{ ml: 1 }} // Add some margin to the left
                                     >
                                         Delete
                                     </Button>
-                                </Box>
-                            </CardContent>
-                        </Card>
-                    ))}
-                </Box>
-            )}
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
         </Box>
     );
 };

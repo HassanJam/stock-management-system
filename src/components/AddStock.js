@@ -1,37 +1,73 @@
-// src/components/AddStock.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { TextField, Button, Box, MenuItem, Snackbar, Alert, Typography } from '@mui/material';
+import { TextField, Button, Box, MenuItem, Snackbar, Alert, Typography, FormControl, InputLabel, Select } from '@mui/material';
 import api from '../api/api.js'
 
-const { stocks_api } = api; // Destructure stocks_api from the imported object
+const { stocks_api } = api; // Import APIs
+
 const AddStock = () => {
     const [itemName, setItemName] = useState('');
     const [itemType, setItemType] = useState('');
     const [quantity, setQuantity] = useState('');
     const [category, setCategory] = useState('');
-    const [successMessage, setSuccessMessage] = useState(false); // New state for success message
-    const categories = ['Camera', 'Wire', 'Landline Phone', 'Video Phone'];
+    const [supplier, setSupplier] = useState('');
+    const [successMessage, setSuccessMessage] = useState(false);
+    const [categories, setCategories] = useState([]);
+    const [suppliers, setSuppliers] = useState([]);
+
+    useEffect(() => {
+        // Dummy categories data
+        const dummyCategories = [
+            { id: 1, name: 'Electronics' },
+            { id: 2, name: 'Furniture' },
+            { id: 3, name: 'Clothing' },
+            { id: 4, name: 'Books' },
+            { id: 5, name: 'Toys' },
+            { id: 6, name: 'Groceries' },
+            { id: 7, name: 'Stationery' },
+        ];
+
+        // Dummy suppliers data
+        const dummySuppliers = [
+            { id: 1, name: 'Supplier A' },
+            { id: 2, name: 'Supplier B' },
+            { id: 3, name: 'Supplier C' },
+            { id: 4, name: 'Supplier D' },
+            { id: 5, name: 'Supplier E' },
+        ];
+
+        // Set dummy data to state
+        setCategories(dummyCategories);
+        setSuppliers(dummySuppliers);
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const newStock = { itemName, itemType, quantity, category };
-
+        const newStock = {
+            item_name: itemName, // Update key to match database column
+            item_type: itemType, // Update key to match database column
+            quantity,
+            category_id: category,
+            supplier_id: supplier
+        };
+    
         try {
-            await axios.post(`${stocks_api}`, newStock);
+            await axios.post(stocks_api, newStock);
             setItemName('');
             setItemType('');
             setQuantity('');
             setCategory('');
-            setSuccessMessage(true); // Show success message
+            setSupplier('');
+            setSuccessMessage(true);
         } catch (error) {
             console.error('Error adding stock:', error);
-            alert('Failed to add stock.');
+            alert('Failed to add stock frontend.');
         }
     };
+    
 
     const handleCloseSnackbar = () => {
-        setSuccessMessage(false); // Hide success message
+        setSuccessMessage(false);
     };
 
     return (
@@ -58,25 +94,40 @@ const AddStock = () => {
                     margin="normal"
                     variant="outlined"
                 />
-                <TextField
-                    fullWidth
-                    select
-                    label="Category"
-                    value={category}
-                    onChange={(e) => setCategory(e.target.value)}
-                    required
-                    margin="normal"
-                    variant="outlined"
-                >
-                    <MenuItem value="">
-                        <em>Select a category</em>
-                    </MenuItem>
-                    {categories.map((cat, index) => (
-                        <MenuItem key={index} value={cat}>
-                            {cat}
+                <FormControl fullWidth margin="normal" variant="outlined">
+                    <InputLabel>Category</InputLabel>
+                    <Select
+                        value={category}
+                        onChange={(e) => setCategory(e.target.value)}
+                        required
+                    >
+                        <MenuItem value="">
+                            <em>Select a category</em>
                         </MenuItem>
-                    ))}
-                </TextField>
+                        {categories.map((cat) => (
+                            <MenuItem key={cat.id} value={cat.id}>
+                                {cat.name}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+                <FormControl fullWidth margin="normal" variant="outlined">
+                    <InputLabel>Supplier</InputLabel>
+                    <Select
+                        value={supplier}
+                        onChange={(e) => setSupplier(e.target.value)}
+                        required
+                    >
+                        <MenuItem value="">
+                            <em>Select a supplier</em>
+                        </MenuItem>
+                        {suppliers.map((sup) => (
+                            <MenuItem key={sup.id} value={sup.id}>
+                                {sup.name}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
                 <TextField
                     fullWidth
                     label="Quantity"
@@ -97,8 +148,7 @@ const AddStock = () => {
                     Add Stock
                 </Button>
             </form>
-            
-            {/* Snackbar for success message */}
+
             <Snackbar
                 open={successMessage}
                 autoHideDuration={3000}
