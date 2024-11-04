@@ -1,13 +1,13 @@
 // /frontend/src/services/authService.js
 import axios from 'axios';
-import auth_api from '../api/api.js'
+import api from '../api/api.js';
 
-const API_URL = `${auth_api}`;
+const { auth_api } = api; // Destructure auth_api from the imported object
 
 export const register = async (username, password, department) => {
-    return await axios.post(`${API_URL}/register`, { username, password, department });
+    return await axios.post(`${auth_api}/register`, { username, password, department });
 };
 
 export const login = async (username, password) => {
-    return await axios.post(`${API_URL}/login`, { username, password });
+    return await axios.post(`${auth_api}/login`, { username, password });
 };

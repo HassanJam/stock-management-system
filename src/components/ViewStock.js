@@ -3,7 +3,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { Typography, Select, MenuItem, FormControl, InputLabel, Card, CardContent, Button, Box } from '@mui/material';
-import stocks_api from '../api/api.js'
+import api from '../api/api.js'
+const { stocks_api } = api; // Destructure stocks_api from the imported object
 
 const ViewStock = () => {
     const [stocks, setStocks] = useState([]);

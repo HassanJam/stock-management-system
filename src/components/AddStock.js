@@ -2,7 +2,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { TextField, Button, Box, MenuItem, Snackbar, Alert, Typography } from '@mui/material';
-import stocks_api from '../api/api.js'
+import api from '../api/api.js'
+
+const { stocks_api } = api; // Destructure stocks_api from the imported object
 const AddStock = () => {
     const [itemName, setItemName] = useState('');
     const [itemType, setItemType] = useState('');

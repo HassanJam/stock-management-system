@@ -3,7 +3,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Typography, TextField, Button, Box, MenuItem, FormControl, InputLabel, Select } from '@mui/material';
-import stocks_api from '../api/api.js'
+import api from '../api/api.js'
+const { stocks_api } = api; // Destructure stocks_api from the imported object
 
 const EditStock = () => {
     const { id } = useParams();
