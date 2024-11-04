@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Typography, TextField, Button, Box, MenuItem, FormControl, InputLabel, Select } from '@mui/material';
+import stocks_api from '../api/api.js'
 
 const EditStock = () => {
     const { id } = useParams();
@@ -13,7 +14,7 @@ const EditStock = () => {
     useEffect(() => {
         const fetchStock = async () => {
             try {
-                const response = await axios.get(`http://localhost:5000/api/stocks/${id}`);
+                const response = await axios.get(`${stocks_api}/${id}`);
                 setStock({
                     itemName: response.data.itemName || '',
                     itemType: response.data.itemType || '',
@@ -35,7 +36,7 @@ const EditStock = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.put(`http://localhost:5000/api/stocks/${id}`, stock);
+            await axios.put(`${stocks_api}/${id}`, stock);
             navigate('/dashboard/view-stock');
         } catch (error) {
             console.error("Failed to update stock.", error.response ? error.response.data : error);

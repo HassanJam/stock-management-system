@@ -1,7 +1,8 @@
 // /frontend/src/services/authService.js
 import axios from 'axios';
+import auth_api from '../api/api.js'
 
-const API_URL = 'http://localhost:5000/api/auth';
+const API_URL = `${stocks_api}`;
 
 export const register = async (username, password, department) => {
     return await axios.post(`${API_URL}/register`, { username, password, department });

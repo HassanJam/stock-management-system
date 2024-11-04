@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { Typography, Select, MenuItem, FormControl, InputLabel, Card, CardContent, Button, Box } from '@mui/material';
+import stocks_api from '../api/api.js'
 
 const ViewStock = () => {
     const [stocks, setStocks] = useState([]);
@@ -12,7 +13,7 @@ const ViewStock = () => {
     useEffect(() => {
         const fetchStocks = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/api/stocks');
+                const response = await axios.get(`${stocks_api}`);
                 setStocks(response.data);
             } catch (error) {
                 console.error("Failed to fetch stocks.", error);
@@ -24,7 +25,7 @@ const ViewStock = () => {
 
     const handleDelete = async (id) => {
         try {
-            await axios.delete(`http://localhost:5000/api/stocks/${id}`);
+            await axios.delete(`${stocks_api}/${id}`);
             setStocks(stocks.filter(stock => stock.id !== id));
         } catch (error) {
             console.error("Failed to delete stock.", error);

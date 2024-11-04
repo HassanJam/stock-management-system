@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { TextField, Button, Box, MenuItem, Snackbar, Alert, Typography } from '@mui/material';
-
+import stocks_api from '../api/api.js'
 const AddStock = () => {
     const [itemName, setItemName] = useState('');
     const [itemType, setItemType] = useState('');
@@ -16,7 +16,7 @@ const AddStock = () => {
         const newStock = { itemName, itemType, quantity, category };
 
         try {
-            await axios.post('http://localhost:5000/api/stocks', newStock);
+            await axios.post(`${stocks_api}`, newStock);
             setItemName('');
             setItemType('');
             setQuantity('');
