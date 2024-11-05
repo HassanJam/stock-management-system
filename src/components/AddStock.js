@@ -147,6 +147,7 @@ const AddStock = () => {
                             margin="normal"
                             variant="outlined"
                         />
+
                         <FormControl fullWidth margin="normal" variant="outlined">
                             <InputLabel>Supplier</InputLabel>
                             <Select
