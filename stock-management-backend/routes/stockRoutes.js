@@ -21,13 +21,20 @@ router.post('/', async (req, res) => {
 // Get all stock items
 router.get('/', async (req, res) => {
     try {
-        const [stocks] = await pool.query('SELECT * FROM stocks');
+        const [stocks] = await pool.query(
+            `SELECT stocks.id, stocks.item_name, stocks.brand, stocks.quantity, 
+                    stocks.unit, stocks.cost, stocks.serial_no, stocks.quality, 
+                    suppliers.name AS supplier_name, stocks.created_at, stocks.updated_at
+             FROM stocks
+             JOIN suppliers ON stocks.supplier_id = suppliers.id`
+        );
         res.json(stocks);
     } catch (err) {
         console.error(err);
         res.status(500).send('Server Error');
     }
 });
+
 
 // Get a specific stock item by ID
 router.get('/:id', async (req, res) => {
