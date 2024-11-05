@@ -1,70 +1,66 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { TextField, Button, Box, MenuItem, Snackbar, Alert, Typography, FormControl, InputLabel, Select } from '@mui/material';
-import api from '../api/api.js'
+import api from '../api/api.js';
 
-const { stocks_api } = api; // Import APIs
+const { stocks_api, suppliers_api } = api; // Import APIs, including suppliers API
 
 const AddStock = () => {
     const [itemName, setItemName] = useState('');
-    const [itemType, setItemType] = useState('');
+    const [brand, setBrand] = useState('');
     const [quantity, setQuantity] = useState('');
-    const [category, setCategory] = useState('');
+    const [unit, setUnit] = useState('');
+    const [cost, setCost] = useState('');
+    const [serialNo, setSerialNo] = useState('');
+    const [quality, setQuality] = useState('');
     const [supplier, setSupplier] = useState('');
     const [successMessage, setSuccessMessage] = useState(false);
-    const [categories, setCategories] = useState([]);
     const [suppliers, setSuppliers] = useState([]);
 
     useEffect(() => {
-        // Dummy categories data
-        const dummyCategories = [
-            { id: 1, name: 'Electronics' },
-            { id: 2, name: 'Furniture' },
-            { id: 3, name: 'Clothing' },
-            { id: 4, name: 'Books' },
-            { id: 5, name: 'Toys' },
-            { id: 6, name: 'Groceries' },
-            { id: 7, name: 'Stationery' },
-        ];
+        // Fetch suppliers from the API
+        const fetchSuppliers = async () => {
+            try {
+                const response = await axios.get(suppliers_api);
+                setSuppliers(response.data);
+            } catch (error) {
+                console.error('Error fetching suppliers:', error);
+                alert('Failed to load suppliers.');
+            }
+        };
 
-        // Dummy suppliers data
-        const dummySuppliers = [
-            { id: 1, name: 'Supplier A' },
-            { id: 2, name: 'Supplier B' },
-            { id: 3, name: 'Supplier C' },
-            { id: 4, name: 'Supplier D' },
-            { id: 5, name: 'Supplier E' },
-        ];
-
-        // Set dummy data to state
-        setCategories(dummyCategories);
-        setSuppliers(dummySuppliers);
+        fetchSuppliers();
     }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         const newStock = {
-            item_name: itemName, // Update key to match database column
-            item_type: itemType, // Update key to match database column
+            item_name: itemName,
+            brand,
             quantity,
-            category_id: category,
-            supplier_id: supplier
+            unit,
+            cost,
+            serial_no: serialNo,
+            quality,
+            supplier_id: supplier,
         };
-    
+
         try {
             await axios.post(stocks_api, newStock);
             setItemName('');
-            setItemType('');
+            setBrand('');
             setQuantity('');
-            setCategory('');
+            setUnit('');
+            setCost('');
+            setSerialNo('');
+            setQuality('');
             setSupplier('');
             setSuccessMessage(true);
         } catch (error) {
             console.error('Error adding stock:', error);
-            alert('Failed to add stock frontend.');
+            alert('Failed to add stock.');
         }
     };
-    
 
     const handleCloseSnackbar = () => {
         setSuccessMessage(false);
@@ -87,30 +83,59 @@ const AddStock = () => {
                 />
                 <TextField
                     fullWidth
-                    label="Item Type"
-                    value={itemType}
-                    onChange={(e) => setItemType(e.target.value)}
+                    label="Brand"
+                    value={brand}
+                    onChange={(e) => setBrand(e.target.value)}
                     required
                     margin="normal"
                     variant="outlined"
                 />
-                <FormControl fullWidth margin="normal" variant="outlined">
-                    <InputLabel>Category</InputLabel>
-                    <Select
-                        value={category}
-                        onChange={(e) => setCategory(e.target.value)}
-                        required
-                    >
-                        <MenuItem value="">
-                            <em>Select a category</em>
-                        </MenuItem>
-                        {categories.map((cat) => (
-                            <MenuItem key={cat.id} value={cat.id}>
-                                {cat.name}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
+                <TextField
+                    fullWidth
+                    label="Quantity"
+                    type="number"
+                    value={quantity}
+                    onChange={(e) => setQuantity(e.target.value)}
+                    required
+                    margin="normal"
+                    variant="outlined"
+                />
+                <TextField
+                    fullWidth
+                    label="Unit"
+                    value={unit}
+                    onChange={(e) => setUnit(e.target.value)}
+                    required
+                    margin="normal"
+                    variant="outlined"
+                />
+                <TextField
+                    fullWidth
+                    label="Cost"
+                    type="number"
+                    value={cost}
+                    onChange={(e) => setCost(e.target.value)}
+                    required
+                    margin="normal"
+                    variant="outlined"
+                />
+                <TextField
+                    fullWidth
+                    label="Serial Number"
+                    value={serialNo}
+                    onChange={(e) => setSerialNo(e.target.value)}
+                    margin="normal"
+                    variant="outlined"
+                />
+                <TextField
+                    fullWidth
+                    label="Quality"
+                    value={quality}
+                    onChange={(e) => setQuality(e.target.value)}
+                    required
+                    margin="normal"
+                    variant="outlined"
+                />
                 <FormControl fullWidth margin="normal" variant="outlined">
                     <InputLabel>Supplier</InputLabel>
                     <Select
@@ -128,16 +153,6 @@ const AddStock = () => {
                         ))}
                     </Select>
                 </FormControl>
-                <TextField
-                    fullWidth
-                    label="Quantity"
-                    type="number"
-                    value={quantity}
-                    onChange={(e) => setQuantity(e.target.value)}
-                    required
-                    margin="normal"
-                    variant="outlined"
-                />
                 <Button
                     fullWidth
                     variant="contained"
