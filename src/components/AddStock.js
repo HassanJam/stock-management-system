@@ -127,15 +127,18 @@ const AddStock = () => {
                     margin="normal"
                     variant="outlined"
                 />
-                <TextField
-                    fullWidth
-                    label="Quality"
-                    value={quality}
-                    onChange={(e) => setQuality(e.target.value)}
-                    required
-                    margin="normal"
-                    variant="outlined"
-                />
+                <FormControl fullWidth margin="normal" variant="outlined">
+                    <InputLabel>Quality</InputLabel>
+                    <Select
+                        value={quality}
+                        onChange={(e) => setQuality(e.target.value)}
+                        label="Quality"
+                        required
+                    >
+                        <MenuItem value="new">New</MenuItem>
+                        <MenuItem value="refurbished">Refurbished</MenuItem>
+                    </Select>
+                </FormControl>
                 <FormControl fullWidth margin="normal" variant="outlined">
                     <InputLabel>Supplier</InputLabel>
                     <Select

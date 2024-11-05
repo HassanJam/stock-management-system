@@ -3,10 +3,12 @@ import axios from 'axios';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Box, Button } from '@mui/material';
 import api from '../api/api.js';
 import { useNavigate } from 'react-router-dom';
+import { useUser } from '../context/UserContext';
 
 const { stocks_api } = api;
 
 const ViewStock = () => {
+    const user = useUser();
     const [stocks, setStocks] = useState([]);
     const navigate = useNavigate();
 
@@ -63,21 +65,28 @@ const ViewStock = () => {
                                 <TableCell>{stock.quality}</TableCell>
                                 <TableCell>{stock.supplier_name}</TableCell>
                                 <TableCell>
-                                    <Button
-                                        variant="contained"
-                                        color="primary"
-                                        onClick={() => navigate(`/dashboard/edit-stock/${stock.id}`)} // Navigate to edit page
-                                    >
-                                        Edit
-                                    </Button>
-                                    <Button
-                                        variant="contained"
-                                        color="secondary"
-                                        onClick={() => handleDelete(stock.id)} // Handle deletion
-                                        sx={{ ml: 1 }} // Add some margin to the left
-                                    >
-                                        Delete
-                                    </Button>
+                                    {user.department === 'procurement' && (
+                                    <Box>
+                                        <Button
+                                            variant="contained"
+                                            color="primary"
+                                            onClick={() => navigate(`/dashboard/edit-stock/${stock.id}`)} // Navigate to edit page
+                                        >
+                                            Edit
+                                        </Button>
+                                        <Button
+                                            variant="contained"
+                                            color="secondary"
+                                            onClick={() => handleDelete(stock.id)} // Handle deletion
+                                            sx={{ ml: 1 }} // Add some margin to the left
+                                        >
+                                            Delete
+                                        </Button>
+                                    </Box>
+
+                                    )}
+                                    
+                 
                                 </TableCell>
                             </TableRow>
                         ))}
