@@ -1,7 +1,18 @@
-// src/components/ViewStock.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Box, Button } from '@mui/material';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Paper,
+    Typography,
+    Box,
+    Button,
+    TextField,
+} from '@mui/material';
 import api from '../api/api.js';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../context/UserContext';
@@ -9,17 +20,19 @@ import { useUser } from '../context/UserContext';
 const { stocks_api } = api;
 
 const ViewStock = () => {
-    const { user } = useUser();
-    console.log(user);
-    console.log(user.department);
+
     const [stocks, setStocks] = useState([]);
+    const [filteredStocks, setFilteredStocks] = useState([]); // For displaying filtered stocks
+    const [filters, setFilters] = useState({ itemName: '', brand: '', supplier: '', serialNo: '', quality: '' }); // Define filters
     const navigate = useNavigate();
+    const { user } = useUser();
 
     useEffect(() => {
         const fetchStocks = async () => {
             try {
                 const response = await axios.get(stocks_api);
                 setStocks(response.data);
+                setFilteredStocks(response.data); // Initialize filtered stocks with all stocks
             } catch (error) {
                 console.error('Error fetching stocks:', error);
             }
@@ -28,13 +41,41 @@ const ViewStock = () => {
         fetchStocks();
     }, []);
 
+    // Update filtered stocks whenever filters change
+    useEffect(() => {
+        const filtered = stocks.filter(stock => {
+            return (
+                stock.item_name.toLowerCase().includes(filters.itemName.toLowerCase()) &&
+                stock.brand.toLowerCase().includes(filters.brand.toLowerCase()) &&
+                stock.supplier_name.toLowerCase().includes(filters.supplier.toLowerCase()) &&
+                stock.serial_no.toLowerCase().includes(filters.serialNo.toLowerCase()) &&
+                stock.quality.toLowerCase().includes(filters.quality.toLowerCase())
+            );
+        });
+        setFilteredStocks(filtered);
+    }, [filters, stocks]);
+
     const handleDelete = async (id) => {
         try {
             await axios.delete(`${stocks_api}/${id}`);
-            setStocks(stocks.filter(stock => stock.id !== id)); // Remove the deleted stock from the state
+            setStocks(stocks.filter(stock => stock.id !== id));
+            setFilteredStocks(filteredStocks.filter(stock => stock.id !== id)); // Update filtered stocks as well
         } catch (error) {
             console.error('Error deleting stock:', error);
         }
+    };
+
+    const handleFilterChange = (e) => {
+        const { name, value } = e.target;
+        setFilters((prevFilters) => ({
+            ...prevFilters,
+            [name]: value,
+        }));
+    };
+
+    // Function to calculate total quantity of filtered stocks
+    const calculateTotalQuantity = () => {
+        return filteredStocks.reduce((total, stock) => total + stock.quantity, 0);
     };
 
     return (

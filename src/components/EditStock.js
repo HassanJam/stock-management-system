@@ -125,10 +125,10 @@ const EditStock = () => {
                         <MenuItem value="">
                             <em>Select unit</em>
                         </MenuItem>
-                        <MenuItem value="pcs">Pieces</MenuItem>
-                        <MenuItem value="kg">Kilograms</MenuItem>
-                        <MenuItem value="liters">Liters</MenuItem>
-                        <MenuItem value="m">Meters</MenuItem>
+                        <MenuItem value="Pcs">Pieces</MenuItem>
+                        <MenuItem value="Kg">Kilograms</MenuItem>
+                        <MenuItem value="Liters">Liters</MenuItem>
+                        <MenuItem value="Meters">Meters</MenuItem>
                     </Select>
                 </FormControl>
 
@@ -160,9 +160,9 @@ const EditStock = () => {
                         <MenuItem value="">
                             <em>Select quality</em>
                         </MenuItem>
-                        <MenuItem value="new">New</MenuItem>
-                        <MenuItem value="used">Used</MenuItem>
-                        <MenuItem value="refurbished">Refurbished</MenuItem>
+                        <MenuItem value="New">New</MenuItem>
+                        <MenuItem value="Used">Used</MenuItem>
+                        <MenuItem value="Refurbished">Refurbished</MenuItem>
                     </Select>
                 </FormControl>
                 <FormControl fullWidth margin="normal" variant="outlined">
