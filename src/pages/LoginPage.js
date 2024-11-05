@@ -34,89 +34,34 @@ const LoginPage = () => {
     };
 
     return (
-        <div style={{ 
-            minHeight: '100vh', 
-            background: 'linear-gradient(to bottom right, #e3f2fd, #bbdefb)', // Example gradient background
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center'
-        }}>
-            <Header title="Login Page" showLoginButton={false} />
-            <Container maxWidth="sm" sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <Paper elevation={5} sx={{ padding: 4, width: '100%', maxWidth: 400, borderRadius: 3 }}>
-                    <Typography variant="h4" gutterBottom align="center" sx={{ color: '#1976d2' }}>
-                        Login
-                    </Typography>
-                    <Box component="form" onSubmit={handleLogin} display="flex" flexDirection="column" gap={2}>
-                        <TextField
-                            label="Username"
-                            variant="outlined"
-                            fullWidth
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                            required
-                            sx={{
-                                '& .MuiOutlinedInput-root': {
-                                    '& fieldset': {
-                                        borderColor: '#1976d2', // Outline color
-                                    },
-                                    '&:hover fieldset': {
-                                        borderColor: '#2196f3', // Hover outline color
-                                    },
-                                    '&.Mui-focused fieldset': {
-                                        borderColor: '#0d47a1', // Focus outline color
-                                    },
-                                },
-                            }}
-                        />
-                        <TextField
-                            label="Password"
-                            type="password"
-                            variant="outlined"
-                            fullWidth
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                            sx={{
-                                '& .MuiOutlinedInput-root': {
-                                    '& fieldset': {
-                                        borderColor: '#1976d2', // Outline color
-                                    },
-                                    '&:hover fieldset': {
-                                        borderColor: '#2196f3', // Hover outline color
-                                    },
-                                    '&.Mui-focused fieldset': {
-                                        borderColor: '#0d47a1', // Focus outline color
-                                    },
-                                },
-                            }}
-                        />
-                        <Button 
-                            type="submit" 
-                            variant="contained" 
-                            sx={{
-                                backgroundColor: '#1976d2',
-                                '&:hover': {
-                                    backgroundColor: '#1565c0',
-                                },
-                                fontWeight: 600,
-                                height: '48px',
-                                textTransform: 'none',
-                            }} 
-                            fullWidth
-                        >
-                            Login
-                        </Button>
-                    </Box>
-                </Paper>
-            </Container>
-            <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
-                <Alert onClose={handleCloseSnackbar} severity="error" sx={{ width: '100%' }}>
-                    {error}
-                </Alert>
-            </Snackbar>
-        </div>
+        <Container maxWidth="xs">
+            <Typography variant="h4" gutterBottom align="center">
+                Login
+            </Typography>
+            <Box component="form" onSubmit={handleLogin} display="flex" flexDirection="column" gap={2}>
+                <TextField
+                    label="Username"
+                    variant="outlined"
+                    fullWidth
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
+                />
+                <TextField
+                    label="Password"
+                    type="password"
+                    variant="outlined"
+                    fullWidth
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                />
+                
+                <Button type="submit" variant="contained" color="primary" fullWidth>
+                    Login
+                </Button>
+            </Box>
+        </Container>
     );
 };
 
