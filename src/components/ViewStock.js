@@ -1,14 +1,17 @@
+// src/components/ViewStock.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Box, Button } from '@mui/material';
 import api from '../api/api.js';
 import { useNavigate } from 'react-router-dom';
+import { useUser } from '../context/UserContext'; // Importing useUser to access user context
 
 const { stocks_api } = api;
 
 const ViewStock = () => {
     const [stocks, setStocks] = useState([]);
     const navigate = useNavigate();
+    const { user } = useUser(); // Get the user from context
 
     useEffect(() => {
         const fetchStocks = async () => {
@@ -49,6 +52,7 @@ const ViewStock = () => {
                             <TableCell>Serial No.</TableCell>
                             <TableCell>Quality</TableCell>
                             <TableCell>Supplier</TableCell>
+                            {user?.department === 'procurement' && <TableCell>Actions</TableCell>} {/* Conditionally render Actions column */}
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -62,23 +66,25 @@ const ViewStock = () => {
                                 <TableCell>{stock.serial_no}</TableCell>
                                 <TableCell>{stock.quality}</TableCell>
                                 <TableCell>{stock.supplier_name}</TableCell>
-                                <TableCell>
-                                    <Button
-                                        variant="contained"
-                                        color="primary"
-                                        onClick={() => navigate(`/dashboard/edit-stock/${stock.id}`)} // Navigate to edit page
-                                    >
-                                        Edit
-                                    </Button>
-                                    <Button
-                                        variant="contained"
-                                        color="secondary"
-                                        onClick={() => handleDelete(stock.id)} // Handle deletion
-                                        sx={{ ml: 1 }} // Add some margin to the left
-                                    >
-                                        Delete
-                                    </Button>
-                                </TableCell>
+                                {user?.department === 'procurement' && (
+                                    <TableCell>
+                                        <Button
+                                            variant="contained"
+                                            color="primary"
+                                            onClick={() => navigate(`/dashboard/edit-stock/${stock.id}`)} // Navigate to edit page
+                                        >
+                                            Edit
+                                        </Button>
+                                        <Button
+                                            variant="contained"
+                                            color="secondary"
+                                            onClick={() => handleDelete(stock.id)} // Handle deletion
+                                            sx={{ ml: 1 }} // Add some margin to the left
+                                        >
+                                            Delete
+                                        </Button>
+                                    </TableCell>
+                                )}
                             </TableRow>
                         ))}
                     </TableBody>

@@ -12,7 +12,7 @@ const AddStock = () => {
     const [unit, setUnit] = useState('');
     const [cost, setCost] = useState('');
     const [serialNo, setSerialNo] = useState('');
-    const [quality, setQuality] = useState('');
+    const [quality, setQuality] = useState(''); // Changed to an empty string for Select
     const [supplier, setSupplier] = useState('');
     const [successMessage, setSuccessMessage] = useState(false);
     const [suppliers, setSuppliers] = useState([]);
@@ -47,13 +47,14 @@ const AddStock = () => {
 
         try {
             await axios.post(stocks_api, newStock);
+            // Reset form fields
             setItemName('');
             setBrand('');
             setQuantity('');
             setUnit('');
             setCost('');
             setSerialNo('');
-            setQuality('');
+            setQuality(''); // Reset quality to empty
             setSupplier('');
             setSuccessMessage(true);
         } catch (error) {
@@ -100,18 +101,26 @@ const AddStock = () => {
                     margin="normal"
                     variant="outlined"
                 />
+                <FormControl fullWidth margin="normal" variant="outlined">
+                    <InputLabel>Unit</InputLabel>
+                    <Select
+                        value={unit}
+                        onChange={(e) => setUnit(e.target.value)}
+                        required
+                    >
+                        <MenuItem value="">
+                            <em>Select unit</em>
+                        </MenuItem>
+                        <MenuItem value="pcs">Pieces</MenuItem>
+                        <MenuItem value="kg">Kilograms</MenuItem>
+                        <MenuItem value="liters">Liters</MenuItem>
+                        <MenuItem value="m">Meters</MenuItem>
+                    </Select>
+                </FormControl>
+
                 <TextField
                     fullWidth
-                    label="Unit"
-                    value={unit}
-                    onChange={(e) => setUnit(e.target.value)}
-                    required
-                    margin="normal"
-                    variant="outlined"
-                />
-                <TextField
-                    fullWidth
-                    label="Cost"
+                    label="Cost Per Unit"
                     type="number"
                     value={cost}
                     onChange={(e) => setCost(e.target.value)}
@@ -127,15 +136,21 @@ const AddStock = () => {
                     margin="normal"
                     variant="outlined"
                 />
-                <TextField
-                    fullWidth
-                    label="Quality"
-                    value={quality}
-                    onChange={(e) => setQuality(e.target.value)}
-                    required
-                    margin="normal"
-                    variant="outlined"
-                />
+                <FormControl fullWidth margin="normal" variant="outlined">
+                    <InputLabel>Quality</InputLabel>
+                    <Select
+                        value={quality}
+                        onChange={(e) => setQuality(e.target.value)}
+                        required
+                    >
+                        <MenuItem value="">
+                            <em>Select quality</em>
+                        </MenuItem>
+                        <MenuItem value="new">New</MenuItem>
+                        <MenuItem value="used">Used</MenuItem>
+                        <MenuItem value="refurbished">Refurbished</MenuItem>
+                    </Select>
+                </FormControl>
                 <FormControl fullWidth margin="normal" variant="outlined">
                     <InputLabel>Supplier</InputLabel>
                     <Select
