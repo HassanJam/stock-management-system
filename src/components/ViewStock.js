@@ -20,10 +20,9 @@ import { useUser } from '../context/UserContext';
 const { stocks_api } = api;
 
 const ViewStock = () => {
-
     const [stocks, setStocks] = useState([]);
-    const [filteredStocks, setFilteredStocks] = useState([]); // For displaying filtered stocks
-    const [filters, setFilters] = useState({ itemName: '', brand: '', supplier: '', serialNo: '', quality: '' }); // Define filters
+    const [filteredStocks, setFilteredStocks] = useState([]);
+    const [filters, setFilters] = useState({ itemName: '', brand: '', supplier: '', serialNo: '', quality: '' });
     const navigate = useNavigate();
     const { user } = useUser();
 
@@ -32,7 +31,7 @@ const ViewStock = () => {
             try {
                 const response = await axios.get(stocks_api);
                 setStocks(response.data);
-                setFilteredStocks(response.data); // Initialize filtered stocks with all stocks
+                setFilteredStocks(response.data);
             } catch (error) {
                 console.error('Error fetching stocks:', error);
             }
@@ -41,7 +40,7 @@ const ViewStock = () => {
         fetchStocks();
     }, []);
 
-    // Update filtered stocks whenever filters change
+    // Filter stocks whenever filters change
     useEffect(() => {
         const filtered = stocks.filter(stock => {
             return (
@@ -59,7 +58,7 @@ const ViewStock = () => {
         try {
             await axios.delete(`${stocks_api}/${id}`);
             setStocks(stocks.filter(stock => stock.id !== id));
-            setFilteredStocks(filteredStocks.filter(stock => stock.id !== id)); // Update filtered stocks as well
+            setFilteredStocks(filteredStocks.filter(stock => stock.id !== id));
         } catch (error) {
             console.error('Error deleting stock:', error);
         }
@@ -67,13 +66,12 @@ const ViewStock = () => {
 
     const handleFilterChange = (e) => {
         const { name, value } = e.target;
-        setFilters((prevFilters) => ({
+        setFilters(prevFilters => ({
             ...prevFilters,
             [name]: value,
         }));
     };
 
-    // Function to calculate total quantity of filtered stocks
     const calculateTotalQuantity = () => {
         return filteredStocks.reduce((total, stock) => total + stock.quantity, 0);
     };
@@ -83,6 +81,51 @@ const ViewStock = () => {
             <Typography variant="h4" align="center" gutterBottom>
                 View Stock
             </Typography>
+            
+            {/* Filter Inputs */}
+            <Box sx={{ mb: 3, display: 'flex', gap: 2 }}>
+                <TextField
+                    label="Item Name"
+                    variant="outlined"
+                    name="itemName"
+                    value={filters.itemName}
+                    onChange={handleFilterChange}
+                />
+                <TextField
+                    label="Brand"
+                    variant="outlined"
+                    name="brand"
+                    value={filters.brand}
+                    onChange={handleFilterChange}
+                />
+                <TextField
+                    label="Supplier"
+                    variant="outlined"
+                    name="supplier"
+                    value={filters.supplier}
+                    onChange={handleFilterChange}
+                />
+                <TextField
+                    label="Serial No."
+                    variant="outlined"
+                    name="serialNo"
+                    value={filters.serialNo}
+                    onChange={handleFilterChange}
+                />
+                <TextField
+                    label="Quality"
+                    variant="outlined"
+                    name="quality"
+                    value={filters.quality}
+                    onChange={handleFilterChange}
+                />
+            </Box>
+
+            {/* Display Total Quantity */}
+            <Typography variant="h6" align="left" sx={{ mb: 2 }}>
+                Total Quantity: {calculateTotalQuantity()}
+            </Typography>
+
             <TableContainer component={Paper} elevation={3} sx={{ borderRadius: 2 }}>
                 <Table>
                     <TableHead>
@@ -95,49 +138,50 @@ const ViewStock = () => {
                             <TableCell sx={{ fontWeight: 'bold', bgcolor: '#1976d2', color: '#fff' }}>Serial No.</TableCell>
                             <TableCell sx={{ fontWeight: 'bold', bgcolor: '#1976d2', color: '#fff' }}>Quality</TableCell>
                             <TableCell sx={{ fontWeight: 'bold', bgcolor: '#1976d2', color: '#fff' }}>Supplier</TableCell>
-
-                            {user?.department === 'procurement' && <TableCell sx={{ fontWeight: 'bold', bgcolor: '#1976d2', color: '#fff' }}>Actions</TableCell>} {/* Conditionally render Actions column */}
+                            {user?.department === 'procurement' && (
+                                <TableCell sx={{ fontWeight: 'bold', bgcolor: '#1976d2', color: '#fff' }}>Actions</TableCell>
+                            )}
                         </TableRow>
                     </TableHead>
                     <TableBody>
-    {stocks.map((stock) => (
-        <TableRow key={stock.id}>
-            <TableCell>{stock.item_name}</TableCell>
-            <TableCell>{stock.brand}</TableCell>
-            <TableCell>{stock.quantity}</TableCell>
-            <TableCell>{stock.unit}</TableCell>
-            <TableCell>{stock.cost}</TableCell>
-            <TableCell>{stock.serial_no}</TableCell>
-            <TableCell>{stock.quality}</TableCell>
-            <TableCell>{stock.supplier_name}</TableCell>
-            <TableCell>
-                {/* Conditionally render the buttons */}
-                {user?.department === 'procurement' ? (
-                    <>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={() => navigate(`/dashboard/edit-stock/${stock.id}`)}
-                            sx={{ mr: 1 }} // Margin to the right
-                        >
-                            Edit
-                        </Button>
-                        <Button
-                            variant="contained"
-                            color="secondary"
-                            onClick={() => handleDelete(stock.id)}
-                        >
-                            Delete
-                        </Button>
-                    </>
-                ) : (
-                    <Typography variant="body2" color="textSecondary">No Actions Available</Typography>
-                )}
-            </TableCell>
-        </TableRow>
-    ))}
-</TableBody>
-
+                        {filteredStocks.map((stock) => (
+                            <TableRow key={stock.id}>
+                                <TableCell>{stock.item_name}</TableCell>
+                                <TableCell>{stock.brand}</TableCell>
+                                <TableCell>{stock.quantity}</TableCell>
+                                <TableCell>{stock.unit}</TableCell>
+                                <TableCell>{stock.cost}</TableCell>
+                                <TableCell>{stock.serial_no}</TableCell>
+                                <TableCell>{stock.quality}</TableCell>
+                                <TableCell>{stock.supplier_name}</TableCell>
+                                {user?.department === 'procurement' ? (
+                                    <TableCell>
+                                        <Button
+                                            variant="contained"
+                                            color="primary"
+                                            onClick={() => navigate(`/dashboard/edit-stock/${stock.id}`)}
+                                            sx={{ mr: 1 }}
+                                        >
+                                            Edit
+                                        </Button>
+                                        <Button
+                                            variant="contained"
+                                            color="secondary"
+                                            onClick={() => handleDelete(stock.id)}
+                                        >
+                                            Delete
+                                        </Button>
+                                    </TableCell>
+                                ) : (
+                                    <TableCell>
+                                        <Typography variant="body2" color="textSecondary">
+                                            No Actions Available
+                                        </Typography>
+                                    </TableCell>
+                                )}
+                            </TableRow>
+                        ))}
+                    </TableBody>
                 </Table>
             </TableContainer>
         </Box>

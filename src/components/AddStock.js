@@ -113,10 +113,10 @@ const AddStock = () => {
                                 <MenuItem value="">
                                     <em>Select unit</em>
                                 </MenuItem>
-                                <MenuItem value="pcs">Pieces</MenuItem>
-                                <MenuItem value="kg">Kilograms</MenuItem>
-                                <MenuItem value="liters">Liters</MenuItem>
-                                <MenuItem value="m">Meters</MenuItem>
+                                <MenuItem value="Pcs">Pieces</MenuItem>
+                                <MenuItem value="Kg">Kilograms</MenuItem>
+                                <MenuItem value="Liters">Liters</MenuItem>
+                                <MenuItem value="Meters">Meters</MenuItem>
                             </Select>
                         </FormControl>
 

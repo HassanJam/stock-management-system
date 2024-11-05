@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Typography, TextField, Button, Box, MenuItem, FormControl, InputLabel, Select, Snackbar, Alert } from '@mui/material';
+import { Typography, TextField, Button, Box, MenuItem, FormControl, InputLabel, Select, Snackbar, Alert, Card, CardContent } from '@mui/material';
 import api from '../api/api.js';
 
 const { stocks_api, suppliers_api, categories_api } = api; // Ensure you import correct APIs
@@ -86,112 +86,116 @@ const EditStock = () => {
             <Typography variant="h4" align="center" gutterBottom>
                 Edit Stock
             </Typography>
-            <form onSubmit={handleSubmit} style={{ maxWidth: '500px', margin: '0 auto' }}>
-                <TextField
-                    fullWidth
-                    label="Item Name"
-                    value={itemName}
-                    onChange={(e) => setItemName(e.target.value)}
-                    required
-                    margin="normal"
-                    variant="outlined"
-                />
-                <TextField
-                    fullWidth
-                    label="Brand"
-                    value={brand}
-                    onChange={(e) => setBrand(e.target.value)}
-                    required
-                    margin="normal"
-                    variant="outlined"
-                />
-                <TextField
-                    fullWidth
-                    label="Quantity"
-                    type="number"
-                    value={quantity}
-                    onChange={(e) => setQuantity(e.target.value)}
-                    required
-                    margin="normal"
-                    variant="outlined"
-                />
-                <FormControl fullWidth margin="normal" variant="outlined">
-                    <InputLabel>Unit</InputLabel>
-                    <Select
-                        value={unit}
-                        onChange={(e) => setUnit(e.target.value)}
-                        required
-                    >
-                        <MenuItem value="">
-                            <em>Select unit</em>
-                        </MenuItem>
-                        <MenuItem value="Pcs">Pieces</MenuItem>
-                        <MenuItem value="Kg">Kilograms</MenuItem>
-                        <MenuItem value="Liters">Liters</MenuItem>
-                        <MenuItem value="Meters">Meters</MenuItem>
-                    </Select>
-                </FormControl>
+            <Card variant="outlined" sx={{ maxWidth: 500, margin: '0 auto', boxShadow: 3, borderRadius: 2, bgcolor: '#f5f5f5' }}>
+                <CardContent>
+                    <form onSubmit={handleSubmit} style={{ maxWidth: '500px', margin: '0 auto' }}>
+                        <TextField
+                            fullWidth
+                            label="Item Name"
+                            value={itemName}
+                            onChange={(e) => setItemName(e.target.value)}
+                            required
+                            margin="normal"
+                            variant="outlined"
+                        />
+                        <TextField
+                            fullWidth
+                            label="Brand"
+                            value={brand}
+                            onChange={(e) => setBrand(e.target.value)}
+                            required
+                            margin="normal"
+                            variant="outlined"
+                        />
+                        <TextField
+                            fullWidth
+                            label="Quantity"
+                            type="number"
+                            value={quantity}
+                            onChange={(e) => setQuantity(e.target.value)}
+                            required
+                            margin="normal"
+                            variant="outlined"
+                        />
+                        <FormControl fullWidth margin="normal" variant="outlined">
+                            <InputLabel>Unit</InputLabel>
+                            <Select
+                                value={unit}
+                                onChange={(e) => setUnit(e.target.value)}
+                                required
+                            >
+                                <MenuItem value="">
+                                    <em>Select unit</em>
+                                </MenuItem>
+                                <MenuItem value="Pcs">Pieces</MenuItem>
+                                <MenuItem value="Kg">Kilograms</MenuItem>
+                                <MenuItem value="Liters">Liters</MenuItem>
+                                <MenuItem value="Meters">Meters</MenuItem>
+                            </Select>
+                        </FormControl>
 
-                <TextField
-                    fullWidth
-                    label="Cost Per Unit"
-                    type="number"
-                    value={cost}
-                    onChange={(e) => setCost(e.target.value)}
-                    required
-                    margin="normal"
-                    variant="outlined"
-                />
-                <TextField
-                    fullWidth
-                    label="Serial Number"
-                    value={serialNo}
-                    onChange={(e) => setSerialNo(e.target.value)}
-                    margin="normal"
-                    variant="outlined"
-                />
-                <FormControl fullWidth margin="normal" variant="outlined">
-                    <InputLabel>Quality</InputLabel>
-                    <Select
-                        value={quality}
-                        onChange={(e) => setQuality(e.target.value)}
-                        required
-                    >
-                        <MenuItem value="">
-                            <em>Select quality</em>
-                        </MenuItem>
-                        <MenuItem value="New">New</MenuItem>
-                        <MenuItem value="Used">Used</MenuItem>
-                        <MenuItem value="Refurbished">Refurbished</MenuItem>
-                    </Select>
-                </FormControl>
-                <FormControl fullWidth margin="normal" variant="outlined">
-                    <InputLabel>Supplier</InputLabel>
-                    <Select
-                        value={supplier}
-                        onChange={(e) => setSupplier(e.target.value)}
-                        required
-                    >
-                        <MenuItem value="">
-                            <em>Select a supplier</em>
-                        </MenuItem>
-                        {suppliers.map((sup) => (
-                            <MenuItem key={sup.id} value={sup.id}>
-                                {sup.name}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-                <Button
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    type="submit"
-                    sx={{ mt: 2 }}
-                >
-                    Update Stock
-                </Button>
-            </form>
+                        <TextField
+                            fullWidth
+                            label="Cost Per Unit"
+                            type="number"
+                            value={cost}
+                            onChange={(e) => setCost(e.target.value)}
+                            required
+                            margin="normal"
+                            variant="outlined"
+                        />
+                        <TextField
+                            fullWidth
+                            label="Serial Number"
+                            value={serialNo}
+                            onChange={(e) => setSerialNo(e.target.value)}
+                            margin="normal"
+                            variant="outlined"
+                        />
+                        <FormControl fullWidth margin="normal" variant="outlined">
+                            <InputLabel>Quality</InputLabel>
+                            <Select
+                                value={quality}
+                                onChange={(e) => setQuality(e.target.value)}
+                                required
+                            >
+                                <MenuItem value="">
+                                    <em>Select quality</em>
+                                </MenuItem>
+                                <MenuItem value="New">New</MenuItem>
+                                <MenuItem value="Used">Used</MenuItem>
+                                <MenuItem value="Refurbished">Refurbished</MenuItem>
+                            </Select>
+                        </FormControl>
+                        <FormControl fullWidth margin="normal" variant="outlined">
+                            <InputLabel>Supplier</InputLabel>
+                            <Select
+                                value={supplier}
+                                onChange={(e) => setSupplier(e.target.value)}
+                                required
+                            >
+                                <MenuItem value="">
+                                    <em>Select a supplier</em>
+                                </MenuItem>
+                                {suppliers.map((sup) => (
+                                    <MenuItem key={sup.id} value={sup.id}>
+                                        {sup.name}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        <Button
+                            fullWidth
+                            variant="contained"
+                            color="primary"
+                            type="submit"
+                            sx={{ mt: 2 }}
+                        >
+                            Update Stock
+                        </Button>
+                    </form>
+                </CardContent>
+            </Card>
 
             <Snackbar
                 open={successMessage}
