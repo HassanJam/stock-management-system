@@ -7,6 +7,7 @@ import EditStock from '../components/EditStock';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
 import { Box, Container, Typography } from '@mui/material';
+import AddSupplier from '../components/AddSupplier';
 
 const Dashboard = () => {
     const { user, logout } = useUser();
@@ -47,6 +48,7 @@ const Dashboard = () => {
                                     <Route path="add-stock" element={<AddStock />} />
                                     <Route path="view-stock" element={<ViewStock />} />
                                     <Route path="edit-stock/:id" element={<EditStock />} />
+                                    <Route path="add-supplier" element={<AddSupplier />} />
                                 </>
                             )}
                             {user.department === 'sales' && (

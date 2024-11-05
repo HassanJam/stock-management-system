@@ -7,7 +7,7 @@ import Dashboard from './pages/Dashboard';
 import AddStockPage from './components/AddStock';
 import ViewStockPage from './components/ViewStock';
 import EditStockPage from './components/EditStock';
-
+import AddSupplierPage from './components/AddSupplier';
 import ProtectedRoute from './components/ProtectedRoute';
 
 const App = () => {
@@ -32,8 +32,12 @@ const App = () => {
                             path="edit-stock/:id" 
                             element={<ProtectedRoute element={<EditStockPage />} />} 
                         />
+                        <Route 
+                            path="add-supplier" 
+                            element={<ProtectedRoute element={<AddSupplierPage />} />} 
+                        />
+                        
                         </Route>
-                    {/* More routes can be added here */}
                 </Routes>
             </Router>
         </UserProvider>
