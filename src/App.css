@@ -36,3 +36,10 @@
     transform: rotate(360deg);
   }
 }
+body {
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(to bottom right, #e3f2fd, #bbdefb); /* Example gradient background */
+  font-family: 'Roboto', sans-serif; /* Adjust font if needed */
+  height: 100vh; /* Ensure it covers the full height */
+}

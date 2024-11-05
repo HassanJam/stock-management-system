@@ -1,71 +1,65 @@
-// src/pages/Dashboard.js
 import React from 'react';
-import { Routes, Route, Link, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import { useUser } from '../context/UserContext';
 import AddStock from '../components/AddStock';
 import ViewStock from '../components/ViewStock';
 import EditStock from '../components/EditStock';
-import { Container, Typography, Button, Box } from '@mui/material';
+import Header from '../components/Header';
+import Sidebar from '../components/Sidebar';
+import { Box, Container, Typography } from '@mui/material';
 
 const Dashboard = () => {
     const { user, logout } = useUser();
-    const navigate = useNavigate(); // Use the useNavigate hook to programmatically navigate
+    const navigate = useNavigate();
 
     if (!user) {
         return <Typography variant="h6" color="error">Please log in to view the dashboard.</Typography>;
     }
 
     const handleLogout = () => {
-        logout(); // Call the logout function from context
-        navigate('/'); // Redirect to the login page
+        logout();
+        navigate('/');
     };
 
     return (
-        <Container>
-            <Typography variant="h4" gutterBottom>
-                {user.department} Dashboard
-            </Typography>
-            <Box display="flex" gap={2} mb={3}>
-                {user.department === 'procurement' && (
-                    <>
-                        <Button component={Link} to="add-stock" variant="contained" color="primary">
-                            Add Stock
-                        </Button>
-                        <Button component={Link} to="view-stock" variant="contained" color="secondary">
-                            View Stock
-                        </Button>
-                    </>
-                )}
-                {user.department === 'sales' && (
-                    <>
-                        <Button component={Link} to="view-stock" variant="contained" color="secondary">
-                            View Sales Stock
-                        </Button>
-                        {/* Add any other buttons specific to sales */}
-                    </>
-                )}
+        <div style={{ 
+            minHeight: '100vh', 
+            background: 'linear-gradient(to bottom right, #e3f2fd, #bbdefb)', // Example gradient background
+            display: 'flex',
+            flexDirection: 'column'
+        }}>
+            <Header />
+            <Box sx={{ display: 'flex', marginTop: '64px' }}> {/* Adjust to match the header height */}
+                <Sidebar department={user.department} />
+                <Box
+                    component="main"
+                    sx={{
+                        flexGrow: 1,
+                        p: 3,
+                        backgroundColor: 'transparent' // Set to transparent to allow the background to show through
+                    }}
+                >
+                    <Container>
+
+                        <Routes>
+                            {user.department === 'procurement' && (
+                                <>
+                                    <Route path="add-stock" element={<AddStock />} />
+                                    <Route path="view-stock" element={<ViewStock />} />
+                                    <Route path="edit-stock/:id" element={<EditStock />} />
+                                </>
+                            )}
+                            {user.department === 'sales' && (
+                                <>
+                                    <Route path="view-stock" element={<ViewStock />} />
+                                </>
+                            )}
+                            <Route path="edit-stock/:id" element={<EditStock />} />
+                        </Routes>
+                    </Container>
+                </Box>
             </Box>
-            <Button variant="contained" color="error" onClick={handleLogout}>
-                Logout
-            </Button>
-            <Routes>
-                {user.department === 'procurement' && (
-                    <>
-                        <Route path="add-stock" element={<AddStock />} />
-                        <Route path="view-stock" element={<ViewStock />} />
-                        <Route path="edit-stock/:id" element={<EditStock />} />
-                        
-                    </>
-                )}
-                {user.department === 'sales' && (
-                    <>
-                        <Route path="view-stock" element={<ViewStock />} />
-                        {/* Add any specific component for sales here */}
-                    </>
-                )}
-                <Route path="edit-stock/:id" element={<EditStock />} />
-            </Routes>
-        </Container>
+        </div>
     );
 };
 

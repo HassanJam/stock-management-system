@@ -1,76 +1,122 @@
-// /frontend/src/pages/LoginPage.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../context/UserContext';
-import { Container, Typography, TextField, Button, Box, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { Container, Typography, TextField, Button, Box, Paper, Snackbar, Alert } from '@mui/material';
 import { login } from '../services/authService';
+import Header from '../components/Header'; 
 
 const LoginPage = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [department, setDepartment] = useState('procurement');
     const { setUser, setToken } = useUser();
     const navigate = useNavigate();
+    const [error, setError] = useState('');
+    const [openSnackbar, setOpenSnackbar] = useState(false);
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        console.log('Logging in with', { username, password, department }); // Log input details
-    
         try {
             const response = await login(username, password);
-            console.log('Login response:', response.data); // Log response data
             const { token, department } = response.data;
             setToken(token);
             setUser({ username, department });
-            localStorage.setItem('token', token); // Store token in local storage
-            navigate('/dashboard'); // Redirect to dashboard
+            localStorage.setItem('token', token);
+            navigate('/dashboard');
         } catch (error) {
-            console.error('Login failed:', error); // Log error
-            alert('Login failed. Check your credentials.');
+            console.error('Login failed:', error);
+            setError('Login failed. Check your credentials.');
+            setOpenSnackbar(true);
         }
     };
-    
+
+    const handleCloseSnackbar = () => {
+        setOpenSnackbar(false);
+    };
 
     return (
-        <Container maxWidth="xs">
-            <Typography variant="h4" gutterBottom align="center">
-                Login
-            </Typography>
-            <Box component="form" onSubmit={handleLogin} display="flex" flexDirection="column" gap={2}>
-                <TextField
-                    label="Username"
-                    variant="outlined"
-                    fullWidth
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    required
-                />
-                <TextField
-                    label="Password"
-                    type="password"
-                    variant="outlined"
-                    fullWidth
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                />
-                <FormControl fullWidth>
-                    <InputLabel>Department</InputLabel>
-                    <Select
-                        value={department}
-                        onChange={(e) => setDepartment(e.target.value)}
-                        label="Department"
-                    >
-                        <MenuItem value="procurement">Procurement</MenuItem>
-                        <MenuItem value="sales">Sales</MenuItem>
-                        {/* Add more departments as needed */}
-                    </Select>
-                </FormControl>
-                <Button type="submit" variant="contained" color="primary" fullWidth>
-                    Login
-                </Button>
-            </Box>
-        </Container>
+        <div style={{ 
+            minHeight: '100vh', 
+            background: 'linear-gradient(to bottom right, #e3f2fd, #bbdefb)', // Example gradient background
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center'
+        }}>
+            <Header title="Login Page" showLoginButton={false} />
+            <Container maxWidth="sm" sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <Paper elevation={5} sx={{ padding: 4, width: '100%', maxWidth: 400, borderRadius: 3 }}>
+                    <Typography variant="h4" gutterBottom align="center" sx={{ color: '#1976d2' }}>
+                        Login
+                    </Typography>
+                    <Box component="form" onSubmit={handleLogin} display="flex" flexDirection="column" gap={2}>
+                        <TextField
+                            label="Username"
+                            variant="outlined"
+                            fullWidth
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            required
+                            sx={{
+                                '& .MuiOutlinedInput-root': {
+                                    '& fieldset': {
+                                        borderColor: '#1976d2', // Outline color
+                                    },
+                                    '&:hover fieldset': {
+                                        borderColor: '#2196f3', // Hover outline color
+                                    },
+                                    '&.Mui-focused fieldset': {
+                                        borderColor: '#0d47a1', // Focus outline color
+                                    },
+                                },
+                            }}
+                        />
+                        <TextField
+                            label="Password"
+                            type="password"
+                            variant="outlined"
+                            fullWidth
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                            sx={{
+                                '& .MuiOutlinedInput-root': {
+                                    '& fieldset': {
+                                        borderColor: '#1976d2', // Outline color
+                                    },
+                                    '&:hover fieldset': {
+                                        borderColor: '#2196f3', // Hover outline color
+                                    },
+                                    '&.Mui-focused fieldset': {
+                                        borderColor: '#0d47a1', // Focus outline color
+                                    },
+                                },
+                            }}
+                        />
+                        <Button 
+                            type="submit" 
+                            variant="contained" 
+                            sx={{
+                                backgroundColor: '#1976d2',
+                                '&:hover': {
+                                    backgroundColor: '#1565c0',
+                                },
+                                fontWeight: 600,
+                                height: '48px',
+                                textTransform: 'none',
+                            }} 
+                            fullWidth
+                        >
+                            Login
+                        </Button>
+                    </Box>
+                </Paper>
+            </Container>
+            <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+                <Alert onClose={handleCloseSnackbar} severity="error" sx={{ width: '100%' }}>
+                    {error}
+                </Alert>
+            </Snackbar>
+        </div>
     );
 };
 

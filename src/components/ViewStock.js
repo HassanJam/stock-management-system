@@ -9,7 +9,9 @@ import { useUser } from '../context/UserContext';
 const { stocks_api } = api;
 
 const ViewStock = () => {
-    const user = useUser();
+    const { user } = useUser();
+    console.log(user);
+    console.log(user.department);
     const [stocks, setStocks] = useState([]);
     const navigate = useNavigate();
 
@@ -36,56 +38,65 @@ const ViewStock = () => {
     };
 
     return (
-        <Box sx={{ p: 3 }}>
+        <Box sx={{ p: 3, bgcolor: '#f9f9f9', borderRadius: 2 }}>
             <Typography variant="h4" align="center" gutterBottom>
                 View Stock
             </Typography>
-            <TableContainer component={Paper}>
+            <TableContainer component={Paper} elevation={3} sx={{ borderRadius: 2 }}>
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell>Item Name</TableCell>
-                            <TableCell>Brand</TableCell>
-                            <TableCell>Quantity</TableCell>
-                            <TableCell>Unit</TableCell>
-                            <TableCell>Cost</TableCell>
-                            <TableCell>Serial No.</TableCell>
-                            <TableCell>Quality</TableCell>
-                            <TableCell>Supplier</TableCell>
-                            {user?.department === 'procurement' && <TableCell>Actions</TableCell>} {/* Conditionally render Actions column */}
+                            <TableCell sx={{ fontWeight: 'bold', bgcolor: '#1976d2', color: '#fff' }}>Item Name</TableCell>
+                            <TableCell sx={{ fontWeight: 'bold', bgcolor: '#1976d2', color: '#fff' }}>Brand</TableCell>
+                            <TableCell sx={{ fontWeight: 'bold', bgcolor: '#1976d2', color: '#fff' }}>Quantity</TableCell>
+                            <TableCell sx={{ fontWeight: 'bold', bgcolor: '#1976d2', color: '#fff' }}>Unit</TableCell>
+                            <TableCell sx={{ fontWeight: 'bold', bgcolor: '#1976d2', color: '#fff' }}>Cost</TableCell>
+                            <TableCell sx={{ fontWeight: 'bold', bgcolor: '#1976d2', color: '#fff' }}>Serial No.</TableCell>
+                            <TableCell sx={{ fontWeight: 'bold', bgcolor: '#1976d2', color: '#fff' }}>Quality</TableCell>
+                            <TableCell sx={{ fontWeight: 'bold', bgcolor: '#1976d2', color: '#fff' }}>Supplier</TableCell>
+
+                            {user?.department === 'procurement' && <TableCell sx={{ fontWeight: 'bold', bgcolor: '#1976d2', color: '#fff' }}>Actions</TableCell>} {/* Conditionally render Actions column */}
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {stocks.map((stock) => (
-                            <TableRow key={stock.id}>
-                                <TableCell>{stock.item_name}</TableCell>
-                                <TableCell>{stock.brand}</TableCell>
-                                <TableCell>{stock.quantity}</TableCell>
-                                <TableCell>{stock.unit}</TableCell>
-                                <TableCell>{stock.cost}</TableCell>
-                                <TableCell>{stock.serial_no}</TableCell>
-                                <TableCell>{stock.quality}</TableCell>
-                                <TableCell>{stock.supplier_name}</TableCell>
-                                <TableCell>
-                                    <Button
-                                        variant="contained"
-                                        color="primary"
-                                        onClick={() => navigate(`/dashboard/edit-stock/${stock.id}`)} // Navigate to edit page
-                                    >
-                                        Edit
-                                    </Button>
-                                    <Button
-                                        variant="contained"
-                                        color="secondary"
-                                        onClick={() => handleDelete(stock.id)} // Handle deletion
-                                        sx={{ ml: 1 }} // Add some margin to the left
-                                    >
-                                        Delete
-                                    </Button>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
+    {stocks.map((stock) => (
+        <TableRow key={stock.id}>
+            <TableCell>{stock.item_name}</TableCell>
+            <TableCell>{stock.brand}</TableCell>
+            <TableCell>{stock.quantity}</TableCell>
+            <TableCell>{stock.unit}</TableCell>
+            <TableCell>{stock.cost}</TableCell>
+            <TableCell>{stock.serial_no}</TableCell>
+            <TableCell>{stock.quality}</TableCell>
+            <TableCell>{stock.supplier_name}</TableCell>
+            <TableCell>
+                {/* Conditionally render the buttons */}
+                {user?.department === 'procurement' ? (
+                    <>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={() => navigate(`/dashboard/edit-stock/${stock.id}`)}
+                            sx={{ mr: 1 }} // Margin to the right
+                        >
+                            Edit
+                        </Button>
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            onClick={() => handleDelete(stock.id)}
+                        >
+                            Delete
+                        </Button>
+                    </>
+                ) : (
+                    <Typography variant="body2" color="textSecondary">No Actions Available</Typography>
+                )}
+            </TableCell>
+        </TableRow>
+    ))}
+</TableBody>
+
                 </Table>
             </TableContainer>
         </Box>
