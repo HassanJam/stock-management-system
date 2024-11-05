@@ -12,7 +12,6 @@ const ViewStock = () => {
     const user = useUser();
     const [stocks, setStocks] = useState([]);
     const navigate = useNavigate();
-    const { user } = useUser(); // Get the user from context
 
     useEffect(() => {
         const fetchStocks = async () => {
