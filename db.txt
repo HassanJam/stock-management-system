@@ -1,22 +1,73 @@
-CREATE DATABASE stock_management;
+drop database stock_management
 
-
+-- Create the database
+CREATE DATABASE IF NOT EXISTS stock_management;
 USE stock_management;
 
-CREATE TABLE stocks (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    itemName VARCHAR(255) NOT NULL,
-    itemType VARCHAR(255) NOT NULL,
-    category ENUM('Camera', 'Wire', 'Landline Phone', 'Video Phone') NOT NULL,
-    quantity INT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+-- Drop existing tables to avoid conflicts
+DROP TABLE IF EXISTS stock_transactions;
+DROP TABLE IF EXISTS purchases;
+DROP TABLE IF EXISTS stocks;
+DROP TABLE IF EXISTS suppliers;
+DROP TABLE IF EXISTS users;
+
+-- Create Users Table
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     department VARCHAR(255) NOT NULL
 );
+
+-- Insert sample users
 INSERT INTO users (username, password, department) VALUES
 ('procurement_user', 'procurement123', 'procurement'), 
-('sales_user', 'sales123', 'sales'); 
+('sales_user', 'sales123', 'sales');
+
+-- Create Suppliers Table
+CREATE TABLE suppliers (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    contact VARCHAR(255),
+    email VARCHAR(255)
+);
+
+-- Create Stocks Table
+CREATE TABLE stocks (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    item_name VARCHAR(255) NOT NULL,
+    brand VARCHAR(255),
+    quantity INT NOT NULL,
+    unit VARCHAR(50),
+    cost DECIMAL(10, 2),
+    serial_no VARCHAR(255),
+    quality VARCHAR(50),
+    supplier_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (supplier_id) REFERENCES suppliers(id)
+);
+
+-- Create Stock Transactions Table
+CREATE TABLE stock_transactions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    item_id INT,
+    transaction_type ENUM('add', 'remove') NOT NULL,
+    quantity INT NOT NULL,
+    date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (item_id) REFERENCES stocks(id)
+);
+
+-- Create Purchases Table
+CREATE TABLE purchases (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    item_id INT,
+    supplier_id INT,
+    quantity INT NOT NULL,
+    purchase_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (item_id) REFERENCES stocks(id),
+    FOREIGN KEY (supplier_id) REFERENCES suppliers(id)
+);
+
+-- Select all data from the stocks table for verification
+SELECT * FROM stocks;

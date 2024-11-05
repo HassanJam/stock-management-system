@@ -42,21 +42,26 @@ const ViewStock = () => {
                     <TableHead>
                         <TableRow>
                             <TableCell>Item Name</TableCell>
-                            <TableCell>Item Type</TableCell>
-                            <TableCell>Category</TableCell>
-                            <TableCell>Supplier</TableCell>
+                            <TableCell>Brand</TableCell>
                             <TableCell>Quantity</TableCell>
-                            <TableCell>Actions</TableCell> {/* Add actions header */}
+                            <TableCell>Unit</TableCell>
+                            <TableCell>Cost</TableCell>
+                            <TableCell>Serial No.</TableCell>
+                            <TableCell>Quality</TableCell>
+                            <TableCell>Supplier</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {stocks.map((stock) => (
                             <TableRow key={stock.id}>
                                 <TableCell>{stock.item_name}</TableCell>
-                                <TableCell>{stock.item_type}</TableCell>
-                                <TableCell>{stock.category_name}</TableCell>
-                                <TableCell>{stock.supplier_name}</TableCell>
+                                <TableCell>{stock.brand}</TableCell>
                                 <TableCell>{stock.quantity}</TableCell>
+                                <TableCell>{stock.unit}</TableCell>
+                                <TableCell>{stock.cost}</TableCell>
+                                <TableCell>{stock.serial_no}</TableCell>
+                                <TableCell>{stock.quality}</TableCell>
+                                <TableCell>{stock.supplier_name}</TableCell>
                                 <TableCell>
                                     <Button
                                         variant="contained"

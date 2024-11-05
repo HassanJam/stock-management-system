@@ -33,16 +33,25 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
     const { id } = req.params;
     try {
-        const [stock] = await pool.query('SELECT * FROM stocks WHERE id = ?', [id]);
+        const [stock] = await pool.query(
+            `SELECT stocks.*, suppliers.name AS supplier_name 
+             FROM stocks 
+             JOIN suppliers ON stocks.supplier_id = suppliers.id 
+             WHERE stocks.id = ?`,
+            [id]
+        );
+        
         if (stock.length === 0) {
             return res.status(404).json({ message: 'Stock item not found' });
         }
+        
         res.json(stock[0]);
     } catch (err) {
         console.error(err);
         res.status(500).send('Server Error');
     }
 });
+
 
 // Update a stock item
 router.put('/:id', async (req, res) => {
