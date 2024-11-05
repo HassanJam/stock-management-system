@@ -7,6 +7,7 @@ require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 5000;
 
+
 // Middleware
 app.use(cors());
 app.use(express.json());
@@ -26,12 +27,22 @@ db.connect((err) => {
     }
     console.log('Connected to the database');
 });
+
+const userRoutes = require('./routes/UserRoutes');
+const supplierRoutes = require('./routes/SupplierRoutes');
+const stockTransactionRoutes = require('./routes/StockTransactionRoutes');
+const purchaseRoutes = require('./routes/PurchaseRoutes');
 const authRoutes = require('./routes/authRoutes');
+const stockRoutes = require('./routes/stockRoutes');
+
+app.use('/api/users', userRoutes);
+app.use('/api/suppliers', supplierRoutes);
+app.use('/api/stock_transactions', stockTransactionRoutes);
+app.use('/api/purchases', purchaseRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/stocks', stockRoutes);
 
 // Import stock routes
-const stockRoutes = require('./routes/stock'); // Add this line
-app.use('/api/stocks', stockRoutes); // And this line
 
 // Start the server
 app.listen(port, () => {
