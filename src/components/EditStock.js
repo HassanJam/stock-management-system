@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Typography, TextField, Button, Box, MenuItem, FormControl, InputLabel, Select } from '@mui/material';
+import { Typography, TextField, Button, Box, MenuItem, FormControl, InputLabel, Select, Snackbar, Alert } from '@mui/material';
 import api from '../api/api.js';
 
 const { stocks_api, suppliers_api, categories_api } = api; // Ensure you import correct APIs
@@ -9,81 +9,76 @@ const { stocks_api, suppliers_api, categories_api } = api; // Ensure you import 
 const EditStock = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const [stock, setStock] = useState({ item_name: '', item_type: '', quantity: '', category_id: '', supplier_id: '' });
-    const [categories, setCategories] = useState([]);
+    const [itemName, setItemName] = useState('');
+    const [brand, setBrand] = useState('');
+    const [quantity, setQuantity] = useState('');
+    const [unit, setUnit] = useState('');
+    const [cost, setCost] = useState('');
+    const [serialNo, setSerialNo] = useState('');
+    const [quality, setQuality] = useState('');
+    const [supplier, setSupplier] = useState('');
+    const [successMessage, setSuccessMessage] = useState(false);
     const [suppliers, setSuppliers] = useState([]);
 
     useEffect(() => {
-        const dummyCategories = [
-            { id: 1, name: 'Electronics' },
-            { id: 2, name: 'Furniture' },
-            { id: 3, name: 'Clothing' },
-            { id: 4, name: 'Books' },
-            { id: 5, name: 'Toys' },
-            { id: 6, name: 'Groceries' },
-            { id: 7, name: 'Stationery' },
-        ];
-
-        // Dummy suppliers data
-        const dummySuppliers = [
-            { id: 1, name: 'Supplier A' },
-            { id: 2, name: 'Supplier B' },
-            { id: 3, name: 'Supplier C' },
-            { id: 4, name: 'Supplier D' },
-            { id: 5, name: 'Supplier E' },
-        ];
         const fetchStock = async () => {
             try {
                 const response = await axios.get(`${stocks_api}/${id}`);
-                console.log("Fetched Stock:", response.data); // Debug log
-                setStock(response.data);
+                const stockData = response.data;
+                setItemName(stockData.item_name);
+                setBrand(stockData.brand);
+                setQuantity(stockData.quantity);
+                setUnit(stockData.unit);
+                setCost(stockData.cost);
+                setSerialNo(stockData.serial_no);
+                setQuality(stockData.quality);
+                setSupplier(stockData.supplier_id);
             } catch (error) {
                 console.error("Failed to fetch stock.", error);
             }
         };
-        
 
-        const fetchCategories = async () => {
-            try {
-                const response = await axios.get(categories_api);
-                console.log("Fetched Categories:", response.data); // Debug log
-                setCategories(response.data);
-            } catch (error) {
-                console.error("Failed to fetch categories.", error);
-            }
-        };
-        
         const fetchSuppliers = async () => {
             try {
                 const response = await axios.get(suppliers_api);
-                console.log("Fetched Suppliers:", response.data); // Debug log
                 setSuppliers(response.data);
             } catch (error) {
                 console.error("Failed to fetch suppliers.", error);
             }
         };
-        
 
         fetchStock();
-        fetchCategories();
         fetchSuppliers();
-        // Set dummy data to state
-        setCategories(dummyCategories);
-        setSuppliers(dummySuppliers);
     }, [id]);
-
-    const handleChange = (e) => {
-        setStock({ ...stock, [e.target.name]: e.target.value });
-    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const updatedStock = {
+            item_name: itemName,
+            brand,
+            quantity,
+            unit,
+            cost,
+            serial_no: serialNo,
+            quality,
+            supplier_id: supplier,
+        };
+
         try {
-            await axios.put(`${stocks_api}/${id}`, stock);
-            navigate('/dashboard/view-stock');
+            await axios.put(`${stocks_api}/${id}`, updatedStock);
+            setSuccessMessage(true);
+            // Optionally, navigate after a delay
+            setTimeout(() => {
+                navigate('/dashboard/view-stock');
+            }, 2000);
         } catch (error) {
             console.error("Failed to update stock.", error.response ? error.response.data : error);
+            alert('Failed to update stock.');
         }
+    };
+
+    const handleCloseSnackbar = () => {
+        setSuccessMessage(false);
     };
 
     return (
@@ -95,49 +90,86 @@ const EditStock = () => {
                 <TextField
                     fullWidth
                     label="Item Name"
-                    name="item_name"
-                    value={stock.item_name}
-                    onChange={handleChange}
+                    value={itemName}
+                    onChange={(e) => setItemName(e.target.value)}
                     required
                     margin="normal"
                     variant="outlined"
                 />
                 <TextField
                     fullWidth
-                    label="Item Type"
-                    name="item_type"
-                    value={stock.item_type}
-                    onChange={handleChange}
+                    label="Brand"
+                    value={brand}
+                    onChange={(e) => setBrand(e.target.value)}
+                    required
+                    margin="normal"
+                    variant="outlined"
+                />
+                <TextField
+                    fullWidth
+                    label="Quantity"
+                    type="number"
+                    value={quantity}
+                    onChange={(e) => setQuantity(e.target.value)}
                     required
                     margin="normal"
                     variant="outlined"
                 />
                 <FormControl fullWidth margin="normal" variant="outlined">
-                    <InputLabel>Category</InputLabel>
+                    <InputLabel>Unit</InputLabel>
                     <Select
-                        name="category_id"
-                        value={stock.category_id}
-                        onChange={handleChange}
-                        label="Category"
+                        value={unit}
+                        onChange={(e) => setUnit(e.target.value)}
                         required
                     >
                         <MenuItem value="">
-                            <em>Select a category</em>
+                            <em>Select unit</em>
                         </MenuItem>
-                        {categories.map((cat) => (
-                            <MenuItem key={cat.id} value={cat.id}>
-                                {cat.name}
-                            </MenuItem>
-                        ))}
+                        <MenuItem value="pcs">Pieces</MenuItem>
+                        <MenuItem value="kg">Kilograms</MenuItem>
+                        <MenuItem value="liters">Liters</MenuItem>
+                        <MenuItem value="m">Meters</MenuItem>
+                    </Select>
+                </FormControl>
+
+                <TextField
+                    fullWidth
+                    label="Cost Per Unit"
+                    type="number"
+                    value={cost}
+                    onChange={(e) => setCost(e.target.value)}
+                    required
+                    margin="normal"
+                    variant="outlined"
+                />
+                <TextField
+                    fullWidth
+                    label="Serial Number"
+                    value={serialNo}
+                    onChange={(e) => setSerialNo(e.target.value)}
+                    margin="normal"
+                    variant="outlined"
+                />
+                <FormControl fullWidth margin="normal" variant="outlined">
+                    <InputLabel>Quality</InputLabel>
+                    <Select
+                        value={quality}
+                        onChange={(e) => setQuality(e.target.value)}
+                        required
+                    >
+                        <MenuItem value="">
+                            <em>Select quality</em>
+                        </MenuItem>
+                        <MenuItem value="new">New</MenuItem>
+                        <MenuItem value="used">Used</MenuItem>
+                        <MenuItem value="refurbished">Refurbished</MenuItem>
                     </Select>
                 </FormControl>
                 <FormControl fullWidth margin="normal" variant="outlined">
                     <InputLabel>Supplier</InputLabel>
                     <Select
-                        name="supplier_id"
-                        value={stock.supplier_id}
-                        onChange={handleChange}
-                        label="Supplier"
+                        value={supplier}
+                        onChange={(e) => setSupplier(e.target.value)}
                         required
                     >
                         <MenuItem value="">
@@ -150,17 +182,6 @@ const EditStock = () => {
                         ))}
                     </Select>
                 </FormControl>
-                <TextField
-                    fullWidth
-                    label="Quantity"
-                    name="quantity"
-                    type="number"
-                    value={stock.quantity}
-                    onChange={handleChange}
-                    required
-                    margin="normal"
-                    variant="outlined"
-                />
                 <Button
                     fullWidth
                     variant="contained"
@@ -171,6 +192,17 @@ const EditStock = () => {
                     Update Stock
                 </Button>
             </form>
+
+            <Snackbar
+                open={successMessage}
+                autoHideDuration={3000}
+                onClose={handleCloseSnackbar}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            >
+                <Alert onClose={handleCloseSnackbar} severity="success" variant="filled">
+                    Stock updated successfully!
+                </Alert>
+            </Snackbar>
         </Box>
     );
 };
