@@ -34,34 +34,55 @@ const LoginPage = () => {
     };
 
     return (
-        <Container maxWidth="xs">
-            <Typography variant="h4" gutterBottom align="center">
-                Login
-            </Typography>
-            <Box component="form" onSubmit={handleLogin} display="flex" flexDirection="column" gap={2}>
-                <TextField
-                    label="Username"
-                    variant="outlined"
-                    fullWidth
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    required
-                />
-                <TextField
-                    label="Password"
-                    type="password"
-                    variant="outlined"
-                    fullWidth
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                />
-                
-                <Button type="submit" variant="contained" color="primary" fullWidth>
-                    Login
-                </Button>
-            </Box>
-        </Container>
+        <div style={{ 
+            background: 'linear-gradient(to bottom right, #e3f2fd, #bbdefb)', // Match gradient background from Dashboard
+            minHeight: '100vh' 
+        }}>
+            <Header />
+            <Container 
+                maxWidth="xs" 
+                sx={{ 
+                    display: 'flex', 
+                    flexDirection: 'column', 
+                    alignItems: 'center', 
+                    justifyContent: 'center', 
+                    minHeight: 'calc(100vh - 64px)', // Adjust for the height of the header
+                }}
+            >
+                <Paper elevation={3} sx={{ padding: 3, borderRadius: 2, bgcolor: '#f9f9f9', width: '100%' }}>
+                    <Typography variant="h4" gutterBottom align="center" sx={{ color: '#1976d2' }}>
+                        Login
+                    </Typography>
+                    <Box component="form" onSubmit={handleLogin} display="flex" flexDirection="column" gap={2}>
+                        <TextField
+                            label="Username"
+                            variant="outlined"
+                            fullWidth
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            required
+                        />
+                        <TextField
+                            label="Password"
+                            type="password"
+                            variant="outlined"
+                            fullWidth
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
+                        <Button type="submit" variant="contained" color="primary" fullWidth>
+                            Login
+                        </Button>
+                    </Box>
+                </Paper>
+            </Container>
+            <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+                <Alert onClose={handleCloseSnackbar} severity="error" sx={{ width: '100%' }}>
+                    {error}
+                </Alert>
+            </Snackbar>
+        </div>
     );
 };
 
