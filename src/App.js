@@ -8,6 +8,7 @@ import AddStockPage from './components/AddStock';
 import ViewStockPage from './components/ViewStock';
 import EditStockPage from './components/EditStock';
 import AddSupplierPage from './components/AddSupplier';
+import PurchaseOrderPage from './components/PurchaseOrder';
 import ProtectedRoute from './components/ProtectedRoute';
 
 const App = () => {
@@ -35,6 +36,10 @@ const App = () => {
                         <Route 
                             path="add-supplier" 
                             element={<ProtectedRoute element={<AddSupplierPage />} />} 
+                        />
+                        <Route 
+                            path="purchase-order" 
+                            element={<ProtectedRoute element={<PurchaseOrderPage />} />} 
                         />
                         
                         </Route>

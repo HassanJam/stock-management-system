@@ -8,6 +8,7 @@ import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
 import { Box, Container, Typography } from '@mui/material';
 import AddSupplier from '../components/AddSupplier';
+import PurchaseOrder from '../components/PurchaseOrder';
 
 const Dashboard = () => {
     const { user, logout } = useUser();
@@ -41,7 +42,6 @@ const Dashboard = () => {
                     }}
                 >
                     <Container>
-
                         <Routes>
                             {user.department === 'procurement' && (
                                 <>
@@ -49,10 +49,12 @@ const Dashboard = () => {
                                     <Route path="view-stock" element={<ViewStock />} />
                                     <Route path="edit-stock/:id" element={<EditStock />} />
                                     <Route path="add-supplier" element={<AddSupplier />} />
+                                    <Route path="purchase-order" element={<PurchaseOrder />} />
                                 </>
                             )}
                             {user.department === 'sales' && (
                                 <>
+                                    <Route path="purchase-order" element={<PurchaseOrder />} />
                                     <Route path="view-stock" element={<ViewStock />} />
                                 </>
                             )}
