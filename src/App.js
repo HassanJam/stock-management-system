@@ -41,6 +41,11 @@ const App = () => {
                             path="purchase-order" 
                             element={<ProtectedRoute element={<PurchaseOrderPage />} />} 
                         />
+                        <Route 
+                            path="add-purchase-order-request" 
+                            element={<ProtectedRoute element={<AddPurchaseOrderRequest />} />} 
+                        />
+                        
                         
                         </Route>
                 </Routes>

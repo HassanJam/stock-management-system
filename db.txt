@@ -75,10 +75,9 @@ CREATE TABLE purchase_orders_request (
     item_name VARCHAR(255) NOT NULL,
     quantity BIGINT NOT NULL,
     status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
-    sales_user_id INT NOT NULL,
+    user_id INT NOT NULL,
     submission_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (sales_user_id) REFERENCES users(id),
-    FOREIGN KEY (procurement_user_id) REFERENCES users(id)
+    FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
 -- Select all data from the stocks table for verification
