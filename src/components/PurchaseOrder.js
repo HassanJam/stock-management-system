@@ -29,7 +29,7 @@ const PurchaseOrder = () => {
 
     // Navigate to the form for adding a new PO
     const handleAddNewPO = () => {
-        window.location.href = '/create-po';
+        window.location.href = '/add-purchase-order-request';
     };
 
     return (

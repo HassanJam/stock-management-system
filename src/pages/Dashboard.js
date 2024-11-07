@@ -56,7 +56,7 @@ const Dashboard = () => {
                             {user.department === 'sales' && (
                                 <>
                                     <Route path="purchase-order" element={<PurchaseOrder />} />
-                                    <Route path="add-purchase-order" element={<AddPurchaseOrderRequest />} />
+                                    <Route path="add-purchase-order-request" element={<AddPurchaseOrderRequest />} />
                                     <Route path="view-stock" element={<ViewStock />} />
                                 </>
                             )}
