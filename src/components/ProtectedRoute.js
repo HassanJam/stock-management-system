@@ -1,4 +1,3 @@
-// /frontend/src/components/ProtectedRoute.js
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useUser } from '../context/UserContext';
@@ -6,7 +5,11 @@ import { useUser } from '../context/UserContext';
 const ProtectedRoute = ({ element }) => {
     const { user } = useUser();
 
-    return user ? element : <Navigate to="/" />;
+    if (!user) {
+        return <Navigate to="/" replace />;
+    }
+
+    return element;
 };
 
 export default ProtectedRoute;

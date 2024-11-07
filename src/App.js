@@ -1,4 +1,3 @@
-// src/App.js
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { UserProvider } from './context/UserContext';
@@ -10,7 +9,7 @@ import EditStockPage from './components/EditStock';
 import AddSupplierPage from './components/AddSupplier';
 import PurchaseOrderPage from './components/PurchaseOrder';
 import ProtectedRoute from './components/ProtectedRoute';
-import AddPurchaseOrderRequest from './components/AddPurchaseOrderRequest';
+import AddPurchaseOrderRequest from './components/AddPurchaseOrderRequest.js';
 
 const App = () => {
     return (
@@ -19,9 +18,8 @@ const App = () => {
                 <Routes>
                     <Route path="/" element={<LoginPage />} />
                     <Route 
-                        path="/dashboard" 
-                        element={<ProtectedRoute element={<Dashboard />} />} 
-                    >
+                        path="/dashboard/*" 
+                        element={<ProtectedRoute element={<Dashboard />} />} >
                         <Route 
                             path="add-stock" 
                             element={<ProtectedRoute element={<AddStockPage />} />} 
@@ -39,14 +37,16 @@ const App = () => {
                             element={<ProtectedRoute element={<AddSupplierPage />} />} 
                         />
                         <Route 
-                            path="purchase-order" 
+                            path="purchase-order/*" 
                             element={<ProtectedRoute element={<PurchaseOrderPage />} />} 
-                        />
-                        <Route 
-                            path="add-purchase-order-request" 
-                            element={<ProtectedRoute element={<AddPurchaseOrderRequest />} />} 
-                        />
+                        >
+                            <Route 
+                                path="add-purchase-order-request" 
+                                element={<ProtectedRoute element={<AddPurchaseOrderRequest />} />} 
+                            />
                         </Route>
+
+                    </Route>
                 </Routes>
             </Router>
         </UserProvider>

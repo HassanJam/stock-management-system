@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { useUser } from '../context/UserContext';
 import AddStock from '../components/AddStock';
 import ViewStock from '../components/ViewStock';
@@ -12,17 +12,13 @@ import PurchaseOrder from '../components/PurchaseOrder';
 import AddPurchaseOrderRequest from '../components/AddPurchaseOrderRequest';
 
 const Dashboard = () => {
-    const { user, logout } = useUser();
-    const navigate = useNavigate();
+    const { user } = useUser();
 
     if (!user) {
         return <Typography variant="h6" color="error">Please log in to view the dashboard.</Typography>;
     }
 
-    const handleLogout = () => {
-        logout();
-        navigate('/');
-    };
+
 
     return (
         <div style={{ 
@@ -65,6 +61,7 @@ const Dashboard = () => {
                                     <Route path="add-stock" element={<AddStock />} />
                                     <Route path="view-stock" element={<ViewStock />} />
                                     <Route path="edit-stock/:id" element={<EditStock />} />
+
                                 </>
                             )}
                             <Route path="edit-stock/:id" element={<EditStock />} />

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Drawer, List, ListItem, ListItemText, Typography } from '@mui/material';
+import {  Drawer, List, ListItem, ListItemText } from '@mui/material';
 import { Link, useLocation } from 'react-router-dom';
 
 const Sidebar = ({ department }) => {

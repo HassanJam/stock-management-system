@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Typography, Box, Paper, List, ListItem, ListItemText, Divider } from '@mui/material';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
+
 
 const PurchaseOrder = () => {
     const [pendingOrders, setPendingOrders] = useState([]);
     const [acceptedOrders, setAcceptedOrders] = useState([]);
     const [rejectedOrders, setRejectedOrders] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
-        // Fetch all POs and categorize them by status
         const fetchOrders = async () => {
             try {
                 const response = await axios.get('/api/purchase-orders');
                 const orders = response.data;
-
-                // Categorize orders based on their status
                 setPendingOrders(orders.filter(order => order.status === 'pending'));
                 setAcceptedOrders(orders.filter(order => order.status === 'accepted'));
                 setRejectedOrders(orders.filter(order => order.status === 'rejected'));
@@ -27,11 +28,6 @@ const PurchaseOrder = () => {
         fetchOrders();
     }, []);
 
-    // Navigate to the form for adding a new PO
-    const handleAddNewPO = () => {
-        window.location.href = '/add-purchase-order-request';
-    };
-
     return (
         <Box sx={{ p: 3 }}>
             <Typography variant="h4" align="center" gutterBottom>
@@ -40,14 +36,17 @@ const PurchaseOrder = () => {
             <Button
                 variant="contained"
                 color="primary"
-                onClick={handleAddNewPO}
+                onClick={() => navigate(`/dashboard/add-purchase-order-request`)}
                 sx={{ mb: 3 }}
             >
                 Add New PO
             </Button>
 
+            {/* Render child routes */}
+            <Outlet />
+
+            {/* Columns for orders */}
             <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center' }}>
-                {/* Pending Orders Column */}
                 <Box sx={{ width: '30%' }}>
                     <Typography variant="h6" align="center">
                         Pending Orders
@@ -57,7 +56,7 @@ const PurchaseOrder = () => {
                             {pendingOrders.length > 0 ? (
                                 pendingOrders.map((order) => (
                                     <React.Fragment key={order.id}>
-                                        <ListItem>
+                                        <ListItem button>
                                             <ListItemText
                                                 primary={order.item_name}
                                                 secondary={`Qty: ${order.quantity} | Total: $${order.total_price}`}
@@ -73,7 +72,7 @@ const PurchaseOrder = () => {
                     </Paper>
                 </Box>
 
-                {/* Accepted Orders Column */}
+                {/* Similar logic for Accepted and Rejected Orders */}
                 <Box sx={{ width: '30%' }}>
                     <Typography variant="h6" align="center">
                         Accepted Orders
@@ -83,7 +82,7 @@ const PurchaseOrder = () => {
                             {acceptedOrders.length > 0 ? (
                                 acceptedOrders.map((order) => (
                                     <React.Fragment key={order.id}>
-                                        <ListItem>
+                                        <ListItem button>
                                             <ListItemText
                                                 primary={order.item_name}
                                                 secondary={`Qty: ${order.quantity} | Total: $${order.total_price}`}
@@ -98,8 +97,6 @@ const PurchaseOrder = () => {
                         </List>
                     </Paper>
                 </Box>
-
-                {/* Rejected Orders Column */}
                 <Box sx={{ width: '30%' }}>
                     <Typography variant="h6" align="center">
                         Rejected Orders
@@ -109,7 +106,7 @@ const PurchaseOrder = () => {
                             {rejectedOrders.length > 0 ? (
                                 rejectedOrders.map((order) => (
                                     <React.Fragment key={order.id}>
-                                        <ListItem>
+                                        <ListItem button>
                                             <ListItemText
                                                 primary={order.item_name}
                                                 secondary={`Qty: ${order.quantity} | Total: $${order.total_price}`}
@@ -128,5 +125,6 @@ const PurchaseOrder = () => {
         </Box>
     );
 };
+
 
 export default PurchaseOrder;

@@ -4,7 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Typography, TextField, Button, Box, MenuItem, FormControl, InputLabel, Select, Snackbar, Alert, Card, CardContent } from '@mui/material';
 import api from '../api/api.js';
 
-const { stocks_api, suppliers_api, categories_api } = api; // Ensure you import correct APIs
+const { stocks_api, suppliers_api } = api; // Ensure you import correct APIs
 
 const EditStock = () => {
     const { id } = useParams();
