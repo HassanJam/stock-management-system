@@ -38,9 +38,9 @@ CREATE TABLE stocks (
     id INT AUTO_INCREMENT PRIMARY KEY,
     item_name VARCHAR(255) NOT NULL,
     brand VARCHAR(255),
-    quantity INT NOT NULL,
+    quantity BIGINT NOT NULL,
     unit VARCHAR(50),
-    cost DECIMAL(10, 2),
+    cost DECIMAL(18, 2),
     serial_no VARCHAR(255),
     quality VARCHAR(50),
     supplier_id INT NOT NULL,
@@ -100,9 +100,4 @@ CREATE TABLE purchase_order_items (
 -- Select all data from the stocks table for verification
 SELECT * FROM stocks;
 
-ALTER TABLE stocks 
-MODIFY COLUMN quantity BIGINT NOT NULL;
-
-ALTER TABLE stocks 
-MODIFY COLUMN cost DECIMAL(18, 2);
 
