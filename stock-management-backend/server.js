@@ -34,13 +34,15 @@ const stockTransactionRoutes = require('./routes/StockTransactionRoutes');
 const purchaseRoutes = require('./routes/PurchaseRoutes');
 const authRoutes = require('./routes/authRoutes');
 const stockRoutes = require('./routes/stockRoutes');
+const purchaseOrderRoutes = require('./routes/purchaseOrderRoutes');
 
 app.use('/api/users', userRoutes);
 app.use('/api/suppliers', supplierRoutes);
-app.use('/api/stock_transactions', stockTransactionRoutes);
+app.use('/api/stockTransactions', stockTransactionRoutes);
 app.use('/api/purchases', purchaseRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/stocks', stockRoutes);
+app.use('/api/purchaseOrders', purchaseOrderRoutes);
 
 // Import stock routes
 
