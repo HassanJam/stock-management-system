@@ -10,6 +10,7 @@ import EditStockPage from './components/EditStock';
 import AddSupplierPage from './components/AddSupplier';
 import PurchaseOrderPage from './components/PurchaseOrder';
 import ProtectedRoute from './components/ProtectedRoute';
+import AddPurchaseOrderRequest from './components/AddPurchaseOrderRequest';
 
 const App = () => {
     return (

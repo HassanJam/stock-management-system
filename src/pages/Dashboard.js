@@ -60,6 +60,13 @@ const Dashboard = () => {
                                     <Route path="view-stock" element={<ViewStock />} />
                                 </>
                             )}
+                            {user.department === 'stock_manager' && (
+                                <>
+                                    <Route path="add-stock" element={<AddStock />} />
+                                    <Route path="view-stock" element={<ViewStock />} />
+                                    <Route path="edit-stock/:id" element={<EditStock />} />
+                                </>
+                            )}
                             <Route path="edit-stock/:id" element={<EditStock />} />
                         </Routes>
                     </Container>
