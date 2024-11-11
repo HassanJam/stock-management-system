@@ -9,7 +9,8 @@ import Sidebar from '../components/Sidebar';
 import { Box, Container, Typography } from '@mui/material';
 import AddSupplier from '../components/AddSupplier';
 import PurchaseOrder from '../components/PurchaseOrder';
-import AddPurchaseOrderRequest from '../components/AddPurchaseOrderRequest';
+import AddPurchaseOrder from '../components/AddPurchaseOrder';
+import EditPurchaseOrder from '../components/EditPurchaseOrder';
 
 const Dashboard = () => {
     const { user } = useUser();
@@ -52,7 +53,8 @@ const Dashboard = () => {
                             {user.department === 'sales' && (
                                 <>
                                     <Route path="purchase-order" element={<PurchaseOrder />} />
-                                    <Route path="add-purchase-order-request" element={<AddPurchaseOrderRequest />} />
+                                    <Route path="add-purchase-order" element={<AddPurchaseOrder />} />
+                                    <Route path="edit-purchase-order" element={<EditPurchaseOrder />} />
                                     <Route path="view-stock" element={<ViewStock />} />
                                 </>
                             )}

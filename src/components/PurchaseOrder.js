@@ -3,6 +3,7 @@ import { Button, Typography, Box, Paper, List, ListItem, ListItemText, Divider, 
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
+import { useUser } from '../context/UserContext';
 
 const PurchaseOrder = () => {
     const [pendingOrders, setPendingOrders] = useState([]);
@@ -11,11 +12,12 @@ const PurchaseOrder = () => {
     const [selectedOrder, setSelectedOrder] = useState(null); // State for the selected order
     const [isDialogOpen, setDialogOpen] = useState(false);    // State for dialog open/close
     const navigate = useNavigate();
+    const { user } = useUser();
 
     useEffect(() => {
         const fetchOrders = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/api/purchaseOrders/');
+                const response = await axios.get('http://localhost:5000/api/purchaseOrders');
                 const orders = response.data;
                 setPendingOrders(orders.filter(order => order.status === 'pending'));
                 setApprovedOrders(orders.filter(order => order.status === 'approved'));
@@ -63,6 +65,7 @@ const PurchaseOrder = () => {
                 >
                     Edit Order
                 </Button>
+
             </Box>
         </>
     );
@@ -72,14 +75,17 @@ const PurchaseOrder = () => {
             <Typography variant="h4" align="center" gutterBottom>
                 Purchase Order Dashboard
             </Typography>
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={() => navigate(`/dashboard/add-purchase-order-request`)}
-                sx={{ mb: 3 }}
-            >
-                Add New PO
-            </Button>
+
+            {user?.department === 'sales' && (
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => navigate(`/dashboard/add-purchase-order`)}
+                    sx={{ mb: 3 }}
+                >
+                    Add New PO
+                </Button>
+            )}
 
             <Outlet />
 
