@@ -10,7 +10,7 @@ import { Box, Container, Typography } from '@mui/material';
 import AddSupplier from '../components/AddSupplier';
 import PurchaseOrder from '../components/PurchaseOrder';
 import AddPurchaseOrder from '../components/AddPurchaseOrder';
-import EditPurchaseOrder from '../components/EditPurchaseOrder';
+import EditPurchaseOrder from '../components/EditPurchaseOrder.js';
 
 const Dashboard = () => {
     const { user } = useUser();
@@ -54,7 +54,7 @@ const Dashboard = () => {
                                 <>
                                     <Route path="purchase-order" element={<PurchaseOrder />} />
                                     <Route path="add-purchase-order" element={<AddPurchaseOrder />} />
-                                    <Route path="edit-purchase-order" element={<EditPurchaseOrder />} />
+                                    <Route path="edit-purchase-order/:id" element={<EditPurchaseOrder />} />
                                     <Route path="view-stock" element={<ViewStock />} />
                                 </>
                             )}

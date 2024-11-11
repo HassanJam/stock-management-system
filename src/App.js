@@ -9,42 +9,42 @@ import EditStockPage from './components/EditStock';
 import AddSupplierPage from './components/AddSupplier';
 import PurchaseOrderPage from './components/PurchaseOrder';
 import ProtectedRoute from './components/ProtectedRoute';
-import AddPurchaseOrder from './components/AddPurchaseOrder.js';
-import EditPurchaseOrder from './components/EditPurchaseOrder';
+import AddPurchaseOrder from './components/AddPurchaseOrder';
+import EditPurchaseOrder from './components/EditPurchaseOrder.js';
 
 const App = () => {
     return (
         <UserProvider>
             <Router>
                 <Routes>
+                    {/* Public route for login */}
                     <Route path="/" element={<LoginPage />} />
+
+                    {/* Protected routes */}
+                    <Route
+                        path="/dashboard/*"
+                        element={<ProtectedRoute element={<Dashboard />} />}
+                    >
                         <Route
-                            path="/dashboard/*"
-                            element={<ProtectedRoute element={<Dashboard />} />} >
-                            <Route
-                                path="add-stock"
-                                element={<ProtectedRoute element={<AddStockPage />} />}
-                            />
-                            <Route
-                                path="view-stock"
-                                element={<ProtectedRoute element={<ViewStockPage />} />}
-                            />
-                            <Route
-                                path="edit-stock/:id"
-                                element={<ProtectedRoute element={<EditStockPage />} />}
-                            />
-                            <Route
-                                path="add-supplier"
-                                element={<ProtectedRoute element={<AddSupplierPage />} />}
-                            />
-                            <Route
-                                path="purchase-order/*"
-                                element={<ProtectedRoute element={<PurchaseOrderPage />} />}
-                            >
-                            <Route
-                                path="add-purchase-order"
-                                element={<ProtectedRoute element={<AddPurchaseOrder />} />}
-                            />
+                            path="add-stock"
+                            element={<ProtectedRoute element={<AddStockPage />} />}
+                        />
+                        <Route
+                            path="view-stock"
+                            element={<ProtectedRoute element={<ViewStockPage />} />}
+                        />
+                        <Route
+                            path="edit-stock/:id"
+                            element={<ProtectedRoute element={<EditStockPage />} />}
+                        />
+                        <Route
+                            path="add-supplier"
+                            element={<ProtectedRoute element={<AddSupplierPage />} />}
+                        />
+                        <Route
+                            path="purchase-order/*"
+                            element={<ProtectedRoute element={<PurchaseOrderPage />} />}
+                        >
                             <Route
                                 path="add-purchase-order"
                                 element={<ProtectedRoute element={<AddPurchaseOrder />} />}
@@ -54,7 +54,6 @@ const App = () => {
                                 element={<ProtectedRoute element={<EditPurchaseOrder />} />}
                             />
                         </Route>
-
                     </Route>
                 </Routes>
             </Router>
