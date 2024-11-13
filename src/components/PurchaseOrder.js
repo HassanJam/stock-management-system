@@ -47,7 +47,7 @@ const PurchaseOrder = () => {
         <>
             <Typography variant="subtitle1">Client: {order.client}</Typography>
             <Typography variant="body2">Submission Date: {new Date(order.submission_date).toLocaleDateString()}</Typography>
-            <Typography variant="h6" color="primary">Total: ${parseFloat(order.total).toFixed(2)}</Typography>
+            <Typography variant="h6" color="primary">Total: Rs.{parseFloat(order.total).toFixed(2)}</Typography>
 
             {/* Action Buttons */}
             <Box sx={{ display: 'flex', gap: 1, mt: 2 }}>
@@ -183,11 +183,11 @@ const PurchaseOrder = () => {
 
                             <Typography variant="subtitle1">Client: {selectedOrder.client}</Typography>
                             <Typography variant="body2">Submission Date: {new Date(selectedOrder.submission_date).toLocaleDateString()}</Typography>
-                            <Typography variant="body2">Tax: ${parseFloat(selectedOrder.tax).toFixed(2)}</Typography>
-                            <Typography variant="body2">Shipping: ${parseFloat(selectedOrder.shipping).toFixed(2)}</Typography>
-                            <Typography variant="body2">Other: ${parseFloat(selectedOrder.other).toFixed(2)}</Typography>
-                            <Typography variant="body2">Subtotal: ${parseFloat(selectedOrder.subtotal).toFixed(2)}</Typography>
-                            <Typography variant="h6" color="primary">Total: ${parseFloat(selectedOrder.total).toFixed(2)}</Typography>
+                            <Typography variant="body2">Tax: Rs.{parseFloat(selectedOrder.tax).toFixed(2)}</Typography>
+                            <Typography variant="body2">Shipping: Rs.{parseFloat(selectedOrder.shipping).toFixed(2)}</Typography>
+                            <Typography variant="body2">Other: Rs.{parseFloat(selectedOrder.other).toFixed(2)}</Typography>
+                            <Typography variant="body2">Subtotal: Rs.{parseFloat(selectedOrder.subtotal).toFixed(2)}</Typography>
+                            <Typography variant="h6" color="primary">Total: Rs.{parseFloat(selectedOrder.total).toFixed(2)}</Typography>
 
 
                         </>
