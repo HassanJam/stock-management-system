@@ -4,15 +4,18 @@ const pool = require('../db'); // Import the database connection pool
 
 // Create a new purchase order with items
 router.post('/', async (req, res) => {
+
+    console.log("New PO added",req.body)
     const { client, user_id, tax, shipping, other, subtotal, total, items } = req.body;
 
     if (!items || !Array.isArray(items) || items.length === 0) {
         return res.status(400).json({ message: 'Items are required for a purchase order.' });
     }
 
-    // Start a transaction
+    // Get a connection from the pool
     const connection = await pool.getConnection();
     try {
+        // Start a transaction
         await connection.beginTransaction();
 
         // Step 1: Insert the purchase order
@@ -47,6 +50,7 @@ router.post('/', async (req, res) => {
         console.error(error);
         res.status(500).json({ message: 'Server error' });
     } finally {
+        // Release the connection back to the pool
         connection.release();
     }
 });
@@ -55,6 +59,7 @@ router.post('/', async (req, res) => {
 router.post('/:id/items', async (req, res) => {
     const { id: purchase_order_id } = req.params;
     const { item_name, quantity, unit_price, total_price } = req.body;
+
     try {
         const [result] = await pool.query(
             `INSERT INTO purchase_order_items (purchase_order_id, item_name, quantity, unit_price, total_price)
@@ -105,16 +110,58 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// Update purchase order status
+// Update purchase order with all fields
 router.put('/:id', async (req, res) => {
+
+    console.log("PO edited",req.body)
+
     const { id } = req.params;
-    const { status } = req.body;
+    const { client, user_id, status, tax, shipping, other, subtotal, total, items } = req.body;
+
+    // Convert tax, shipping, subtotal, and total to numbers
+    const parsedTax = parseFloat(tax);
+    const parsedShipping = parseFloat(shipping);
+    const parsedOther = parseFloat(other);
+    const parsedSubtotal = parseFloat(subtotal);
+    const parsedTotal = parseFloat(total);
+
+    // Ensure the required fields are provided and are valid numbers
+    if (!client || !user_id || isNaN(parsedTax) || isNaN(parsedShipping) || isNaN(parsedOther) || isNaN(parsedSubtotal) || isNaN(parsedTotal) || !status || !items || items.length === 0) {
+        return res.status(400).json({ message: 'All fields are required and must have valid values.' });
+    }
+
     try {
-        const [result] = await pool.query(`UPDATE purchase_orders SET status = ? WHERE id = ?`, [status, id]);
+        // Update the purchase order table with the main details
+        const [result] = await pool.query(
+            `UPDATE purchase_orders 
+             SET client = ?, user_id = ?, tax = ?, shipping = ?, other = ?, subtotal = ?, total = ?, status = ?
+             WHERE id = ?`,
+            [client, user_id, parsedTax, parsedShipping, parsedOther, parsedSubtotal, parsedTotal, status, id]
+        );
+
         if (result.affectedRows === 0) {
             return res.status(404).json({ message: 'Purchase order not found' });
         }
-        res.json({ message: 'Purchase order status updated successfully' });
+
+        // Now update the items in the 'purchase_order_items' table
+        // First, delete existing items associated with this order
+        await pool.query('DELETE FROM purchase_order_items WHERE purchase_order_id = ?', [id]);
+
+        // Insert new items
+        const itemPromises = items.map(item => {
+            const { item_name, quantity, unit_price, total_price } = item;
+            return pool.query(
+                `INSERT INTO purchase_order_items (purchase_order_id, item_name, quantity, unit_price, total_price) 
+                 VALUES (?, ?, ?, ?, ?)`,
+                [id, item_name, quantity, unit_price, total_price]
+            );
+        });
+
+        // Wait for all item insertions to complete
+        await Promise.all(itemPromises);
+
+        // Respond with success
+        res.json({ message: 'Purchase order updated successfully' });
     } catch (err) {
         console.error(err);
         res.status(500).send('Server Error');

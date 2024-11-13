@@ -17,6 +17,7 @@ const App = () => {
         <UserProvider>
             <Router>
                 <Routes>
+                    {/* Public route for login */}
                     <Route path="/" element={<LoginPage />} />
                         <Route
                             path="/dashboard/*"
@@ -50,7 +51,6 @@ const App = () => {
                                 element={<ProtectedRoute element={<EditPurchaseOrder />} />}
                             />
                         </Route>
-
                     </Route>
                 </Routes>
             </Router>
