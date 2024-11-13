@@ -56,10 +56,10 @@ const EditPurchaseOrder = () => {
         };
 
         try {
-            await axios.put(`${purchaseOrders_api}/${id}`, updatedPO);
+            await axios.put(`${po_api}/${id}`, updatedPO);
             setSuccessMessage(true);
             setTimeout(() => {
-                navigate('/dashboard/view-purchase-orders');
+                navigate('/dashboard/purchase-orders');
             }, 2000);
         } catch (error) {
             console.error("Failed to update purchase order.", error.response ? error.response.data : error);

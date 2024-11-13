@@ -7,9 +7,9 @@ import AddStockPage from './components/AddStock';
 import ViewStockPage from './components/ViewStock';
 import EditStockPage from './components/EditStock';
 import AddSupplierPage from './components/AddSupplier';
-import PurchaseOrderPage from './components/PurchaseOrder';
+import RequisitionForm from './components/requisitionForm';
 import ProtectedRoute from './components/ProtectedRoute';
-import AddPurchaseOrder from './components/AddPurchaseOrder.js';
+import AddRequisitionOrder from './components/addRequisitionOrder';
 import EditPurchaseOrder from './components/EditPurchaseOrder';
 
 const App = () => {
@@ -38,16 +38,12 @@ const App = () => {
                                 element={<ProtectedRoute element={<AddSupplierPage />} />}
                             />
                             <Route
-                                path="purchase-order/*"
-                                element={<ProtectedRoute element={<PurchaseOrderPage />} />}
+                                path="requisitionForm/*"
+                                element={<ProtectedRoute element={<RequisitionForm />} />}
                             >
                             <Route
-                                path="add-purchase-order"
-                                element={<ProtectedRoute element={<AddPurchaseOrder />} />}
-                            />
-                            <Route
-                                path="add-purchase-order"
-                                element={<ProtectedRoute element={<AddPurchaseOrder />} />}
+                                path="addRequisitionOrder"
+                                element={<ProtectedRoute element={<AddRequisitionOrder />} />}
                             />
                             <Route
                                 path="edit-purchase-order/:id"

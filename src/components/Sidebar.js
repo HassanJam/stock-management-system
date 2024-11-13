@@ -11,7 +11,7 @@ const Sidebar = ({ department }) => {
             { text: 'Add Stock', path: '/dashboard/add-stock' },
             { text: 'View Stock', path: '/dashboard/view-stock' },
             { text: 'Add Supplier', path: '/dashboard/add-supplier' },
-            { text: 'Purchase Order', path: '/dashboard/purchase-order' }
+            { text: 'Purchase Order', path: '/dashboard/requisitionForm' }
         ],
         stock_manager: [
             { text: 'Dashboard', path: '/dashboard' },
@@ -20,7 +20,7 @@ const Sidebar = ({ department }) => {
         ],
         sales: [
             { text: 'View Sales Stock', path: '/dashboard/view-stock' },
-            { text: 'Purchase Order', path: '/dashboard/purchase-order' }
+            { text: 'Requisition Form', path: '/dashboard/requisitionForm' }
 
         ]
     };

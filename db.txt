@@ -105,3 +105,10 @@ SELECT * FROM stocks;
 
 
 //npm install @mui/icons-material
+
+
+CREATE TABLE requisitionForm (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    projectName VARCHAR(255) NOT NULL,
+    projectDescription Varchar(255) NOT NULL
+);

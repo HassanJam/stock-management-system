@@ -8,8 +8,8 @@ import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
 import { Box, Container, Typography } from '@mui/material';
 import AddSupplier from '../components/AddSupplier';
-import PurchaseOrder from '../components/PurchaseOrder';
-import AddPurchaseOrder from '../components/AddPurchaseOrder';
+import RequisitionForm from '../components/requisitionForm';
+import AddPurchaseOrder from '../components/addRequisitionOrder';
 import EditPurchaseOrder from '../components/EditPurchaseOrder';
 
 const Dashboard = () => {
@@ -47,14 +47,14 @@ const Dashboard = () => {
                                     <Route path="view-stock" element={<ViewStock />} />
                                     <Route path="edit-stock/:id" element={<EditStock />} />
                                     <Route path="add-supplier" element={<AddSupplier />} />
-                                    <Route path="purchase-order" element={<PurchaseOrder />} />
+                                    <Route path="requisitionForm" element={<RequisitionForm />} />
                                 </>
                             )}
                             {user.department === 'sales' && (
                                 <>
-                                    <Route path="purchase-order" element={<PurchaseOrder />} />
-                                    <Route path="add-purchase-order" element={<AddPurchaseOrder />} />
-                                    <Route path="edit-purchase-order" element={<EditPurchaseOrder />} />
+                                    <Route path="requisitionForm" element={<RequisitionForm />} />
+                                    <Route path="addRequisitionOrder" element={<AddPurchaseOrder />} />
+                                    <Route path="edit-purchase-order/:id" element={<EditPurchaseOrder />} />
                                     <Route path="view-stock" element={<ViewStock />} />
                                 </>
                             )}

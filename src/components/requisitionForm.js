@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
 import { useUser } from '../context/UserContext';
 
-const PurchaseOrder = () => {
+const RequisitionForm = () => {
     const [pendingOrders, setPendingOrders] = useState([]);
     const [approvedOrders, setApprovedOrders] = useState([]);
     const [rejectedOrders, setRejectedOrders] = useState([]);
@@ -65,7 +65,6 @@ const PurchaseOrder = () => {
                 >
                     Edit Order
                 </Button>
-
             </Box>
         </>
     );
@@ -73,17 +72,17 @@ const PurchaseOrder = () => {
     return (
         <Box sx={{ p: 3 }}>
             <Typography variant="h4" align="center" gutterBottom>
-                Purchase Order Dashboard
+                Requisition Form Dashboard
             </Typography>
 
             {user?.department === 'sales' && (
                 <Button
                     variant="contained"
                     color="primary"
-                    onClick={() => navigate(`/dashboard/add-purchase-order`)}
+                    onClick={() => navigate(`/dashboard/addRequisitionOrder`)}
                     sx={{ mb: 3 }}
                 >
-                    Add New PO
+                    Add New Form
                 </Button>
             )}
 
@@ -203,4 +202,4 @@ const PurchaseOrder = () => {
     );
 };
 
-export default PurchaseOrder;
+export default RequisitionForm;
