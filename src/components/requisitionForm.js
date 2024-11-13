@@ -61,7 +61,7 @@ const RequisitionForm = () => {
                 <Button
                     variant="contained"
                     color="secondary"
-                    onClick={() => navigate(`/dashboard/edit-purchase-order/${order.id}`)}
+                    onClick={() => navigate(`/dashboard/editRequisitionOrder/${order.id}`)}
                 >
                     Edit Order
                 </Button>

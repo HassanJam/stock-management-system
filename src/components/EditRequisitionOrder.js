@@ -74,7 +74,7 @@ const EditPurchaseOrder = () => {
     return (
         <Box sx={{ p: 3 }}>
             <Typography variant="h4" align="center" gutterBottom>
-                Edit Purchase Order
+                Edit Requisition form
             </Typography>
             <Card variant="outlined" sx={{ maxWidth: 500, margin: '0 auto', boxShadow: 3, borderRadius: 2, bgcolor: '#f5f5f5' }}>
                 <CardContent>

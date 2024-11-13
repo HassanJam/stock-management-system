@@ -10,7 +10,7 @@ import AddSupplierPage from './components/AddSupplier';
 import RequisitionForm from './components/requisitionForm';
 import ProtectedRoute from './components/ProtectedRoute';
 import AddRequisitionOrder from './components/addRequisitionOrder';
-import EditPurchaseOrder from './components/EditPurchaseOrder';
+import EditPurchaseOrder from './components/EditRequisitionOrder';
 
 const App = () => {
     return (
@@ -23,19 +23,19 @@ const App = () => {
                             path="/dashboard/*"
                             element={<ProtectedRoute element={<Dashboard />} />} >
                             <Route
-                                path="add-stock"
+                                path="addStock"
                                 element={<ProtectedRoute element={<AddStockPage />} />}
                             />
                             <Route
-                                path="view-stock"
+                                path="viewStock"
                                 element={<ProtectedRoute element={<ViewStockPage />} />}
                             />
                             <Route
-                                path="edit-stock/:id"
+                                path="editStock/:id"
                                 element={<ProtectedRoute element={<EditStockPage />} />}
                             />
                             <Route
-                                path="add-supplier"
+                                path="addSupplier"
                                 element={<ProtectedRoute element={<AddSupplierPage />} />}
                             />
                             <Route
@@ -47,7 +47,7 @@ const App = () => {
                                 element={<ProtectedRoute element={<AddRequisitionOrder />} />}
                             />
                             <Route
-                                path="edit-purchase-order/:id"
+                                path="editRequisitionOrder/:id"
                                 element={<ProtectedRoute element={<EditPurchaseOrder />} />}
                             />
                         </Route>

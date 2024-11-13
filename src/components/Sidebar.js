@@ -8,18 +8,18 @@ const Sidebar = ({ department }) => {
     const sidebarOptions = {
         procurement: [
             { text: 'Dashboard', path: '/dashboard' },
-            { text: 'Add Stock', path: '/dashboard/add-stock' },
-            { text: 'View Stock', path: '/dashboard/view-stock' },
-            { text: 'Add Supplier', path: '/dashboard/add-supplier' },
+            { text: 'Add Stock', path: '/dashboard/addStock' },
+            { text: 'View Stock', path: '/dashboard/viewStock' },
+            { text: 'Add Supplier', path: '/dashboard/addSupplier' },
             { text: 'Purchase Order', path: '/dashboard/requisitionForm' }
         ],
         stock_manager: [
             { text: 'Dashboard', path: '/dashboard' },
-            { text: 'Add Stock', path: '/dashboard/add-stock' },
-            { text: 'View Stock', path: '/dashboard/view-stock' },
+            { text: 'Add Stock', path: '/dashboard/addStock' },
+            { text: 'View Stock', path: '/dashboard/viewStock' },
         ],
         sales: [
-            { text: 'View Sales Stock', path: '/dashboard/view-stock' },
+            { text: 'View Sales Stock', path: '/dashboard/viewStock' },
             { text: 'Requisition Form', path: '/dashboard/requisitionForm' }
 
         ]

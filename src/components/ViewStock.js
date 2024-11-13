@@ -159,7 +159,7 @@ const ViewStock = () => {
                                         <Button
                                             variant="contained"
                                             color="primary"
-                                            onClick={() => navigate(`/dashboard/edit-stock/${stock.id}`)}
+                                            onClick={() => navigate(`/dashboard/editStock/${stock.id}`)}
                                             sx={{ mr: 1 }}
                                         >
                                             Edit

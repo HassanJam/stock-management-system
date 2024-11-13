@@ -10,7 +10,7 @@ import { Box, Container, Typography } from '@mui/material';
 import AddSupplier from '../components/AddSupplier';
 import RequisitionForm from '../components/requisitionForm';
 import AddPurchaseOrder from '../components/addRequisitionOrder';
-import EditPurchaseOrder from '../components/EditPurchaseOrder';
+import EditPurchaseOrder from '../components/EditRequisitionOrder';
 
 const Dashboard = () => {
     const { user } = useUser();
@@ -43,11 +43,11 @@ const Dashboard = () => {
                         <Routes>
                             {user.department === 'procurement' && (
                                 <>
-                                    <Route path="add-stock" element={<AddStock />} />
-                                    <Route path="view-stock" element={<ViewStock />} />
-                                    <Route path="edit-stock/:id" element={<EditStock />} />
-                                    <Route path="edit-purchase-order/:id" element={<EditPurchaseOrder />} />
-                                    <Route path="add-supplier" element={<AddSupplier />} />
+                                    <Route path="addStock" element={<AddStock />} />
+                                    <Route path="viewStock" element={<ViewStock />} />
+                                    <Route path="editStock/:id" element={<EditStock />} />
+                                    <Route path="editRequisitionOrder/:id" element={<EditPurchaseOrder />} />
+                                    <Route path="addSupplier" element={<AddSupplier />} />
                                     <Route path="requisitionForm" element={<RequisitionForm />} />
                                 </>
                             )}
@@ -55,19 +55,19 @@ const Dashboard = () => {
                                 <>
                                     <Route path="requisitionForm" element={<RequisitionForm />} />
                                     <Route path="addRequisitionOrder" element={<AddPurchaseOrder />} />
-                                    <Route path="edit-purchase-order/:id" element={<EditPurchaseOrder />} />
-                                    <Route path="view-stock" element={<ViewStock />} />
+                                    <Route path="editRequisitionOrder/:id" element={<EditPurchaseOrder />} />
+                                    <Route path="viewStock" element={<ViewStock />} />
                                 </>
                             )}
                             {user.department === 'stock_manager' && (
                                 <>
-                                    <Route path="add-stock" element={<AddStock />} />
-                                    <Route path="view-stock" element={<ViewStock />} />
-                                    <Route path="edit-stock/:id" element={<EditStock />} />
+                                    <Route path="addStock" element={<AddStock />} />
+                                    <Route path="viewStock" element={<ViewStock />} />
+                                    <Route path="editStock/:id" element={<EditStock />} />
 
                                 </>
                             )}
-                            <Route path="edit-stock/:id" element={<EditStock />} />
+                            <Route path="editStock/:id" element={<EditStock />} />
                         </Routes>
                     </Container>
                 </Box>
