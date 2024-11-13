@@ -7,10 +7,13 @@ import AddStockPage from './components/AddStock';
 import ViewStockPage from './components/ViewStock';
 import EditStockPage from './components/EditStock';
 import AddSupplierPage from './components/AddSupplier';
-import RequisitionForm from './components/requisitionForm';
 import ProtectedRoute from './components/ProtectedRoute';
+import RequisitionForm from './components/requisitionForm';
 import AddRequisitionOrder from './components/addRequisitionOrder';
-import EditPurchaseOrder from './components/EditRequisitionOrder';
+import EditRequisitionOrder from './components/EditRequisitionOrder';
+import PurchaseOrderForm from './components/purchaseOrder';
+import AddPurchaseOrder from './components/addPurchaseOrder';
+import EditPurchaseOrder from './components/editPurchaseOrder';
 
 const App = () => {
     return (
@@ -19,38 +22,57 @@ const App = () => {
                 <Routes>
                     {/* Public route for login */}
                     <Route path="/" element={<LoginPage />} />
+
+                    {/* Protected dashboard routes */}
+                    <Route
+                        path="/dashboard"
+                        element={<ProtectedRoute element={<Dashboard />} />}
+                    >
+                        {/* Stock management */}
                         <Route
-                            path="/dashboard/*"
-                            element={<ProtectedRoute element={<Dashboard />} />} >
-                            <Route
-                                path="addStock"
-                                element={<ProtectedRoute element={<AddStockPage />} />}
-                            />
-                            <Route
-                                path="viewStock"
-                                element={<ProtectedRoute element={<ViewStockPage />} />}
-                            />
-                            <Route
-                                path="editStock/:id"
-                                element={<ProtectedRoute element={<EditStockPage />} />}
-                            />
-                            <Route
-                                path="addSupplier"
-                                element={<ProtectedRoute element={<AddSupplierPage />} />}
-                            />
-                            <Route
-                                path="requisitionForm/*"
-                                element={<ProtectedRoute element={<RequisitionForm />} />}
-                            >
-                            <Route
-                                path="addRequisitionOrder"
-                                element={<ProtectedRoute element={<AddRequisitionOrder />} />}
-                            />
-                            <Route
-                                path="editRequisitionOrder/:id"
-                                element={<ProtectedRoute element={<EditPurchaseOrder />} />}
-                            />
-                        </Route>
+                            path="addStock"
+                            element={<ProtectedRoute element={<AddStockPage />} />}
+                        />
+                        <Route
+                            path="viewStock"
+                            element={<ProtectedRoute element={<ViewStockPage />} />}
+                        />
+                        <Route
+                            path="editStock/:id"
+                            element={<ProtectedRoute element={<EditStockPage />} />}
+                        />
+                        <Route
+                            path="addSupplier"
+                            element={<ProtectedRoute element={<AddSupplierPage />} />}
+                        />
+
+                        {/* Purchase Orders */}
+                        <Route
+                            path="purchaseOrders"
+                            element={<ProtectedRoute element={<PurchaseOrderForm />} />}
+                        />
+                        <Route
+                            path="addpurchaseOrders"
+                            element={<ProtectedRoute element={<AddPurchaseOrder />} />}
+                        />
+                        <Route
+                            path="editpurchaseOrders/:id"
+                            element={<ProtectedRoute element={<EditPurchaseOrder />} />}
+                        />
+
+                        {/* Requisition Orders */}
+                        <Route
+                            path="requisitionForm"
+                            element={<ProtectedRoute element={<RequisitionForm />} />}
+                        />
+                        <Route
+                            path="addrequisitionForm"
+                            element={<ProtectedRoute element={<AddRequisitionOrder />} />}
+                        />
+                        <Route
+                            path="editrequisitionForm/:id"
+                            element={<ProtectedRoute element={<EditRequisitionOrder />} />}
+                        />
                     </Route>
                 </Routes>
             </Router>

@@ -79,7 +79,7 @@ const RequisitionForm = () => {
                 <Button
                     variant="contained"
                     color="primary"
-                    onClick={() => navigate(`/dashboard/addRequisitionOrder`)}
+                    onClick={() => navigate(`/dashboard/addrequisitionForm`)}
                     sx={{ mb: 3 }}
                 >
                     Add New Form

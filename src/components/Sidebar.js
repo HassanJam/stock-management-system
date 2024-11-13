@@ -20,7 +20,8 @@ const Sidebar = ({ department }) => {
         ],
         sales: [
             { text: 'View Sales Stock', path: '/dashboard/viewStock' },
-            { text: 'Requisition Form', path: '/dashboard/requisitionForm' }
+            { text: 'Requisition Form', path: '/dashboard/requisitionForm' },
+            { text: 'Purchase orders', path: '/dashboard/purchaseOrders' }
 
         ]
     };

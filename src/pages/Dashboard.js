@@ -9,65 +9,80 @@ import Sidebar from '../components/Sidebar';
 import { Box, Container, Typography } from '@mui/material';
 import AddSupplier from '../components/AddSupplier';
 import RequisitionForm from '../components/requisitionForm';
-import AddPurchaseOrder from '../components/addRequisitionOrder';
-import EditPurchaseOrder from '../components/EditRequisitionOrder';
+import AddRequisitionOrder from '../components/addRequisitionOrder';
+import EditRequisitionOrder from '../components/EditRequisitionOrder';
+import PurchaseOrder from '../components/purchaseOrder';
+import AddPurchaseOrder from '../components/addPurchaseOrder';
+import EditPurchaseOrder from '../components/editPurchaseOrder';
 
 const Dashboard = () => {
     const { user } = useUser();
 
     if (!user) {
-        return <Typography variant="h6" color="error">Please log in to view the dashboard.</Typography>;
+        return (
+            <Typography variant="h6" color="error" align="center" mt={4}>
+                Please log in to view the dashboard.
+            </Typography>
+        );
     }
 
-
-
     return (
-        <div style={{ 
-            minHeight: '100vh', 
-            background: 'linear-gradient(to bottom right, #e3f2fd, #bbdefb)', // Example gradient background
-            display: 'flex',
-            flexDirection: 'column'
-        }}>
+        <div
+            style={{
+                minHeight: '100vh',
+                background: 'linear-gradient(to bottom right, #e3f2fd, #bbdefb)', // Example gradient background
+                display: 'flex',
+                flexDirection: 'column',
+            }}
+        >
             <Header />
-            <Box sx={{ display: 'flex', marginTop: '64px' }}> {/* Adjust to match the header height */}
+            <Box sx={{ display: 'flex', marginTop: '64px' }}>
+                {/* Adjust to match the header height */}
                 <Sidebar department={user.department} />
                 <Box
                     component="main"
                     sx={{
                         flexGrow: 1,
                         p: 3,
-                        backgroundColor: 'transparent' // Set to transparent to allow the background to show through
+                        backgroundColor: 'transparent', // Set to transparent to allow the background to show through
                     }}
                 >
                     <Container>
                         <Routes>
+                            {/* Procurement Department Routes */}
                             {user.department === 'procurement' && (
                                 <>
                                     <Route path="addStock" element={<AddStock />} />
                                     <Route path="viewStock" element={<ViewStock />} />
                                     <Route path="editStock/:id" element={<EditStock />} />
-                                    <Route path="editRequisitionOrder/:id" element={<EditPurchaseOrder />} />
                                     <Route path="addSupplier" element={<AddSupplier />} />
                                     <Route path="requisitionForm" element={<RequisitionForm />} />
+                                    <Route path="requisitionForm/add" element={<AddRequisitionOrder />} />
+                                    <Route path="requisitionForm/edit/:id" element={<EditRequisitionOrder />} />
                                 </>
                             )}
+
+                            {/* Sales Department Routes */}
                             {user.department === 'sales' && (
                                 <>
+                                    <Route path="purchaseOrders" element={<PurchaseOrder />} />
+                                    <Route path="addpurchaseOrders" element={<AddPurchaseOrder />} />
+                                    <Route path="editpurchaseOrders/:id" element={<EditPurchaseOrder />} />
                                     <Route path="requisitionForm" element={<RequisitionForm />} />
-                                    <Route path="addRequisitionOrder" element={<AddPurchaseOrder />} />
-                                    <Route path="editRequisitionOrder/:id" element={<EditPurchaseOrder />} />
+                                    <Route path="addrequisitionForm" element={<AddRequisitionOrder />} />
+                                    <Route path="editrequisitionForm/:id" element={<EditRequisitionOrder />} />
                                     <Route path="viewStock" element={<ViewStock />} />
                                 </>
                             )}
+
+                            {/* Stock Manager Department Routes */}
                             {user.department === 'stock_manager' && (
                                 <>
                                     <Route path="addStock" element={<AddStock />} />
                                     <Route path="viewStock" element={<ViewStock />} />
                                     <Route path="editStock/:id" element={<EditStock />} />
-
                                 </>
                             )}
-                            <Route path="editStock/:id" element={<EditStock />} />
                         </Routes>
                     </Container>
                 </Box>

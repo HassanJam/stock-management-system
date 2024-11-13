@@ -52,7 +52,7 @@ const AddPurchaseOrder = () => {
         e.preventDefault();
         const newPO = {
             client,
-            user_id: 1, // Replace with dynamic user ID if available
+            userId: 1, // Replace with dynamic user ID if available
             status: 'pending', // Default status
             tax,
             shipping,

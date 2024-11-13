@@ -75,7 +75,7 @@ const PurchaseOrder = () => {
             <Button
                 variant="contained"
                 color="primary"
-                onClick={() => navigate(`/dashboard/add-purchase-order`)}
+                onClick={() => navigate(`/dashboard/addpurchaseOrders`)}
                 sx={{ mb: 3 }}
             >
                 Add New PO
