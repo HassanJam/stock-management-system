@@ -44,7 +44,7 @@ const PurchaseOrder = () => {
     const renderOrderDetails = (order) => (
         <>
             <Typography variant="subtitle1">Client: {order.client}</Typography>
-            <Typography variant="body2">Submission Date: {new Date(order.submission_date).toLocaleDateString()}</Typography>
+            <Typography variant="body2">Submission Date: {new Date(order.submissionDate).toLocaleDateString()}</Typography>
             <Typography variant="h6" color="primary">Total: ${parseFloat(order.total).toFixed(2)}</Typography>
 
             {/* Action Buttons */}
@@ -59,7 +59,7 @@ const PurchaseOrder = () => {
                 <Button
                     variant="contained"
                     color="secondary"
-                    onClick={() => navigate(`/dashboard/edit-purchase-order/${order.id}`)}
+                    onClick={() => navigate(`/dashboard/editpurchaseOrders/${order.id}`)}
                 >
                     Edit Order
                 </Button>
@@ -166,8 +166,8 @@ const PurchaseOrder = () => {
                                 {selectedOrder.items.map((item) => (
                                     <ListItem key={item.id}>
                                         <ListItemText
-                                            primary={item.item_name}
-                                            secondary={`Quantity: ${item.quantity} | Unit Price: $${parseFloat(item.unit_price).toFixed(2)} | Total: $${parseFloat(item.total_price).toFixed(2)}`}
+                                            primary={item.itemName}
+                                            secondary={`Quantity: ${item.quantity} | Unit Price: $${parseFloat(item.unitPrice).toFixed(2)} | Total: $${parseFloat(item.totalPrice).toFixed(2)}`}
                                         />
                                     </ListItem>
                                 ))}

@@ -68,7 +68,10 @@ const AddPurchaseOrder = () => {
         };
 
         try {
+            console.log(newPO);
+
             await axios.post(po_api, newPO);
+
             // Reset form fields
             setClient('');
             setTax(0);

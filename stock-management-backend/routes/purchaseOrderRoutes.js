@@ -26,13 +26,16 @@ router.post('/', async (req, res) => {
         const purchaseOrderId = purchaseOrderResult.insertId;
 
         // Step 2: Insert each item associated with the purchase order
+
+        console.log("Items", items);
         const itemValues = items.map(item => [
             purchaseOrderId,
-            item.itemName,
+            item.item_name,
             item.quantity,
-            item.unitPrice,
-            item.quantity * item.unitPrice // Calculate totalPrice for each item
+            item.unit_price,
+            item.quantity * item.unit_price // Calculate totalPrice for each item
         ]);
+        console.log("Item values", itemValues[0]);
 
         await connection.query(
             `INSERT INTO purchaseOrderItems (purchaseOrderId, itemName, quantity, unitPrice, totalPrice) 
