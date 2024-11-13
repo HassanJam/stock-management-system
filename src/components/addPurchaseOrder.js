@@ -6,7 +6,7 @@ import api from '../api/api.js';
 
 const { po_api } = api; 
 
-const AddPurchaseOrderRequest = () => {
+const AddPurchaseOrder = () => {
     const [client, setClient] = useState('');
     const [tax, setTax] = useState(0);
     const [shipping, setShipping] = useState(0);
@@ -50,7 +50,7 @@ const AddPurchaseOrderRequest = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const newPORequest = {
+        const newPO = {
             client,
             user_id: 1, // Replace with dynamic user ID if available
             status: 'pending', // Default status
@@ -68,7 +68,7 @@ const AddPurchaseOrderRequest = () => {
         };
 
         try {
-            await axios.post(po_api, newPORequest);
+            await axios.post(po_api, newPO);
             // Reset form fields
             setClient('');
             setTax(0);
@@ -79,8 +79,8 @@ const AddPurchaseOrderRequest = () => {
             setItems([{ itemName: '', quantity: 0, unitPrice: 0, totalPrice: 0 }]);
             setSuccessMessage(true);
         } catch (error) {
-            console.error('Error adding PO request:', error);
-            setErrorMessage('Failed to add PO request.');
+            console.error('Error adding PO:', error);
+            setErrorMessage('Failed to add PO.');
         }
     };
 
@@ -92,7 +92,7 @@ const AddPurchaseOrderRequest = () => {
     return (
         <Box sx={{ p: 3 }}>
             <Typography variant="h4" align="center" gutterBottom>
-                Add Purchase Order Request
+                Add Purchase Order
             </Typography>
             <Card variant="outlined" sx={{ maxWidth: 700, margin: '0 auto', boxShadow: 3, borderRadius: 2, bgcolor: '#f5f5f5' }}>
                 <CardContent>
@@ -241,7 +241,7 @@ const AddPurchaseOrderRequest = () => {
                                 },
                             }}
                         >
-                            Submit PO Request
+                            Submit PO
                         </Button>
                     </form>
                 </CardContent>
@@ -254,7 +254,7 @@ const AddPurchaseOrderRequest = () => {
                 anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
             >
                 <Alert onClose={handleCloseSnackbar} severity="success" variant="filled">
-                    PO request added successfully!
+                    PO added successfully!
                 </Alert>
             </Snackbar>
             <Snackbar
@@ -271,4 +271,4 @@ const AddPurchaseOrderRequest = () => {
     );
 };
 
-export default AddPurchaseOrderRequest;
+export default AddPurchaseOrder;
