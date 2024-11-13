@@ -1,6 +1,6 @@
 const pool = require('../db');
 
-class Supplier {
+class supplier {
     static async create(name, contact, email) {
         const [result] = await pool.query(
             'INSERT INTO suppliers (name, contact, email) VALUES (?, ?, ?)',
@@ -20,4 +20,4 @@ class Supplier {
     }
 }
 
-module.exports = Supplier;
+module.exports = supplier;

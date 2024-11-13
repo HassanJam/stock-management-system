@@ -28,10 +28,10 @@ db.connect((err) => {
     console.log('Connected to the database');
 });
 
-const userRoutes = require('./routes/UserRoutes');
-const supplierRoutes = require('./routes/SupplierRoutes');
-const stockTransactionRoutes = require('./routes/StockTransactionRoutes');
-const purchaseRoutes = require('./routes/PurchaseRoutes');
+const userRoutes = require('./routes/userRoutes');
+const supplierRoutes = require('./routes/supplierRoutes');
+const stockTransactionRoutes = require('./routes/stockTransactionRoutes');
+const purchaseRoutes = require('./routes/purchaseRoutes');
 const authRoutes = require('./routes/authRoutes');
 const stockRoutes = require('./routes/stockRoutes');
 const purchaseOrderRoutes = require('./routes/purchaseOrderRoutes');

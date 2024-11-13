@@ -4,9 +4,8 @@ const pool = require('../db'); // Import the database connection pool
 
 // Create a new purchase order with items
 router.post('/', async (req, res) => {
-
-    console.log("New PO added",req.body)
-    const { client, user_id, tax, shipping, other, subtotal, total, items } = req.body;
+    console.log("New PO added", req.body);
+    const { client, userId, tax, shipping, other, subtotal, total, items } = req.body;
 
     if (!items || !Array.isArray(items) || items.length === 0) {
         return res.status(400).json({ message: 'Items are required for a purchase order.' });
@@ -20,23 +19,23 @@ router.post('/', async (req, res) => {
 
         // Step 1: Insert the purchase order
         const [purchaseOrderResult] = await connection.query(
-            `INSERT INTO purchase_orders (client, user_id, tax, shipping, other, subtotal, total) 
+            `INSERT INTO purchaseOrders (client, userId, tax, shipping, other, subtotal, total) 
              VALUES (?, ?, ?, ?, ?, ?, ?)`,
-            [client, user_id, tax, shipping, other, subtotal, total]
+            [client, userId, tax, shipping, other, subtotal, total]
         );
         const purchaseOrderId = purchaseOrderResult.insertId;
 
         // Step 2: Insert each item associated with the purchase order
         const itemValues = items.map(item => [
             purchaseOrderId,
-            item.item_name,
+            item.itemName,
             item.quantity,
-            item.unit_price,
-            item.quantity * item.unit_price // Calculate total_price for each item
+            item.unitPrice,
+            item.quantity * item.unitPrice // Calculate totalPrice for each item
         ]);
 
         await connection.query(
-            `INSERT INTO purchase_order_items (purchase_order_id, item_name, quantity, unit_price, total_price) 
+            `INSERT INTO purchaseOrderItems (purchaseOrderId, itemName, quantity, unitPrice, totalPrice) 
              VALUES ?`,
             [itemValues]
         );
@@ -57,14 +56,14 @@ router.post('/', async (req, res) => {
 
 // Add an item to a specific purchase order
 router.post('/:id/items', async (req, res) => {
-    const { id: purchase_order_id } = req.params;
-    const { item_name, quantity, unit_price, total_price } = req.body;
+    const { id: purchaseOrderId } = req.params;
+    const { itemName, quantity, unitPrice, totalPrice } = req.body;
 
     try {
         const [result] = await pool.query(
-            `INSERT INTO purchase_order_items (purchase_order_id, item_name, quantity, unit_price, total_price)
+            `INSERT INTO purchaseOrderItems (purchaseOrderId, itemName, quantity, unitPrice, totalPrice)
              VALUES (?, ?, ?, ?, ?)`,
-            [purchase_order_id, item_name, quantity, unit_price, total_price]
+            [purchaseOrderId, itemName, quantity, unitPrice, totalPrice]
         );
         res.status(201).json({ id: result.insertId, message: 'Item added to purchase order successfully' });
     } catch (err) {
@@ -76,13 +75,13 @@ router.post('/:id/items', async (req, res) => {
 // Get all purchase orders with their items
 router.get('/', async (req, res) => {
     try {
-        const [purchaseOrders] = await pool.query(`SELECT * FROM purchase_orders`);
-        const [items] = await pool.query(`SELECT * FROM purchase_order_items`);
+        const [purchaseOrders] = await pool.query(`SELECT * FROM purchaseOrders`);
+        const [items] = await pool.query(`SELECT * FROM purchaseOrderItems`);
 
         // Group items by purchase order ID
         const ordersWithItems = purchaseOrders.map(order => ({
             ...order,
-            items: items.filter(item => item.purchase_order_id === order.id),
+            items: items.filter(item => item.purchaseOrderId === order.id),
         }));
 
         res.json(ordersWithItems);
@@ -96,12 +95,12 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
     const { id } = req.params;
     try {
-        const [purchaseOrder] = await pool.query(`SELECT * FROM purchase_orders WHERE id = ?`, [id]);
+        const [purchaseOrder] = await pool.query(`SELECT * FROM purchaseOrders WHERE id = ?`, [id]);
         if (purchaseOrder.length === 0) {
             return res.status(404).json({ message: 'Purchase order not found' });
         }
 
-        const [items] = await pool.query(`SELECT * FROM purchase_order_items WHERE purchase_order_id = ?`, [id]);
+        const [items] = await pool.query(`SELECT * FROM purchaseOrderItems WHERE purchaseOrderId = ?`, [id]);
 
         res.json({ ...purchaseOrder[0], items });
     } catch (err) {
@@ -112,13 +111,12 @@ router.get('/:id', async (req, res) => {
 
 // Update purchase order with all fields
 router.put('/:id', async (req, res) => {
-
-    console.log("PO edited",req.body)
+    console.log("PO edited", req.body);
 
     const { id } = req.params;
-    const { client, user_id, status, tax, shipping, other, subtotal, total, items } = req.body;
+    const { client, userId, status, tax, shipping, other, subtotal, total, items } = req.body;
 
-    // Convert tax, shipping, subtotal, and total to numbers
+    // Convert tax, shipping, other, subtotal, and total to numbers
     const parsedTax = parseFloat(tax);
     const parsedShipping = parseFloat(shipping);
     const parsedOther = parseFloat(other);
@@ -126,34 +124,34 @@ router.put('/:id', async (req, res) => {
     const parsedTotal = parseFloat(total);
 
     // Ensure the required fields are provided and are valid numbers
-    if (!client || !user_id || isNaN(parsedTax) || isNaN(parsedShipping) || isNaN(parsedOther) || isNaN(parsedSubtotal) || isNaN(parsedTotal) || !status || !items || items.length === 0) {
+    if (!client || !userId || isNaN(parsedTax) || isNaN(parsedShipping) || isNaN(parsedOther) || isNaN(parsedSubtotal) || isNaN(parsedTotal) || !status || !items || items.length === 0) {
         return res.status(400).json({ message: 'All fields are required and must have valid values.' });
     }
 
     try {
         // Update the purchase order table with the main details
         const [result] = await pool.query(
-            `UPDATE purchase_orders 
-             SET client = ?, user_id = ?, tax = ?, shipping = ?, other = ?, subtotal = ?, total = ?, status = ?
+            `UPDATE purchaseOrders 
+             SET client = ?, userId = ?, tax = ?, shipping = ?, other = ?, subtotal = ?, total = ?, status = ?
              WHERE id = ?`,
-            [client, user_id, parsedTax, parsedShipping, parsedOther, parsedSubtotal, parsedTotal, status, id]
+            [client, userId, parsedTax, parsedShipping, parsedOther, parsedSubtotal, parsedTotal, status, id]
         );
 
         if (result.affectedRows === 0) {
             return res.status(404).json({ message: 'Purchase order not found' });
         }
 
-        // Now update the items in the 'purchase_order_items' table
+        // Now update the items in the 'purchaseOrderItems' table
         // First, delete existing items associated with this order
-        await pool.query('DELETE FROM purchase_order_items WHERE purchase_order_id = ?', [id]);
+        await pool.query('DELETE FROM purchaseOrderItems WHERE purchaseOrderId = ?', [id]);
 
         // Insert new items
         const itemPromises = items.map(item => {
-            const { item_name, quantity, unit_price, total_price } = item;
+            const { itemName, quantity, unitPrice, totalPrice } = item;
             return pool.query(
-                `INSERT INTO purchase_order_items (purchase_order_id, item_name, quantity, unit_price, total_price) 
+                `INSERT INTO purchaseOrderItems (purchaseOrderId, itemName, quantity, unitPrice, totalPrice) 
                  VALUES (?, ?, ?, ?, ?)`,
-                [id, item_name, quantity, unit_price, total_price]
+                [id, itemName, quantity, unitPrice, totalPrice]
             );
         });
 
@@ -172,8 +170,8 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
     const { id } = req.params;
     try {
-        await pool.query('DELETE FROM purchase_order_items WHERE purchase_order_id = ?', [id]);
-        const [result] = await pool.query('DELETE FROM purchase_orders WHERE id = ?', [id]);
+        await pool.query('DELETE FROM purchaseOrderItems WHERE purchaseOrderId = ?', [id]);
+        const [result] = await pool.query('DELETE FROM purchaseOrders WHERE id = ?', [id]);
         if (result.affectedRows === 0) {
             return res.status(404).json({ message: 'Purchase order not found' });
         }

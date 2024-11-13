@@ -4,12 +4,12 @@ const pool = require('../db'); // Import the database connection pool
 
 // Add a new stock item
 router.post('/', async (req, res) => {
-    const { item_name, brand, quantity, unit, cost, serial_no, quality, supplier_id } = req.body;
+    const { itemName, brand, quantity, unit, cost, serialNo, quality, supplierId } = req.body;
     try {
         const [result] = await pool.query(
-            `INSERT INTO stocks (item_name, brand, quantity, unit, cost, serial_no, quality, supplier_id)
+            `INSERT INTO stocks (itemName, brand, quantity, unit, cost, serialNo, quality, supplierId)
              VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-            [item_name, brand, quantity, unit, cost, serial_no, quality, supplier_id]
+            [itemName, brand, quantity, unit, cost, serialNo, quality, supplierId]
         );
         res.status(201).json({ id: result.insertId, message: 'Stock item created successfully' });
     } catch (err) {
@@ -22,11 +22,11 @@ router.post('/', async (req, res) => {
 router.get('/', async (req, res) => {
     try {
         const [stocks] = await pool.query(
-            `SELECT stocks.id, stocks.item_name, stocks.brand, stocks.quantity, 
-                    stocks.unit, stocks.cost, stocks.serial_no, stocks.quality, 
-                    suppliers.name AS supplier_name, stocks.created_at, stocks.updated_at
+            `SELECT stocks.id, stocks.itemName, stocks.brand, stocks.quantity, 
+                    stocks.unit, stocks.cost, stocks.serialNo, stocks.quality, 
+                    suppliers.name AS supplierName, stocks.createdAt, stocks.updatedAt
              FROM stocks
-             JOIN suppliers ON stocks.supplier_id = suppliers.id`
+             JOIN suppliers ON stocks.supplierId = suppliers.id`
         );
         res.json(stocks);
     } catch (err) {
@@ -35,15 +35,14 @@ router.get('/', async (req, res) => {
     }
 });
 
-
 // Get a specific stock item by ID
 router.get('/:id', async (req, res) => {
     const { id } = req.params;
     try {
         const [stock] = await pool.query(
-            `SELECT stocks.*, suppliers.name AS supplier_name 
+            `SELECT stocks.*, suppliers.name AS supplierName 
              FROM stocks 
-             JOIN suppliers ON stocks.supplier_id = suppliers.id 
+             JOIN suppliers ON stocks.supplierId = suppliers.id 
              WHERE stocks.id = ?`,
             [id]
         );
@@ -59,17 +58,16 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-
 // Update a stock item
 router.put('/:id', async (req, res) => {
     const { id } = req.params;
-    const { item_name, brand, quantity, unit, cost, serial_no, quality, supplier_id } = req.body;
+    const { itemName, brand, quantity, unit, cost, serialNo, quality, supplierId } = req.body;
     try {
         const [result] = await pool.query(
             `UPDATE stocks
-             SET item_name = ?, brand = ?, quantity = ?, unit = ?, cost = ?, serial_no = ?, quality = ?, supplier_id = ?
+             SET itemName = ?, brand = ?, quantity = ?, unit = ?, cost = ?, serialNo = ?, quality = ?, supplierId = ?
              WHERE id = ?`,
-            [item_name, brand, quantity, unit, cost, serial_no, quality, supplier_id, id]
+            [itemName, brand, quantity, unit, cost, serialNo, quality, supplierId, id]
         );
         if (result.affectedRows === 0) {
             return res.status(404).json({ message: 'Stock item not found' });

@@ -4,11 +4,11 @@ const pool = require('../db');
 
 // CRUD routes for stock transactions
 router.post('/', async (req, res) => {
-    const { item_id, transaction_type, quantity } = req.body;
+    const { itemId, transactionType, quantity } = req.body;
     try {
         const [newTransaction] = await pool.query(
-            'INSERT INTO stock_transactions (item_id, transaction_type, quantity) VALUES (?, ?, ?)',
-            [item_id, transaction_type, quantity]
+            'INSERT INTO stockTransactions (itemId, transactionType, quantity) VALUES (?, ?, ?)',
+            [itemId, transactionType, quantity]
         );
         res.status(201).json(newTransaction);
     } catch (err) {
