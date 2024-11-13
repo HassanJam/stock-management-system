@@ -46,6 +46,7 @@ const Dashboard = () => {
                                     <Route path="add-stock" element={<AddStock />} />
                                     <Route path="view-stock" element={<ViewStock />} />
                                     <Route path="edit-stock/:id" element={<EditStock />} />
+                                    <Route path="edit-purchase-order/:id" element={<EditPurchaseOrder />} />
                                     <Route path="add-supplier" element={<AddSupplier />} />
                                     <Route path="purchase-order" element={<PurchaseOrder />} />
                                 </>
