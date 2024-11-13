@@ -1,15 +1,18 @@
-drop database stock_management
+DROP DATABASE IF EXISTS stockManagement;
 
 -- Create the database
-CREATE DATABASE IF NOT EXISTS stock_management;
-USE stock_management;
+CREATE DATABASE IF NOT EXISTS stockManagement;
+USE stockManagement;
 
 -- Drop existing tables to avoid conflicts
-DROP TABLE IF EXISTS stock_transactions;
+DROP TABLE IF EXISTS stockTransactions;
 DROP TABLE IF EXISTS purchases;
 DROP TABLE IF EXISTS stocks;
 DROP TABLE IF EXISTS suppliers;
 DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS purchaseOrders;
+DROP TABLE IF EXISTS purchaseOrderItems;
+DROP TABLE IF EXISTS requisitionForm;
 
 -- Create Users Table
 CREATE TABLE users (
@@ -21,9 +24,9 @@ CREATE TABLE users (
 
 -- Insert sample users
 INSERT INTO users (username, password, department) VALUES
-('stockuser', '123', 'stock_manager'),
-('prouser', '123', 'procurement'),
-('salesuser', '123', 'sales');
+('stockUser', '123', 'stockManager'),
+('proUser', '123', 'procurement'),
+('salesUser', '123', 'sales');
 
 -- Create Suppliers Table
 CREATE TABLE suppliers (
@@ -36,79 +39,72 @@ CREATE TABLE suppliers (
 -- Create Stocks Table
 CREATE TABLE stocks (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    item_name VARCHAR(255) NOT NULL,
+    itemName VARCHAR(255) NOT NULL,
     brand VARCHAR(255),
-    quantity BIGINT NOT NULL,
+    quantity INT NOT NULL, -- Consider using INT instead of BIGINT if quantities are not extremely large
     unit VARCHAR(50),
     cost DECIMAL(18, 2),
-    serial_no VARCHAR(255),
+    serialNo VARCHAR(255),
     quality VARCHAR(50),
-    supplier_id INT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (supplier_id) REFERENCES suppliers(id)
+    supplierId INT NOT NULL,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (supplierId) REFERENCES suppliers(id)
 );
 
 -- Create Stock Transactions Table
-CREATE TABLE stock_transactions (
+CREATE TABLE stockTransactions (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    item_id INT,
-    transaction_type ENUM('add', 'remove') NOT NULL,
+    itemId INT,
+    transactionType ENUM('add', 'remove') NOT NULL,
     quantity INT NOT NULL,
     date DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (item_id) REFERENCES stocks(id)
+    FOREIGN KEY (itemId) REFERENCES stocks(id)
 );
 
 -- Create Purchases Table
 CREATE TABLE purchases (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    item_id INT,
-    supplier_id INT,
+    itemId INT,
+    supplierId INT,
     quantity INT NOT NULL,
-    purchase_date DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (item_id) REFERENCES stocks(id),
-    FOREIGN KEY (supplier_id) REFERENCES suppliers(id)
+    purchaseDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (itemId) REFERENCES stocks(id),
+    FOREIGN KEY (supplierId) REFERENCES suppliers(id)
 );
 
--- Main table to store purchase orders
-CREATE TABLE purchase_orders (
+-- Create Purchase Orders Table
+CREATE TABLE purchaseOrders (
     id INT AUTO_INCREMENT PRIMARY KEY,
     client VARCHAR(255) NOT NULL, -- Name or ID of the client
-    user_id INT NOT NULL, -- ID of the user creating the order
+    userId INT NOT NULL, -- ID of the user creating the order
     status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
-    submission_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    submissionDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     tax DECIMAL(18, 2) DEFAULT 0, -- Tax amount
     shipping DECIMAL(18, 2) DEFAULT 0, -- Shipping cost
     other DECIMAL(18, 2) DEFAULT 0, -- Additional charges
     subtotal DECIMAL(18, 2) NOT NULL,
     total DECIMAL(18, 2) NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id)
+    FOREIGN KEY (userId) REFERENCES users(id)
 );
 
 -- Table to store individual items within each purchase order
-CREATE TABLE purchase_order_items (
+CREATE TABLE purchaseOrderItems (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    purchase_order_id INT NOT NULL, -- Foreign key to link to purchase_orders
-    item_name VARCHAR(255) NOT NULL,
-    quantity BIGINT NOT NULL,
-    unit_price DECIMAL(18, 2) NOT NULL,
-    total_price DECIMAL(18, 2) NOT NULL,
-    FOREIGN KEY (purchase_order_id) REFERENCES purchase_orders(id)
+    purchaseOrderId INT NOT NULL, -- Foreign key to link to purchaseOrders
+    itemName VARCHAR(255) NOT NULL,
+    quantity INT NOT NULL, -- Consider using INT instead of BIGINT for item quantities
+    unitPrice DECIMAL(18, 2) NOT NULL,
+    totalPrice DECIMAL(18, 2) NOT NULL,
+    FOREIGN KEY (purchaseOrderId) REFERENCES purchaseOrders(id)
 );
 
-
--- Select all data from the stocks table for verification
-SELECT * FROM stocks;
-
-
-
-
-
-//npm install @mui/icons-material
-
-
+-- Requisition Form Table
 CREATE TABLE requisitionForm (
     id INT AUTO_INCREMENT PRIMARY KEY,
     projectName VARCHAR(255) NOT NULL,
-    projectDescription Varchar(255) NOT NULL
+    projectDescription VARCHAR(255) NOT NULL
 );
+
+-- Select all data from the stocks table for verification
+SELECT * FROM stocks;
