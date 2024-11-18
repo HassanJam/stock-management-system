@@ -4,7 +4,7 @@ import { TextField, Button, Box, Snackbar, Alert, Typography, Card, CardContent 
 import dayjs from 'dayjs';
 import api from '../api/api.js';
 
-const { po_api } = api; // Ensure this points to the correct API endpoint
+const { requisitionApi } = api; // Ensure this points to the correct API endpoint
 
 const AddRequisitionOrder = () => {
     const [projectName, setProjectName] = useState('');
@@ -27,7 +27,7 @@ const AddRequisitionOrder = () => {
         };
 
         try {
-            await axios.post(po_api, newRequisition);
+            await axios.post(requisitionApi, newRequisition);
             // Reset form fields
             setProjectName('');
             setClientName('');

@@ -70,7 +70,7 @@ const App = () => {
                             element={<ProtectedRoute element={<AddRequisitionOrder />} />}
                         />
                         <Route
-                            path="editrequisitionOrder/:id"
+                            path="editrequisitionForm/:id"
                             element={<ProtectedRoute element={<EditRequisitionForm />} />}
                         />
                     </Route>

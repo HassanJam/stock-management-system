@@ -21,9 +21,13 @@ const EditRequisitionForm = () => {
             try {
                 const response = await axios.get(`${requisitionApi}/${id}`);
                 const reqData = response.data;
+                console.log(reqData);
+                const formattedDate = reqData.date ? reqData.date.split('T')[0] : '';
+
                 setProjectName(reqData.projectName);
                 setClientName(reqData.clientName);
-                setDate(reqData.date);
+
+                setDate(formattedDate);
                 setDescription(reqData.description);
                 setStatus(reqData.status);
             } catch (error) {
@@ -48,7 +52,7 @@ const EditRequisitionForm = () => {
             await axios.put(`${requisitionApi}/${id}`, updatedRequisition);
             setSuccessMessage(true);
             setTimeout(() => {
-                navigate('/dashboard/requisition-forms');
+                navigate('/dashboard/requisitionForm');
             }, 2000);
         } catch (error) {
             console.error("Failed to update requisition form.", error.response ? error.response.data : error);

@@ -5,9 +5,13 @@ const pool = require('../db'); // Import the database connection pool
 // Create a new requisition
 router.post('/', async (req, res) => {
     console.log("New requisition added", req.body);
-    const { projectName, clientName, date, description, status = 'pending' } = req.body;
-
-    if (!projectName || !clientName || !date || !description) {
+    const { projectName, clientName, date, projectDescription, status = 'pending' } = req.body;
+    console.log("Status", status);
+    console.log("Date", date);
+    console.log("Description", projectDescription);
+    console.log("Client Name", clientName);
+    console.log("Project Name", projectName);
+    if (!projectName || !clientName || !date || !projectDescription) {
         return res.status(400).json({ message: 'All fields are required.' });
     }
 
@@ -17,8 +21,12 @@ router.post('/', async (req, res) => {
         const [result] = await connection.query(
             `INSERT INTO requisitionForm (projectName, clientName, date, description, status) 
              VALUES (?, ?, ?, ?, ?)`,
-            [projectName, clientName, date, description, status]
+            [projectName, clientName, date, projectDescription, status]
         );
+        if (result.affectedRows === 0) {
+            return res.status(500).json({ message: 'Failed to create requisition form' });
+        }
+        console.log("Requisition added in backend");
 
         // Send response
         res.status(201).json({
