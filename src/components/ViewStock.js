@@ -148,12 +148,15 @@ const ViewStock = () => {
                         {filteredStocks.map((stock) => (
                             <TableRow key={stock.id}>
                                 <TableCell>{stock.itemName}</TableCell>
+                                <TableCell>{stock.itemName}</TableCell>
                                 <TableCell>{stock.brand}</TableCell>
                                 <TableCell>{stock.quantity}</TableCell>
                                 <TableCell>{stock.unit}</TableCell>
                                 <TableCell>{stock.cost}</TableCell>
                                 <TableCell>{stock.serialNo}</TableCell>
+                                <TableCell>{stock.serialNo}</TableCell>
                                 <TableCell>{stock.quality}</TableCell>
+                                <TableCell>{stock.supplierName}</TableCell>
                                 <TableCell>{stock.supplierName}</TableCell>
                                 {user?.department === 'procurement' ? (
                                     <TableCell>

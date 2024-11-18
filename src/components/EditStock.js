@@ -32,7 +32,9 @@ const EditStock = () => {
                 setUnit(stockData.unit);
                 setCost(stockData.cost);
                 setSerialNo(stockData.serialNo);
+                setSerialNo(stockData.serialNo);
                 setQuality(stockData.quality);
+                setSupplier(stockData.supplierId);
                 setSupplier(stockData.supplierId);
             } catch (error) {
                 console.error("Failed to fetch stock.", error);
@@ -55,6 +57,7 @@ const EditStock = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const updatedStock = {
+            itemName: itemName,
             itemName: itemName,
             brand,
             quantity,
