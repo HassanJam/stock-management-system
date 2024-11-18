@@ -4,7 +4,7 @@ import { TextField, Button, Box, Snackbar, Alert, Typography, Card, CardContent,
 import { Add, Delete } from '@mui/icons-material';
 import api from '../api/api.js';
 
-const { po_api } = api; 
+const { poApi } = api; 
 
 const AddPurchaseOrder = () => {
     const [client, setClient] = useState('');
@@ -70,7 +70,7 @@ const AddPurchaseOrder = () => {
         try {
             console.log(newPO);
 
-            await axios.post(po_api, newPO);
+            await axios.post(poApi, newPO);
 
             // Reset form fields
             setClient('');

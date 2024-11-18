@@ -23,7 +23,9 @@ router.post('/', async (req, res) => {
              VALUES (?, ?, ?, ?, ?, ?, ?)`,
             [client, userId, tax, shipping, other, subtotal, total]
         );
+        console.log("PO added in backend");
         const purchaseOrderId = purchaseOrderResult.insertId;
+        console.log("PO ID", purchaseOrderId);
 
         // Step 2: Insert each item associated with the purchase order
 
