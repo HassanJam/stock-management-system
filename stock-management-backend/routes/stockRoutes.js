@@ -1,20 +1,88 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../db'); // Import the database connection pool
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
 
-// Add a new stock item
-router.post('/', async (req, res) => {
-    const { itemName, brand, quantity, unit, cost, serialNo, quality, supplierId } = req.body;
+router.post('/', upload.fields([{ name: 'inwardGatePass' }, { name: 'outwardGatePass' }]), async (req, res) => {
+    // Destructure the request body data
+    const {
+        itemDescription,
+        modelNumber,
+        serialNumbers,
+        make,
+        quantity,
+        unit,
+        type,
+        purchaseDate,
+        stockInDate,
+        stockInDetails,
+        stockOutDate,
+        stockOutDetails,
+        storeLocation,
+        contactPerson
+    } = req.body;
+
+    // Log incoming data for debugging
+    console.log('Incoming request data:', req.body);
+    console.log('Request files:', req.files);
+
+    // Check for missing fields
+    if (!itemDescription || !modelNumber || !make || !quantity || !unit || !type || !purchaseDate) {
+        return res.status(400).json({ message: 'Missing required fields' });
+    }
+
+    const connection = await pool.getConnection();
+
     try {
-        const [result] = await pool.query(
-            `INSERT INTO stocks (itemName, brand, quantity, unit, cost, serialNo, quality, supplierId)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-            [itemName, brand, quantity, unit, cost, serialNo, quality, supplierId]
+        await connection.beginTransaction();
+
+        const [stockResult] = await connection.query(
+            `INSERT INTO stocks (
+                item_description, model_number, make, quantity, unit_of_measurement, type, 
+                purchase_date, stock_in_date, stock_in_details, stock_out_date, 
+                stock_out_details, store_location, contact_person
+             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            [
+                itemDescription, modelNumber, make, quantity, unit, type,
+                purchaseDate, stockInDate, stockInDetails, stockOutDate,
+                stockOutDetails, storeLocation, contactPerson
+            ]
         );
-        res.status(201).json({ id: result.insertId, message: 'Stock item created successfully' });
+
+        const stockId = stockResult.insertId;
+
+        // Insert serial numbers if provided
+        if (serialNumbers && serialNumbers.length > 0) {
+            const serialNumberValues = serialNumbers.map(sn => [stockId, sn]);
+            await connection.query(
+                `INSERT INTO serial_numbers (stock_id, serial_number) VALUES ?`,
+                [serialNumberValues]
+            );
+        }
+
+    // Insert files if provided
+    if (req.files && req.files.inwardGatePass && req.files.outwardGatePass) {
+        const fileValues = [
+            [stockId, 'inwardGatePass', req.files.inwardGatePass[0].path],
+            [stockId, 'outwardGatePass', req.files.outwardGatePass[0].path]
+        ];
+        await connection.query(
+            `INSERT INTO files (stock_id, file_type, file_path) VALUES ?`,
+            [fileValues]
+        );
+    }
+
+
+        await connection.commit();
+
+        res.status(201).json({ id: stockId, message: 'Stock item created successfully' });
     } catch (err) {
+        await connection.rollback();
         console.error(err);
         res.status(500).send('Server Error');
+    } finally {
+        connection.release();
     }
 });
 
@@ -22,12 +90,15 @@ router.post('/', async (req, res) => {
 router.get('/', async (req, res) => {
     try {
         const [stocks] = await pool.query(
-            `SELECT stocks.id, stocks.itemName, stocks.brand, stocks.quantity, 
-                    stocks.unit, stocks.cost, stocks.serialNo, stocks.quality, 
-                    suppliers.name AS supplierName, stocks.createdAt, stocks.updatedAt
+            `SELECT stocks.id, stocks.item_description, stocks.model_number, stocks.make, 
+                    stocks.quantity, stocks.unit_of_measurement, stocks.type, stocks.purchase_date, 
+                    stocks.stock_in_date, stocks.stock_out_date, stocks.store_location, 
+                    stocks.contact_person, GROUP_CONCAT(serial_numbers.serial_number) AS serial_numbers
              FROM stocks
-             JOIN suppliers ON stocks.supplierId = suppliers.id`
+             LEFT JOIN serial_numbers ON stocks.id = serial_numbers.stock_id
+             GROUP BY stocks.id`
         );
+
         res.json(stocks);
     } catch (err) {
         console.error(err);
@@ -40,18 +111,24 @@ router.get('/:id', async (req, res) => {
     const { id } = req.params;
     try {
         const [stock] = await pool.query(
-            `SELECT stocks.*, suppliers.name AS supplierName 
-             FROM stocks 
-             JOIN suppliers ON stocks.supplierId = suppliers.id 
-             WHERE stocks.id = ?`,
+            `SELECT stocks.*, GROUP_CONCAT(serial_numbers.serial_number) AS serial_numbers
+             FROM stocks
+             LEFT JOIN serial_numbers ON stocks.id = serial_numbers.stock_id
+             WHERE stocks.id = ?
+             GROUP BY stocks.id`,
             [id]
         );
-        
+
         if (stock.length === 0) {
             return res.status(404).json({ message: 'Stock item not found' });
         }
-        
-        res.json(stock[0]);
+
+        const [files] = await pool.query(
+            `SELECT file_type, file_path FROM files WHERE stock_id = ?`,
+            [id]
+        );
+
+        res.json({ ...stock[0], files });
     } catch (err) {
         console.error(err);
         res.status(500).send('Server Error');
@@ -61,21 +138,81 @@ router.get('/:id', async (req, res) => {
 // Update a stock item
 router.put('/:id', async (req, res) => {
     const { id } = req.params;
-    const { itemName, brand, quantity, unit, cost, serialNo, quality, supplierId } = req.body;
+    const {
+        itemDescription,
+        modelNumber,
+        make,
+        quantity,
+        unitOfMeasurement,
+        type,
+        purchaseDate,
+        stockInDate,
+        stockInDetails,
+        stockOutDate,
+        stockOutDetails,
+        storeLocation,
+        contactPerson,
+        serialNumbers,
+        files
+    } = req.body;
+
+    const connection = await pool.getConnection();
+
     try {
-        const [result] = await pool.query(
+        // Begin transaction
+        await connection.beginTransaction();
+
+        // Update stocks table
+        const [result] = await connection.query(
             `UPDATE stocks
-             SET itemName = ?, brand = ?, quantity = ?, unit = ?, cost = ?, serialNo = ?, quality = ?, supplierId = ?
+             SET item_description = ?, model_number = ?, make = ?, quantity = ?, 
+                 unit_of_measurement = ?, type = ?, purchase_date = ?, stock_in_date = ?, 
+                 stock_in_details = ?, stock_out_date = ?, stock_out_details = ?, 
+                 store_location = ?, contact_person = ?
              WHERE id = ?`,
-            [itemName, brand, quantity, unit, cost, serialNo, quality, supplierId, id]
+            [
+                itemDescription, modelNumber, make, quantity, unitOfMeasurement, type,
+                purchaseDate, stockInDate, stockInDetails, stockOutDate,
+                stockOutDetails, storeLocation, contactPerson, id
+            ]
         );
+
         if (result.affectedRows === 0) {
             return res.status(404).json({ message: 'Stock item not found' });
         }
+
+        // Update serial numbers
+        await connection.query(`DELETE FROM serial_numbers WHERE stock_id = ?`, [id]);
+        if (serialNumbers && serialNumbers.length > 0) {
+            const serialNumberValues = serialNumbers.map(sn => [id, sn]);
+            await connection.query(
+                `INSERT INTO serial_numbers (stock_id, serial_number) VALUES ?`,
+                [serialNumberValues]
+            );
+        }
+
+        // Update files
+        await connection.query(`DELETE FROM files WHERE stock_id = ?`, [id]);
+        if (files && files.length > 0) {
+            const fileValues = files.map(file => [id, file.fileType, file.filePath]);
+            await connection.query(
+                `INSERT INTO files (stock_id, file_type, file_path) VALUES ?`,
+                [fileValues]
+            );
+        }
+
+        // Commit transaction
+        await connection.commit();
+
         res.json({ message: 'Stock item updated successfully' });
     } catch (err) {
+        // Rollback transaction on error
+        await connection.rollback();
         console.error(err);
         res.status(500).send('Server Error');
+    } finally {
+        // Release the connection
+        connection.release();
     }
 });
 

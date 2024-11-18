@@ -1,70 +1,88 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import {
+    TextField,
+    Button,
+    Box,
+    MenuItem,
+    Typography,
+    FormControl,
+    InputLabel,
+    Select,
+    Card,
+    CardContent,
+} from '@mui/material';
 import axios from 'axios';
-import { TextField, Button, Box, MenuItem, Snackbar, Alert, Typography, FormControl, InputLabel, Select, Card, CardContent } from '@mui/material';
-import api from '../api/api.js';
-
-const { stocks_api, suppliersApi } = api; // Import APIs, including suppliers API
+import api from '../api/api'; // Import your API file
+const { stocks_api } = api; // Ensure this points to the correct API endpoint
 
 const AddStock = () => {
-    const [itemName, setItemName] = useState('');
-    const [brand, setBrand] = useState('');
+    const [itemDescription, setItemDescription] = useState('');
+    const [modelNumber, setModelNumber] = useState('');
+    const [serialNumbers, setSerialNumbers] = useState(['']);
+    const [make, setMake] = useState('');
     const [quantity, setQuantity] = useState('');
     const [unit, setUnit] = useState('');
-    const [cost, setCost] = useState('');
-    const [serialNo, setSerialNo] = useState('');
-    const [quality, setQuality] = useState('');
-    const [supplier, setSupplier] = useState('');
-    const [successMessage, setSuccessMessage] = useState(false);
-    const [suppliers, setSuppliers] = useState([]);
+    const [type, setType] = useState('');
+    const [purchaseDate, setPurchaseDate] = useState('');
+    const [stockInDate, setStockInDate] = useState('');
+    const [stockInDetails, setStockInDetails] = useState('');
+    const [stockOutDate, setStockOutDate] = useState('');
+    const [stockOutDetails, setStockOutDetails] = useState('');
+    const [inwardGatePass, setInwardGatePass] = useState(null);
+    const [outwardGatePass, setOutwardGatePass] = useState(null);
+    const [storeLocation, setStoreLocation] = useState('');
+    const [contactPerson, setContactPerson] = useState('');
 
-    useEffect(() => {
-        // Fetch suppliers from the API
-        const fetchSuppliers = async () => {
-            try {
-                const response = await axios.get(suppliersApi);
-                setSuppliers(response.data);
-            } catch (error) {
-                console.error('Error fetching suppliers:', error);
-                alert('Failed to load suppliers.');
-            }
-        };
+    const handleSerialNumberChange = (index, value) => {
+        const updatedSerialNumbers = [...serialNumbers];
+        updatedSerialNumbers[index] = value;
+        setSerialNumbers(updatedSerialNumbers);
+    };
 
-        fetchSuppliers();
-    }, []);
+    const addSerialField = () => setSerialNumbers([...serialNumbers, '']);
+    const removeSerialField = (index) => {
+        const updatedSerialNumbers = serialNumbers.filter((_, i) => i !== index);
+        setSerialNumbers(updatedSerialNumbers);
+    };
+
+    const handleFileUpload = (e, setFile) => {
+        setFile(e.target.files[0]);
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const newStock = {
-            itemName: itemName,
-            brand,
-            quantity,
-            unit,
-            cost,
-            serialNo: serialNo,
-            quality,
-            supplierId: supplier,
-        };
 
+        const formData = new FormData();
+        formData.append('itemDescription', itemDescription);
+        formData.append('modelNumber', modelNumber);
+        serialNumbers.forEach((serial, index) => formData.append(`serialNumbers[${index}]`, serial));
+        formData.append('make', make);
+        formData.append('quantity', quantity);
+        formData.append('unit', unit);
+        formData.append('type', type);
+        formData.append('purchaseDate', purchaseDate);
+        formData.append('stockInDate', stockInDate);
+        formData.append('stockInDetails', stockInDetails);
+        formData.append('stockOutDate', stockOutDate);
+        formData.append('stockOutDetails', stockOutDetails);
+        formData.append('inwardGatePass', inwardGatePass);
+        formData.append('outwardGatePass', outwardGatePass);
+        formData.append('storeLocation', storeLocation);
+        formData.append('contactPerson', contactPerson);
+        formData.forEach((value, key) => {
+            console.log(key, value);  // Log each field name and value
+        });
         try {
-            await axios.post(stocks_api, newStock);
-            // Reset form fields
-            setItemName('');
-            setBrand('');
-            setQuantity('');
-            setUnit('');
-            setCost('');
-            setSerialNo('');
-            setQuality('');
-            setSupplier('');
-            setSuccessMessage(true);
+            await axios.post(stocks_api, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+            alert('Stock added successfully!');
         } catch (error) {
             console.error('Error adding stock:', error);
             alert('Failed to add stock.');
         }
-    };
-
-    const handleCloseSnackbar = () => {
-        setSuccessMessage(false);
     };
 
     return (
@@ -72,133 +90,139 @@ const AddStock = () => {
             <Typography variant="h4" align="center" gutterBottom>
                 Add Stock
             </Typography>
-            <Card variant="outlined" sx={{ maxWidth: 500, margin: '0 auto', boxShadow: 3, borderRadius: 2, bgcolor: '#f5f5f5' }}>
+            <Card variant="outlined" sx={{ maxWidth: 600, margin: '0 auto', p: 2 }}>
                 <CardContent>
                     <form onSubmit={handleSubmit}>
                         <TextField
+                            label="Item Description"
+                            value={itemDescription}
+                            onChange={(e) => setItemDescription(e.target.value)}
                             fullWidth
-                            label="Item Name"
-                            value={itemName}
-                            onChange={(e) => setItemName(e.target.value)}
-                            required
                             margin="normal"
-                            variant="outlined"
                         />
                         <TextField
+                            label="Model Number"
+                            value={modelNumber}
+                            onChange={(e) => setModelNumber(e.target.value)}
                             fullWidth
-                            label="Brand"
-                            value={brand}
-                            onChange={(e) => setBrand(e.target.value)}
-                            required
                             margin="normal"
-                            variant="outlined"
                         />
-                        <TextField
-                            fullWidth
-                            label="Quantity"
-                            type="number"
-                            value={quantity}
-                            onChange={(e) => setQuantity(e.target.value)}
-                            required
-                            margin="normal"
-                            variant="outlined"
-                        />
-                        <FormControl fullWidth margin="normal" variant="outlined">
-                            <InputLabel>Unit</InputLabel>
-                            <Select
-                                value={unit}
-                                onChange={(e) => setUnit(e.target.value)}
-                                required
-                            >
-                                <MenuItem value="">
-                                    <em>Select unit</em>
-                                </MenuItem>
-                                <MenuItem value="Pcs">Pieces</MenuItem>
-                                <MenuItem value="Kg">Kilograms</MenuItem>
-                                <MenuItem value="Liters">Liters</MenuItem>
-                                <MenuItem value="Meters">Meters</MenuItem>
+                        {serialNumbers.map((serial, index) => (
+                            <Box key={index} display="flex" alignItems="center" marginY={1}>
+                                <TextField
+                                    label={`Serial Number ${index + 1}`}
+                                    value={serial}
+                                    onChange={(e) => handleSerialNumberChange(index, e.target.value)}
+                                    fullWidth
+                                />
+                                <Button
+                                    onClick={() => removeSerialField(index)}
+                                    color="error"
+                                    sx={{ ml: 1 }}
+                                >
+                                    Remove
+                                </Button>
+                            </Box>
+                        ))}
+                        <Button onClick={addSerialField} variant="outlined" color="primary" sx={{ mb: 2 }}>
+                            Add Serial Number
+                        </Button>
+                        <FormControl fullWidth margin="normal">
+                            <InputLabel>Make</InputLabel>
+                            <Select value={make} onChange={(e) => setMake(e.target.value)}>
+                                <MenuItem value="In">In</MenuItem>
+                                <MenuItem value="Out">Out</MenuItem>
                             </Select>
                         </FormControl>
-
                         <TextField
-                            fullWidth
-                            label="Cost Per Unit"
+                            label="Quantity"
+                            value={quantity}
+                            onChange={(e) => setQuantity(e.target.value)}
                             type="number"
-                            value={cost}
-                            onChange={(e) => setCost(e.target.value)}
-                            required
+                            fullWidth
                             margin="normal"
-                            variant="outlined"
                         />
                         <TextField
+                            label="Unit of Measurement"
+                            value={unit}
+                            onChange={(e) => setUnit(e.target.value)}
                             fullWidth
-                            label="Serial Number"
-                            value={serialNo}
-                            onChange={(e) => setSerialNo(e.target.value)}
                             margin="normal"
-                            variant="outlined"
                         />
-                        <FormControl fullWidth margin="normal" variant="outlined">
-                            <InputLabel>Quality</InputLabel>
-                            <Select
-                                value={quality}
-                                onChange={(e) => setQuality(e.target.value)}
-                                required
-                            >
-                                <MenuItem value="">
-                                    <em>Select quality</em>
-                                </MenuItem>
+                        <FormControl fullWidth margin="normal">
+                            <InputLabel>Type</InputLabel>
+                            <Select value={type} onChange={(e) => setType(e.target.value)}>
                                 <MenuItem value="New">New</MenuItem>
                                 <MenuItem value="Used">Used</MenuItem>
                                 <MenuItem value="Refurbished">Refurbished</MenuItem>
                             </Select>
                         </FormControl>
-                        <FormControl fullWidth margin="normal" variant="outlined">
-                            <InputLabel>Supplier</InputLabel>
-                            <Select
-                                value={supplier}
-                                onChange={(e) => setSupplier(e.target.value)}
-                                required
-                            >
-                                <MenuItem value="">
-                                    <em>Select a supplier</em>
-                                </MenuItem>
-                                {suppliers.map((sup) => (
-                                    <MenuItem key={sup.id} value={sup.id}>
-                                        {sup.name}
-                                    </MenuItem>
-                                ))}
+                        <TextField
+                            label="Purchase Date"
+                            value={purchaseDate}
+                            onChange={(e) => setPurchaseDate(e.target.value)}
+                            type="date"
+                            InputLabelProps={{ shrink: true }}
+                            fullWidth
+                            margin="normal"
+                        />
+                        <TextField
+                            label="Stock-In Date & Time"
+                            value={stockInDate}
+                            onChange={(e) => setStockInDate(e.target.value)}
+                            type="datetime-local"
+                            InputLabelProps={{ shrink: true }}
+                            fullWidth
+                            margin="normal"
+                        />
+                        <TextField
+                            label="Stock-In Person Details"
+                            value={stockInDetails}
+                            onChange={(e) => setStockInDetails(e.target.value)}
+                            fullWidth
+                            margin="normal"
+                        />
+                        <TextField
+                            label="Stock-Out Date & Time"
+                            value={stockOutDate}
+                            onChange={(e) => setStockOutDate(e.target.value)}
+                            type="datetime-local"
+                            InputLabelProps={{ shrink: true }}
+                            fullWidth
+                            margin="normal"
+                        />
+                        <TextField
+                            label="Stock-Out Person Details"
+                            value={stockOutDetails}
+                            onChange={(e) => setStockOutDetails(e.target.value)}
+                            fullWidth
+                            margin="normal"
+                        />
+                        <Typography>Inward Gate Pass/Delivery Challan</Typography>
+                        <input type="file" onChange={(e) => handleFileUpload(e, setInwardGatePass)} />
+                        <Typography>Outward Gate Pass/Delivery Challan</Typography>
+                        <input type="file" onChange={(e) => handleFileUpload(e, setOutwardGatePass)} />
+                        <FormControl fullWidth margin="normal">
+                            <InputLabel>Store Location</InputLabel>
+                            <Select value={storeLocation} onChange={(e) => setStoreLocation(e.target.value)}>
+                                <MenuItem value="Lahore">Lahore</MenuItem>
+                                <MenuItem value="Islamabad">Islamabad</MenuItem>
+                                <MenuItem value="Other">Other</MenuItem>
                             </Select>
                         </FormControl>
-                        <Button
+                        <TextField
+                            label="For Project/Contact Person"
+                            value={contactPerson}
+                            onChange={(e) => setContactPerson(e.target.value)}
                             fullWidth
-                            variant="contained"
-                            color="primary"
-                            type="submit"
-                            sx={{
-                                mt: 2,
-                                bgcolor: '#1976d2',
-                                '&:hover': {
-                                    bgcolor: '#115293', // Darker blue on hover
-                                },
-                            }}
-                        >
-                            Add Stock
+                            margin="normal"
+                        />
+                        <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
+                            Submit
                         </Button>
                     </form>
                 </CardContent>
             </Card>
-
-            <Snackbar
-                open={successMessage}
-                autoHideDuration={3000}
-                onClose={handleCloseSnackbar}
-                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-            >
-                <Alert onClose={handleCloseSnackbar} severity="success" variant="filled">
-                    Stock added successfully!
-                </Alert>
-            </Snackbar>
         </Box>
     );
 };
