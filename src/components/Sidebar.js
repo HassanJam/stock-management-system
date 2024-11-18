@@ -11,6 +11,7 @@ const Sidebar = ({ department }) => {
             { text: 'Add Stock', path: '/dashboard/addStock' },
             { text: 'View Stock', path: '/dashboard/viewStock' },
             { text: 'Add Supplier', path: '/dashboard/addSupplier' },
+            { text: 'Requisition Form', path: '/dashboard/requisitionForm' },
             { text: 'Purchase Order', path: '/dashboard/purchaseOrders' }
         ],
         stock_manager: [

@@ -53,7 +53,7 @@ const EditRequisitionForm = () => {
             await axios.put(`${requisitionApi}/${id}`, updatedRequisition);
             setSuccessMessage(true);
             setTimeout(() => {
-                navigate('/dashboard/requisition-forms');
+                navigate('/dashboard/requisitionForm');
             }, 2000);
         } catch (error) {
             console.error("Failed to update requisition form.", error.response ? error.response.data : error);
