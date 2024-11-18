@@ -1,154 +1,311 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Typography, TextField, Button, Box, MenuItem, FormControl, InputLabel, Select, Snackbar, Alert, Card, CardContent } from '@mui/material';
+
+import { TextField, Button, Box, Snackbar, Alert, Typography, Card, CardContent, Grid, IconButton, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import { Add, Delete } from '@mui/icons-material';
 import api from '../api/api.js';
 
-const { po_api,suppliers_api } = api;
+const { poApi } = api;
 
-const EditPurchaseOrder = () => {
+const EditPurchaseOrder = ({ orderId }) => {
+
     const { id } = useParams();
     const navigate = useNavigate();
-    const [orderName, setOrderName] = useState('');
-    const [supplier, setSupplier] = useState('');
-    const [quantity, setQuantity] = useState('');
-    const [status, setStatus] = useState('');
-    const [cost, setCost] = useState('');
-    const [suppliers, setSuppliers] = useState([]);
+    const [client, setClient] = useState('');
+    const [tax, setTax] = useState(0);
+    const [shipping, setShipping] = useState(0);
+    const [other, setOther] = useState(0);
+    const [subtotal, setSubtotal] = useState(0);
+    const [total, setTotal] = useState(0);
+    const [items, setItems] = useState([{ itemName: '', quantity: 0, unitPrice: 0, totalPrice: 0 }]);
     const [successMessage, setSuccessMessage] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
+    const [status, setStatus] = useState('pending'); // Default to 'pending'
 
     useEffect(() => {
-        const fetchPurchaseOrder = async () => {
+        const fetchOrderData = async () => {
             try {
-                const response = await axios.get(`${po_api}/${id}`);
+                const response = await axios.get(`${poApi}/${id}`);
                 const poData = response.data;
-                setOrderName(poData.order_name);
-                setSupplier(poData.supplier_id);
-                setQuantity(poData.quantity);
-                setStatus(poData.status);
-                setCost(poData.cost);
+                setClient(poData.client);
+                setTax(poData.tax);
+                setShipping(poData.shipping);
+                setOther(poData.other);
+                setSubtotal(poData.subtotal);
+                setTotal(poData.total);
+                setItems(poData.items.map(item => ({
+                    itemName: item.itemName,
+                    quantity: item.quantity,
+                    unitPrice: item.unitPrice,
+                    totalPrice: item.totalPrice,
+                })));
+                setStatus(poData.status); // Set the status
             } catch (error) {
-                console.error("Failed to fetch purchase order.", error);
+                setErrorMessage('Failed to load purchase order.');
             }
         };
 
-        const fetchSuppliers = async () => {
-            try {
-                const response = await axios.get(suppliers_api);
-                setSuppliers(response.data);
-            } catch (error) {
-                console.error("Failed to fetch suppliers.", error);
-            }
-        };
+        fetchOrderData();
+    }, [orderId]);
 
-        fetchPurchaseOrder();
-        fetchSuppliers();
-    }, [id]);
+    const handleItemChange = (index, field, value) => {
+        const updatedItems = [...items];
+        if (field === 'quantity' || field === 'unitPrice') {
+            updatedItems[index][field] = parseFloat(value) || 0; // Ensure it's a number
+            updatedItems[index].totalPrice = updatedItems[index].quantity * updatedItems[index].unitPrice;
+        } else {
+            updatedItems[index][field] = value; // For non-numeric fields like itemName
+        }
+        setItems(updatedItems);
+
+        // Recalculate subtotal and total
+        const newSubtotal = updatedItems.reduce((sum, item) => sum + item.totalPrice, 0);
+        setSubtotal(newSubtotal);
+        calculateTotal(newSubtotal, tax, shipping, other);
+    };
+
+
+    const handleTaxChange = (value) => {
+        const parsedValue = parseFloat(value) || 0;
+        setTax(parsedValue);
+        calculateTotal(subtotal, parsedValue, shipping, other);
+    };
+
+    const handleShippingChange = (value) => {
+        const parsedValue = parseFloat(value) || 0;
+        setShipping(parsedValue);
+        calculateTotal(subtotal, tax, parsedValue, other);
+    };
+
+    const handleOtherChange = (value) => {
+        const parsedValue = parseFloat(value) || 0;
+        setOther(parsedValue);
+        calculateTotal(subtotal, tax, shipping, parsedValue);
+    };
+
+    const addItem = () => {
+        setItems([...items, { itemName: '', quantity: 0, unitPrice: 0, totalPrice: 0 }]);
+    };
+
+    const removeItem = (index) => {
+        const updatedItems = items.filter((_, i) => i !== index);
+        setItems(updatedItems);
+        calculateSubtotal(updatedItems);
+    };
+
+    const calculateSubtotal = (updatedItems) => {
+        const newSubtotal = updatedItems.reduce((sum, item) => sum + item.totalPrice, 0);
+        setSubtotal(newSubtotal);
+        calculateTotal(newSubtotal, tax, shipping, other);
+    };
+
+    const calculateTotal = (newSubtotal, taxValue, shippingValue, otherValue) => {
+        console.log("Data types:");
+        console.log("newSubtotal:", newSubtotal, typeof newSubtotal);
+        console.log("taxValue:", taxValue, typeof taxValue);
+        console.log("shippingValue:", shippingValue, typeof shippingValue);
+        console.log("otherValue:", otherValue, typeof otherValue);
+
+        const newTotal = parseFloat(newSubtotal || 0) + parseFloat(taxValue || 0) + parseFloat(shippingValue || 0) + parseFloat(otherValue || 0);
+        setTotal(newTotal);
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         const updatedPO = {
-            order_name: orderName,
-            supplier_id: supplier,
-            quantity,
-            status,
-            cost,
+            client,
+            userId: 1, // Replace with dynamic user ID if available
+            status, // Include the status
+            tax,
+            shipping,
+            other,
+            subtotal,
+            total,
+            items: items.map(({ itemName, quantity, unitPrice, totalPrice }) => ({
+                itemName: itemName,
+                quantity,
+                unitPrice: unitPrice,
+                totalPrice: totalPrice,
+            })),
         };
-
+    
         try {
-            await axios.put(`${po_api}/${id}`, updatedPO);
+            await axios.put(`${poApi}/${id}`, updatedPO);
             setSuccessMessage(true);
             setTimeout(() => {
-                navigate('/dashboard/purchase-orders');
-            }, 2000);
+                navigate('/dashboard/purchaseOrders');
+            }, 1000);
         } catch (error) {
-            console.error("Failed to update purchase order.", error.response ? error.response.data : error);
-            alert('Failed to update purchase order.');
+            console.error('Error updating PO:', error);
+            setErrorMessage('Failed to update PO.');
         }
     };
+    
 
     const handleCloseSnackbar = () => {
         setSuccessMessage(false);
+        setErrorMessage('');
     };
 
     return (
         <Box sx={{ p: 3 }}>
             <Typography variant="h4" align="center" gutterBottom>
-                Edit Purchase form
+                Edit Purchase Order
             </Typography>
-            <Card variant="outlined" sx={{ maxWidth: 500, margin: '0 auto', boxShadow: 3, borderRadius: 2, bgcolor: '#f5f5f5' }}>
+            <Card variant="outlined" sx={{ maxWidth: 700, margin: '0 auto', boxShadow: 3, borderRadius: 2, bgcolor: '#f5f5f5' }}>
                 <CardContent>
-                    <form onSubmit={handleSubmit} style={{ maxWidth: '500px', margin: '0 auto' }}>
-                        <TextField
-                            fullWidth
-                            label="Order Name"
-                            value={orderName}
-                            onChange={(e) => setOrderName(e.target.value)}
-                            required
-                            margin="normal"
-                            variant="outlined"
-                        />
-                        <FormControl fullWidth margin="normal" variant="outlined">
-                            <InputLabel>Supplier</InputLabel>
-                            <Select
-                                value={supplier}
-                                onChange={(e) => setSupplier(e.target.value)}
-                                required
-                            >
-                                <MenuItem value="">
-                                    <em>Select a supplier</em>
-                                </MenuItem>
-                                {suppliers.map((sup) => (
-                                    <MenuItem key={sup.id} value={sup.id}>
-                                        {sup.name}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                        <TextField
-                            fullWidth
-                            label="Quantity"
-                            type="number"
-                            value={quantity}
-                            onChange={(e) => setQuantity(e.target.value)}
-                            required
-                            margin="normal"
-                            variant="outlined"
-                        />
-                        <TextField
-                            fullWidth
-                            label="Cost"
-                            type="number"
-                            value={cost}
-                            onChange={(e) => setCost(e.target.value)}
-                            required
-                            margin="normal"
-                            variant="outlined"
-                        />
+                    <form onSubmit={handleSubmit}>
+
                         <FormControl fullWidth margin="normal" variant="outlined">
                             <InputLabel>Status</InputLabel>
                             <Select
                                 value={status}
-                                onChange={(e) => setStatus(e.target.value)}
-                                required
+                                onChange={(e) => setStatus(e.target.value)} // Update status state
+                                label="Status"
                             >
-                                <MenuItem value="">
-                                    <em>Select status</em>
-                                </MenuItem>
-                                <MenuItem value="Pending">Pending</MenuItem>
-                                <MenuItem value="Approved">Approved</MenuItem>
-                                <MenuItem value="Rejected">Rejected</MenuItem>
-                                <MenuItem value="Completed">Completed</MenuItem>
+                                <MenuItem value="pending">Pending</MenuItem>
+                                <MenuItem value="approved">Approved</MenuItem>
+                                <MenuItem value="rejected">Rejected</MenuItem>
                             </Select>
                         </FormControl>
+
+                        <TextField
+                            fullWidth
+                            label="Client"
+                            value={client}
+                            onChange={(e) => setClient(e.target.value)}
+                            required
+                            margin="normal"
+                            variant="outlined"
+                        />
+                        <Grid container spacing={2}>
+                            <Grid item xs={6}>
+                                <TextField
+                                    fullWidth
+                                    label="Tax"
+                                    type="number"
+                                    value={tax}
+                                    onChange={(e) => handleTaxChange(e.target.value)}
+                                    margin="normal"
+                                    variant="outlined"
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <TextField
+                                    fullWidth
+                                    label="Shipping"
+                                    type="number"
+                                    value={shipping}
+                                    onChange={(e) => handleShippingChange(e.target.value)}
+                                    margin="normal"
+                                    variant="outlined"
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <TextField
+                                    fullWidth
+                                    label="Other Charges"
+                                    type="number"
+                                    value={other}
+                                    onChange={(e) => handleOtherChange(e.target.value)}
+                                    margin="normal"
+                                    variant="outlined"
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <TextField
+                                    fullWidth
+                                    label="Subtotal"
+                                    value={subtotal}
+                                    margin="normal"
+                                    variant="outlined"
+                                    InputProps={{ readOnly: true }}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    fullWidth
+                                    label="Total"
+                                    value={total}
+                                    margin="normal"
+                                    variant="outlined"
+                                    InputProps={{ readOnly: true }}
+                                />
+                            </Grid>
+                        </Grid>
+                        <Typography variant="h6" sx={{ mt: 3 }}>
+                            Items
+                        </Typography>
+                        {items.map((item, index) => (
+                            <Grid container spacing={2} key={index} alignItems="center" sx={{ mb: 2 }}>
+                                <Grid item xs={4}>
+                                    <TextField
+                                        fullWidth
+                                        label="Item Name"
+                                        value={item.itemName}
+                                        onChange={(e) => handleItemChange(index, 'itemName', e.target.value)}
+                                        required
+                                    />
+                                </Grid>
+                                <Grid item xs={2}>
+                                    <TextField
+                                        fullWidth
+                                        label="Quantity"
+                                        type="number"
+                                        value={item.quantity}
+                                        onChange={(e) => handleItemChange(index, 'quantity', parseInt(e.target.value, 10))}
+                                        required
+                                    />
+                                </Grid>
+                                <Grid item xs={2}>
+                                    <TextField
+                                        fullWidth
+                                        label="Unit Price"
+                                        type="number"
+                                        value={item.unitPrice}
+                                        onChange={(e) => handleItemChange(index, 'unitPrice', parseFloat(e.target.value))}
+                                        required
+                                    />
+                                </Grid>
+                                <Grid item xs={2}>
+                                    <TextField
+                                        fullWidth
+                                        label="Total Price"
+                                        value={item.totalPrice}
+                                        InputProps={{ readOnly: true }}
+                                    />
+                                </Grid>
+                                <Grid item xs={2}>
+                                    <IconButton onClick={() => removeItem(index)} color="error">
+                                        <Delete />
+                                    </IconButton>
+                                </Grid>
+                            </Grid>
+                        ))}
+                        <Button
+                            startIcon={<Add />}
+                            onClick={addItem}
+                            sx={{ mt: 2 }}
+                            variant="outlined"
+                            color="primary"
+                        >
+                            Add Item
+                        </Button>
                         <Button
                             fullWidth
                             variant="contained"
                             color="primary"
                             type="submit"
-                            sx={{ mt: 2 }}
+                            sx={{
+                                mt: 3,
+                                bgcolor: '#1976d2',
+                                '&:hover': {
+                                    bgcolor: '#115293',
+                                },
+                            }}
                         >
-                            Update Purchase Order
+                            Update PO
                         </Button>
                     </form>
                 </CardContent>
@@ -161,7 +318,17 @@ const EditPurchaseOrder = () => {
                 anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
             >
                 <Alert onClose={handleCloseSnackbar} severity="success" variant="filled">
-                    Purchase order updated successfully!
+                    PO updated successfully!
+                </Alert>
+            </Snackbar>
+            <Snackbar
+                open={!!errorMessage}
+                autoHideDuration={3000}
+                onClose={handleCloseSnackbar}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            >
+                <Alert onClose={handleCloseSnackbar} severity="error" variant="filled">
+                    {errorMessage}
                 </Alert>
             </Snackbar>
         </Box>

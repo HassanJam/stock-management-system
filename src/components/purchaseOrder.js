@@ -179,7 +179,7 @@ const PurchaseOrder = () => {
                             <Divider sx={{ my: 2 }} />
 
                             <Typography variant="subtitle1">Client: {selectedOrder.client}</Typography>
-                            <Typography variant="body2">Submission Date: {new Date(selectedOrder.submission_date).toLocaleDateString()}</Typography>
+                            <Typography variant="body2">Submission Date: {new Date(selectedOrder.submissionDate).toLocaleDateString()}</Typography>
                             <Typography variant="body2">Tax: ${parseFloat(selectedOrder.tax).toFixed(2)}</Typography>
                             <Typography variant="body2">Shipping: ${parseFloat(selectedOrder.shipping).toFixed(2)}</Typography>
                             <Typography variant="body2">Other: ${parseFloat(selectedOrder.other).toFixed(2)}</Typography>
