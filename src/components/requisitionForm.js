@@ -4,10 +4,13 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
 import { useUser } from '../context/UserContext';
+import api from '../api/api.js';
+
+const { requisitionApi } = api;
 
 const RequisitionForm = () => {
     const [pendingOrders, setPendingOrders] = useState([]);
-    const [approvedOrders, setApprovedOrders] = useState([]);
+    const [completedOrders, setCompletedOrders] = useState([]);
     const [rejectedOrders, setRejectedOrders] = useState([]);
     const [selectedOrder, setSelectedOrder] = useState(null); // State for the selected order
     const [isDialogOpen, setDialogOpen] = useState(false);    // State for dialog open/close
@@ -17,10 +20,10 @@ const RequisitionForm = () => {
     useEffect(() => {
         const fetchOrders = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/api/purchaseOrders');
+                const response = await axios.get(`${requisitionApi}`);
                 const orders = response.data;
                 setPendingOrders(orders.filter(order => order.status === 'pending'));
-                setApprovedOrders(orders.filter(order => order.status === 'approved'));
+                setCompletedOrders(orders.filter(order => order.status === 'completed'));
                 setRejectedOrders(orders.filter(order => order.status === 'rejected'));
             } catch (error) {
                 console.error('Error fetching orders:', error);
@@ -45,9 +48,9 @@ const RequisitionForm = () => {
 
     const renderOrderDetails = (order) => (
         <>
-            <Typography variant="subtitle1">Client: {order.client}</Typography>
-            <Typography variant="body2">Submission Date: {new Date(order.submission_date).toLocaleDateString()}</Typography>
-            <Typography variant="h6" color="primary">Total: Rs.{parseFloat(order.total).toFixed(2)}</Typography>
+            <Typography variant="subtitle1">Project Name: {order.projectName}</Typography>
+            <Typography variant="body2">Date: {new Date(order.date).toLocaleDateString()}</Typography>
+            <Typography variant="subtitle1">Client Name: {order.clientName}</Typography>
 
             {/* Action Buttons */}
             <Box sx={{ display: 'flex', gap: 1, mt: 2 }}>
@@ -112,15 +115,15 @@ const RequisitionForm = () => {
                     </Paper>
                 </Box>
 
-                {/* Approved Orders */}
+                {/* Completed Orders */}
                 <Box sx={{ width: '30%' }}>
                     <Typography variant="h6" align="center">
-                        Approved Orders
+                        Completed Orders
                     </Typography>
                     <Paper variant="outlined" sx={{ p: 2 }}>
                         <List>
-                            {approvedOrders.length > 0 ? (
-                                approvedOrders.map((order) => (
+                            {completedOrders.length > 0 ? (
+                                completedOrders.map((order) => (
                                     <React.Fragment key={order.id}>
                                         <ListItem alignItems="flex-start">
                                             <ListItemText primary={renderOrderDetails(order)} />
@@ -129,7 +132,7 @@ const RequisitionForm = () => {
                                     </React.Fragment>
                                 ))
                             ) : (
-                                <Typography align="center">No approved orders</Typography>
+                                <Typography align="center">No completed orders</Typography>
                             )}
                         </List>
                     </Paper>
@@ -159,45 +162,40 @@ const RequisitionForm = () => {
                 </Box>
             </Box>
 
-            {/* Dialog for order details */}
+            {/* Dialog for requisition details */}
             <Dialog open={isDialogOpen} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
-                <DialogTitle>Order Details</DialogTitle>
+                <DialogTitle>Requisition Details</DialogTitle>
                 <DialogContent dividers>
                     {selectedOrder && (
                         <>
-
-                            <Typography variant="subtitle2">Items:</Typography>
-                            <List dense>
-                                {selectedOrder.items.map((item) => (
-                                    <ListItem key={item.id}>
-                                        <ListItemText
-                                            primary={item.item_name}
-                                            secondary={`Quantity: ${item.quantity} | Unit Price: $${parseFloat(item.unit_price).toFixed(2)} | Total: $${parseFloat(item.total_price).toFixed(2)}`}
-                                        />
-                                    </ListItem>
-                                ))}
-                            </List>
+                            <Typography variant="subtitle1">Project Name: {selectedOrder.projectName}</Typography>
+                            <Typography variant="subtitle1">Client Name: {selectedOrder.clientName}</Typography>
+                            <Typography variant="body2">Date: {new Date(selectedOrder.date).toLocaleDateString()}</Typography>
+                            <Typography variant="body2">Description:</Typography>
+                            <Typography variant="body2" sx={{ mt: 1, mb: 2 }}>{selectedOrder.description}</Typography>
 
                             <Divider sx={{ my: 2 }} />
 
-                            <Typography variant="subtitle1">Client: {selectedOrder.client}</Typography>
-                            <Typography variant="body2">Submission Date: {new Date(selectedOrder.submission_date).toLocaleDateString()}</Typography>
-                            <Typography variant="body2">Tax: Rs.{parseFloat(selectedOrder.tax).toFixed(2)}</Typography>
-                            <Typography variant="body2">Shipping: Rs.{parseFloat(selectedOrder.shipping).toFixed(2)}</Typography>
-                            <Typography variant="body2">Other: Rs.{parseFloat(selectedOrder.other).toFixed(2)}</Typography>
-                            <Typography variant="body2">Subtotal: Rs.{parseFloat(selectedOrder.subtotal).toFixed(2)}</Typography>
-                            <Typography variant="h6" color="primary">Total: Rs.{parseFloat(selectedOrder.total).toFixed(2)}</Typography>
-
-
+                            <Typography variant="subtitle2">Status:</Typography>
+                            <Typography
+                                variant="body2"
+                                sx={{
+                                    mt: 1,
+                                    color:
+                                        selectedOrder.status === "pending"
+                                            ? "orange"
+                                            : selectedOrder.status === "completed"
+                                                ? "green"
+                                                : "red",
+                                }}
+                            >
+                                {selectedOrder.status.charAt(0).toUpperCase() + selectedOrder.status.slice(1)}
+                            </Typography>
                         </>
                     )}
                 </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseDialog} color="primary">
-                        Close
-                    </Button>
-                </DialogActions>
             </Dialog>
+
         </Box>
     );
 };

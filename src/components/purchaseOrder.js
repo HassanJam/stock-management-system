@@ -3,6 +3,9 @@ import { Button, Typography, Box, Paper, List, ListItem, ListItemText, Divider, 
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
+import api from '../api/api.js';
+
+const { poApi } = api;
 
 const PurchaseOrder = () => {
     const [pendingOrders, setPendingOrders] = useState([]);
@@ -15,7 +18,7 @@ const PurchaseOrder = () => {
     useEffect(() => {
         const fetchOrders = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/api/purchaseOrders/');
+                const response = await axios.get(`${poApi}`);
                 const orders = response.data;
                 setPendingOrders(orders.filter(order => order.status === 'pending'));
                 setApprovedOrders(orders.filter(order => order.status === 'approved'));

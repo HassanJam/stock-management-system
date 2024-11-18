@@ -4,66 +4,55 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Typography, TextField, Button, Box, MenuItem, FormControl, InputLabel, Select, Snackbar, Alert, Card, CardContent } from '@mui/material';
 import api from '../api/api.js';
 
-const { po_api, suppliers_api } = api;
+const { requisitionApi } = api;
 
-const EditPurchaseOrder = () => {
+const EditRequisitionForm = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const [orderName, setOrderName] = useState('');
-    const [supplier, setSupplier] = useState('');
-    const [quantity, setQuantity] = useState('');
+    const [projectName, setProjectName] = useState('');
+    const [clientName, setClientName] = useState('');
+    const [date, setDate] = useState('');
+    const [description, setDescription] = useState('');
     const [status, setStatus] = useState('');
-    const [cost, setCost] = useState('');
-    const [suppliers, setSuppliers] = useState([]);
     const [successMessage, setSuccessMessage] = useState(false);
 
     useEffect(() => {
-        const fetchPurchaseOrder = async () => {
+        const fetchRequisitionForm = async () => {
             try {
-                const response = await axios.get(`${po_api}/${id}`);
-                const poData = response.data;
-                setOrderName(poData.order_name);
-                setSupplier(poData.supplier_id);
-                setQuantity(poData.quantity);
-                setStatus(poData.status);
-                setCost(poData.cost);
+                const response = await axios.get(`${requisitionApi}/${id}`);
+                const reqData = response.data;
+                setProjectName(reqData.projectName);
+                setClientName(reqData.clientName);
+                setDate(reqData.date);
+                setDescription(reqData.description);
+                setStatus(reqData.status);
             } catch (error) {
-                console.error("Failed to fetch purchase order.", error);
+                console.error("Failed to fetch requisition form.", error);
             }
         };
 
-        const fetchSuppliers = async () => {
-            try {
-                const response = await axios.get(suppliers_api);
-                setSuppliers(response.data);
-            } catch (error) {
-                console.error("Failed to fetch suppliers.", error);
-            }
-        };
-
-        fetchPurchaseOrder();
-        fetchSuppliers();
+        fetchRequisitionForm();
     }, [id]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const updatedPO = {
-            order_name: orderName,
-            supplier_id: supplier,
-            quantity,
+        const updatedRequisition = {
+            projectName,
+            clientName,
+            date,
+            description,
             status,
-            cost,
         };
 
         try {
-            await axios.put(`${po_api}/${id}`, updatedPO);
+            await axios.put(`${requisitionApi}/${id}`, updatedRequisition);
             setSuccessMessage(true);
             setTimeout(() => {
-                navigate('/dashboard/purchase-orders');
+                navigate('/dashboard/requisition-forms');
             }, 2000);
         } catch (error) {
-            console.error("Failed to update purchase order.", error.response ? error.response.data : error);
-            alert('Failed to update purchase order.');
+            console.error("Failed to update requisition form.", error.response ? error.response.data : error);
+            alert('Failed to update requisition form.');
         }
     };
 
@@ -74,53 +63,49 @@ const EditPurchaseOrder = () => {
     return (
         <Box sx={{ p: 3 }}>
             <Typography variant="h4" align="center" gutterBottom>
-                Edit Requisition form
+                Edit Requisition Form
             </Typography>
             <Card variant="outlined" sx={{ maxWidth: 500, margin: '0 auto', boxShadow: 3, borderRadius: 2, bgcolor: '#f5f5f5' }}>
                 <CardContent>
                     <form onSubmit={handleSubmit} style={{ maxWidth: '500px', margin: '0 auto' }}>
                         <TextField
                             fullWidth
-                            label="Order Name"
-                            value={orderName}
-                            onChange={(e) => setOrderName(e.target.value)}
-                            required
-                            margin="normal"
-                            variant="outlined"
-                        />
-                        <FormControl fullWidth margin="normal" variant="outlined">
-                            <InputLabel>Supplier</InputLabel>
-                            <Select
-                                value={supplier}
-                                onChange={(e) => setSupplier(e.target.value)}
-                                required
-                            >
-                                <MenuItem value="">
-                                    <em>Select a supplier</em>
-                                </MenuItem>
-                                {suppliers.map((sup) => (
-                                    <MenuItem key={sup.id} value={sup.id}>
-                                        {sup.name}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                        <TextField
-                            fullWidth
-                            label="Quantity"
-                            type="number"
-                            value={quantity}
-                            onChange={(e) => setQuantity(e.target.value)}
+                            label="Project Name"
+                            value={projectName}
+                            onChange={(e) => setProjectName(e.target.value)}
                             required
                             margin="normal"
                             variant="outlined"
                         />
                         <TextField
                             fullWidth
-                            label="Cost"
-                            type="number"
-                            value={cost}
-                            onChange={(e) => setCost(e.target.value)}
+                            label="Client Name"
+                            value={clientName}
+                            onChange={(e) => setClientName(e.target.value)}
+                            required
+                            margin="normal"
+                            variant="outlined"
+                        />
+                        <TextField
+                            fullWidth
+                            label="Date"
+                            type="date"
+                            value={date}
+                            onChange={(e) => setDate(e.target.value)}
+                            required
+                            margin="normal"
+                            variant="outlined"
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                        />
+                        <TextField
+                            fullWidth
+                            label="Description"
+                            multiline
+                            rows={4}
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
                             required
                             margin="normal"
                             variant="outlined"
@@ -135,10 +120,9 @@ const EditPurchaseOrder = () => {
                                 <MenuItem value="">
                                     <em>Select status</em>
                                 </MenuItem>
-                                <MenuItem value="Pending">Pending</MenuItem>
-                                <MenuItem value="Approved">Approved</MenuItem>
-                                <MenuItem value="Rejected">Rejected</MenuItem>
-                                <MenuItem value="Completed">Completed</MenuItem>
+                                <MenuItem value="pending">Pending</MenuItem>
+                                <MenuItem value="completed">Completed</MenuItem>
+                                <MenuItem value="rejected">Rejected</MenuItem>
                             </Select>
                         </FormControl>
                         <Button
@@ -148,7 +132,7 @@ const EditPurchaseOrder = () => {
                             type="submit"
                             sx={{ mt: 2 }}
                         >
-                            Update Purchase Order
+                            Update Requisition Form
                         </Button>
                     </form>
                 </CardContent>
@@ -161,11 +145,11 @@ const EditPurchaseOrder = () => {
                 anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
             >
                 <Alert onClose={handleCloseSnackbar} severity="success" variant="filled">
-                    Purchase order updated successfully!
+                    Requisition form updated successfully!
                 </Alert>
             </Snackbar>
         </Box>
     );
 };
 
-export default EditPurchaseOrder;
+export default EditRequisitionForm;
