@@ -21,7 +21,9 @@ const EditRequisitionForm = () => {
             try {
                 const response = await axios.get(`${requisitionApi}/${id}`);
                 const reqData = response.data;
+                console.log(reqData);
                 const formattedDate = reqData.date ? reqData.date.split('T')[0] : '';
+                console.log(formattedDate)
 
                 console.log(reqData);
                 setProjectName(reqData.projectName);
@@ -36,11 +38,6 @@ const EditRequisitionForm = () => {
 
         fetchRequisitionForm();
     }, [id]);
-
-    const formatDate = (isoDate) => {
-        const date = new Date(isoDate);
-        return new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(date);
-    };
     
     const handleSubmit = async (e) => {
         e.preventDefault();
