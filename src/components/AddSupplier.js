@@ -3,7 +3,7 @@ import axios from 'axios';
 import { TextField, Button, Box, Snackbar, Alert, Typography, Card, CardContent } from '@mui/material';
 import api from '../api/api.js';
 
-const { suppliers_api } = api; // Import suppliers API
+const { suppliersApi } = api; // Import suppliers API
 
 const AddSupplier = () => {
     const [name, setName] = useState('');
@@ -20,7 +20,7 @@ const AddSupplier = () => {
         };
 
         try {
-            await axios.post(suppliers_api, newSupplier);
+            await axios.post(suppliersApi, newSupplier);
             // Reset form fields
             setName('');
             setContact('');

@@ -3,7 +3,7 @@ import axios from 'axios';
 import { TextField, Button, Box, MenuItem, Snackbar, Alert, Typography, FormControl, InputLabel, Select, Card, CardContent } from '@mui/material';
 import api from '../api/api.js';
 
-const { stocks_api, suppliers_api } = api; // Import APIs, including suppliers API
+const { stocks_api, suppliersApi } = api; // Import APIs, including suppliers API
 
 const AddStock = () => {
     const [itemName, setItemName] = useState('');
@@ -21,7 +21,7 @@ const AddStock = () => {
         // Fetch suppliers from the API
         const fetchSuppliers = async () => {
             try {
-                const response = await axios.get(suppliers_api);
+                const response = await axios.get(suppliersApi);
                 setSuppliers(response.data);
             } catch (error) {
                 console.error('Error fetching suppliers:', error);
