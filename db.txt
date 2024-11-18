@@ -78,7 +78,7 @@ CREATE TABLE purchaseOrders (
     id INT AUTO_INCREMENT PRIMARY KEY,
     client VARCHAR(255) NOT NULL, -- Name or ID of the client
     userId INT NOT NULL, -- ID of the user creating the order
-    status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
+    status ENUM('pending', 'completed', 'rejected') DEFAULT 'pending',
     submissionDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     tax DECIMAL(18, 2) DEFAULT 0, -- Tax amount
     shipping DECIMAL(18, 2) DEFAULT 0, -- Shipping cost
@@ -103,8 +103,18 @@ CREATE TABLE purchaseOrderItems (
 CREATE TABLE requisitionForm (
     id INT AUTO_INCREMENT PRIMARY KEY,
     projectName VARCHAR(255) NOT NULL,
-    projectDescription VARCHAR(255) NOT NULL
+    clientName VARCHAR(255) NOT NULL,
+    date DATE NOT NULL,
+    description TEXT,
+    status ENUM('pending', 'completed', 'rejected') DEFAULT 'pending',
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
+
 
 -- Select all data from the stocks table for verification
 SELECT * FROM stocks;
+SELECT * FROM purchaseOrders;
+SELECT * FROM requisitionForm;
+
+
