@@ -35,14 +35,14 @@ const AddStock = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const newStock = {
-            item_name: itemName,
+            itemName: itemName,
             brand,
             quantity,
             unit,
             cost,
-            serial_no: serialNo,
+            serialNo: serialNo,
             quality,
-            supplier_id: supplier,
+            supplierId: supplier,
         };
 
         try {

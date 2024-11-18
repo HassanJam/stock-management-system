@@ -60,10 +60,10 @@ const AddPurchaseOrder = () => {
             subtotal,
             total,
             items: items.map(({ itemName, quantity, unitPrice, totalPrice }) => ({
-                item_name: itemName,
+                itemName: itemName,
                 quantity,
-                unit_price: unitPrice,
-                total_price: totalPrice,
+                unitPrice: unitPrice,
+                totalPrice: totalPrice,
             })),
         };
 

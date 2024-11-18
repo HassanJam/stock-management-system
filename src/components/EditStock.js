@@ -4,7 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Typography, TextField, Button, Box, MenuItem, FormControl, InputLabel, Select, Snackbar, Alert, Card, CardContent } from '@mui/material';
 import api from '../api/api.js';
 
-const { stocks_api, suppliers_api } = api; // Ensure you import correct APIs
+const { stocks_api, suppliersApi } = api; // Ensure you import correct APIs
 
 const EditStock = () => {
     const { id } = useParams();
@@ -25,14 +25,15 @@ const EditStock = () => {
             try {
                 const response = await axios.get(`${stocks_api}/${id}`);
                 const stockData = response.data;
-                setItemName(stockData.item_name);
+                console.log(stockData);
+                setItemName(stockData.itemName);
                 setBrand(stockData.brand);
                 setQuantity(stockData.quantity);
                 setUnit(stockData.unit);
                 setCost(stockData.cost);
-                setSerialNo(stockData.serial_no);
+                setSerialNo(stockData.serialNo);
                 setQuality(stockData.quality);
-                setSupplier(stockData.supplier_id);
+                setSupplier(stockData.supplierId);
             } catch (error) {
                 console.error("Failed to fetch stock.", error);
             }
@@ -40,7 +41,7 @@ const EditStock = () => {
 
         const fetchSuppliers = async () => {
             try {
-                const response = await axios.get(suppliers_api);
+                const response = await axios.get(suppliersApi);
                 setSuppliers(response.data);
             } catch (error) {
                 console.error("Failed to fetch suppliers.", error);
@@ -54,14 +55,14 @@ const EditStock = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const updatedStock = {
-            item_name: itemName,
+            itemName: itemName,
             brand,
             quantity,
             unit,
             cost,
-            serial_no: serialNo,
+            serialNo: serialNo,
             quality,
-            supplier_id: supplier,
+            supplierId: supplier,
         };
 
         try {

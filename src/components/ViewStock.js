@@ -44,15 +44,16 @@ const ViewStock = () => {
     useEffect(() => {
         const filtered = stocks.filter(stock => {
             return (
-                stock.item_name.toLowerCase().includes(filters.itemName.toLowerCase()) &&
-                stock.brand.toLowerCase().includes(filters.brand.toLowerCase()) &&
-                stock.supplier_name.toLowerCase().includes(filters.supplier.toLowerCase()) &&
-                stock.serial_no.toLowerCase().includes(filters.serialNo.toLowerCase()) &&
-                stock.quality.toLowerCase().includes(filters.quality.toLowerCase())
+                (stock.itemName || '').toLowerCase().includes(filters.itemName.toLowerCase()) &&
+                (stock.brand || '').toLowerCase().includes(filters.brand.toLowerCase()) &&
+                (stock.supplierName || '').toLowerCase().includes(filters.supplier.toLowerCase()) &&
+                (stock.serial_no || '').toLowerCase().includes(filters.serialNo.toLowerCase()) &&
+                (stock.quality || '').toLowerCase().includes(filters.quality.toLowerCase())
             );
         });
         setFilteredStocks(filtered);
     }, [filters, stocks]);
+    
 
     const handleDelete = async (id) => {
         try {
@@ -146,14 +147,14 @@ const ViewStock = () => {
                     <TableBody>
                         {filteredStocks.map((stock) => (
                             <TableRow key={stock.id}>
-                                <TableCell>{stock.item_name}</TableCell>
+                                <TableCell>{stock.itemName}</TableCell>
                                 <TableCell>{stock.brand}</TableCell>
                                 <TableCell>{stock.quantity}</TableCell>
                                 <TableCell>{stock.unit}</TableCell>
                                 <TableCell>{stock.cost}</TableCell>
-                                <TableCell>{stock.serial_no}</TableCell>
+                                <TableCell>{stock.serialNo}</TableCell>
                                 <TableCell>{stock.quality}</TableCell>
-                                <TableCell>{stock.supplier_name}</TableCell>
+                                <TableCell>{stock.supplierName}</TableCell>
                                 {user?.department === 'procurement' ? (
                                     <TableCell>
                                         <Button

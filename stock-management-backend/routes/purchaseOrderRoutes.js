@@ -30,10 +30,10 @@ router.post('/', async (req, res) => {
         console.log("Items", items);
         const itemValues = items.map(item => [
             purchaseOrderId,
-            item.item_name,
+            item.itemName,
             item.quantity,
-            item.unit_price,
-            item.quantity * item.unit_price // Calculate totalPrice for each item
+            item.unitPrice,
+            item.quantity * item.unitPrice // Calculate totalPrice for each item
         ]);
         console.log("Item values", itemValues[0]);
 
