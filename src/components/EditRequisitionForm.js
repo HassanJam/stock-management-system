@@ -21,10 +21,12 @@ const EditRequisitionForm = () => {
             try {
                 const response = await axios.get(`${requisitionApi}/${id}`);
                 const reqData = response.data;
+                const formattedDate = reqData.date ? reqData.date.split('T')[0] : '';
+
                 console.log(reqData);
                 setProjectName(reqData.projectName);
                 setClientName(reqData.clientName);
-                setDate(reqData.date);
+                setDate(formattedDate);
                 setDescription(reqData.description);
                 setStatus(reqData.status);
             } catch (error) {
