@@ -9,8 +9,8 @@ import EditStockPage from './components/EditStock';
 import AddSupplierPage from './components/AddSupplier';
 import ProtectedRoute from './components/ProtectedRoute';
 import RequisitionForm from './components/requisitionForm';
-import AddRequisitionOrder from './components/addRequisitionOrder';
-import EditRequisitionForm from './components/EditRequisitionOrder';
+import AddRequisitionForm from './components/addRequisitionForm';
+import EditRequisitionForm from './components/EditRequisitionForm';
 import PurchaseOrderForm from './components/purchaseOrder';
 import AddPurchaseOrder from './components/addPurchaseOrder';
 import EditPurchaseOrder from './components/editPurchaseOrder';
@@ -67,10 +67,10 @@ const App = () => {
                         />
                         <Route
                             path="addrequisitionForm"
-                            element={<ProtectedRoute element={<AddRequisitionOrder />} />}
+                            element={<ProtectedRoute element={<AddRequisitionForm />} />}
                         />
                         <Route
-                            path="editrequisitionOrder/:id"
+                            path="editrequisitionForm/:id"
                             element={<ProtectedRoute element={<EditRequisitionForm />} />}
                         />
                     </Route>

@@ -6,7 +6,7 @@ import api from '../api/api.js';
 
 const { po_api } = api; // Ensure this points to the correct API endpoint
 
-const AddRequisitionOrder = () => {
+const AddRequisitionForm = () => {
     const [projectName, setProjectName] = useState('');
     const [clientName, setClientName] = useState('');
     const [date, setDate] = useState(dayjs().format('YYYY-MM-DDTHH:mm')); // Default to current date-time
@@ -145,4 +145,4 @@ const AddRequisitionOrder = () => {
     );
 };
 
-export default AddRequisitionOrder;
+export default AddRequisitionForm;

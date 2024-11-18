@@ -22,6 +22,11 @@ const RequisitionForm = () => {
             try {
                 const response = await axios.get(`${requisitionApi}`);
                 const orders = response.data;
+    
+                // Log response to check data structure
+                console.log('Fetched orders:', orders);
+    
+                // Filter and set orders based on status
                 setPendingOrders(orders.filter(order => order.status === 'pending'));
                 setCompletedOrders(orders.filter(order => order.status === 'completed'));
                 setRejectedOrders(orders.filter(order => order.status === 'rejected'));
@@ -30,9 +35,10 @@ const RequisitionForm = () => {
                 alert('Failed to load orders.');
             }
         };
-
+    
         fetchOrders();
     }, []);
+    
 
     // Open dialog with selected order details
     const handleViewDetails = (order) => {
@@ -64,7 +70,7 @@ const RequisitionForm = () => {
                 <Button
                     variant="contained"
                     color="secondary"
-                    onClick={() => navigate(`/dashboard/editRequisitionOrder/${order.id}`)}
+                    onClick={() => navigate(`/dashboard/editRequisitionForm/${order.id}`)}
                 >
                     Edit Order
                 </Button>
