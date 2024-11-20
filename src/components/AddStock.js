@@ -1,19 +1,8 @@
 import React, { useState } from 'react';
-import {
-    TextField,
-    Button,
-    Box,
-    MenuItem,
-    Typography,
-    FormControl,
-    InputLabel,
-    Select,
-    Card,
-    CardContent,
-} from '@mui/material';
+import { TextField, MenuItem, Select, FormControl, InputLabel, Button, Box, Typography, Paper, Grid, Container } from '@mui/material';
 import axios from 'axios';
 import api from '../api/api'; // Import your API file
-const { stocks_api } = api; // Ensure this points to the correct API endpoint
+const { stocks_api } = api;
 
 const AddStock = () => {
     const [itemDescription, setItemDescription] = useState('');
@@ -32,6 +21,7 @@ const AddStock = () => {
     const [outwardGatePass, setOutwardGatePass] = useState(null);
     const [storeLocation, setStoreLocation] = useState('');
     const [contactPerson, setContactPerson] = useState('');
+    const [stockStatus, setStockStatus] = useState('');
 
     const handleSerialNumberChange = (index, value) => {
         const updatedSerialNumbers = [...serialNumbers];
@@ -69,9 +59,8 @@ const AddStock = () => {
         formData.append('outwardGatePass', outwardGatePass);
         formData.append('storeLocation', storeLocation);
         formData.append('contactPerson', contactPerson);
-        formData.forEach((value, key) => {
-            console.log(key, value);  // Log each field name and value
-        });
+        formData.append('stockStatus', stockStatus);
+
         try {
             await axios.post(stocks_api, formData, {
                 headers: {
@@ -86,144 +75,229 @@ const AddStock = () => {
     };
 
     return (
-        <Box sx={{ p: 3 }}>
+        <Container sx={{ mt: 4, mb: 4 }}>
             <Typography variant="h4" align="center" gutterBottom>
                 Add Stock
             </Typography>
-            <Card variant="outlined" sx={{ maxWidth: 600, margin: '0 auto', p: 2 }}>
-                <CardContent>
-                    <form onSubmit={handleSubmit}>
-                        <TextField
-                            label="Item Description"
-                            value={itemDescription}
-                            onChange={(e) => setItemDescription(e.target.value)}
-                            fullWidth
-                            margin="normal"
-                        />
-                        <TextField
-                            label="Model Number"
-                            value={modelNumber}
-                            onChange={(e) => setModelNumber(e.target.value)}
-                            fullWidth
-                            margin="normal"
-                        />
+            <Paper sx={{ padding: 3, borderRadius: 2, boxShadow: 3 }}>
+                <form onSubmit={handleSubmit}>
+                    <Grid container spacing={3}>
+                        <Grid item xs={12} sm={6}>
+                            <FormControl fullWidth margin="normal">
+                                <InputLabel>Stock Status</InputLabel>
+                                <Select value={stockStatus} onChange={(e) => setStockStatus(e.target.value)} fullWidth>
+                                    <MenuItem value="In">In</MenuItem>
+                                    <MenuItem value="Out">Out</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                label="Item Description"
+                                value={itemDescription}
+                                onChange={(e) => setItemDescription(e.target.value)}
+                                fullWidth
+                                margin="normal"
+                                InputLabelProps={{
+                                    shrink: true, // Prevent label from floating
+                                }}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                label="Model Number"
+                                value={modelNumber}
+                                onChange={(e) => setModelNumber(e.target.value)}
+                                fullWidth
+                                margin="normal"
+                                InputLabelProps={{
+                                    shrink: true, // Prevent label from floating
+                                }}
+                            />
+                        </Grid>
                         {serialNumbers.map((serial, index) => (
-                            <Box key={index} display="flex" alignItems="center" marginY={1}>
-                                <TextField
-                                    label={`Serial Number ${index + 1}`}
-                                    value={serial}
-                                    onChange={(e) => handleSerialNumberChange(index, e.target.value)}
-                                    fullWidth
-                                />
-                                <Button
-                                    onClick={() => removeSerialField(index)}
-                                    color="error"
-                                    sx={{ ml: 1 }}
-                                >
-                                    Remove
-                                </Button>
-                            </Box>
+                            <Grid item xs={12} sm={6} key={index}>
+                                <Box display="flex" alignItems="center" marginY={1}>
+                                    <TextField
+                                        label={`Serial Number ${index + 1}`}
+                                        value={serial}
+                                        onChange={(e) => handleSerialNumberChange(index, e.target.value)}
+                                        fullWidth
+                                        InputLabelProps={{
+                                            shrink: true, // Prevent label from floating
+                                        }}
+                                    />
+                                    <Button onClick={() => removeSerialField(index)} color="error" sx={{ ml: 1 }}>
+                                        Remove
+                                    </Button>
+                                </Box>
+                            </Grid>
                         ))}
-                        <Button onClick={addSerialField} variant="outlined" color="primary" sx={{ mb: 2 }}>
-                            Add Serial Number
+                        <Grid item xs={12}>
+                            <Button onClick={addSerialField} variant="outlined" color="primary" sx={{ mb: 2 }}>
+                                Add Serial Number
+                            </Button>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                label="Make"
+                                value={make}
+                                onChange={(e) => setMake(e.target.value)}
+                                fullWidth
+                                margin="normal"
+                                InputLabelProps={{
+                                    shrink: true, // Prevent label from floating
+                                }}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                label="Quantity"
+                                value={quantity}
+                                onChange={(e) => setQuantity(e.target.value)}
+                                type="number"
+                                fullWidth
+                                margin="normal"
+                                InputLabelProps={{
+                                    shrink: true, // Prevent label from floating
+                                }}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                label="Unit of Measurement"
+                                value={unit}
+                                onChange={(e) => setUnit(e.target.value)}
+                                fullWidth
+                                margin="normal"
+                                InputLabelProps={{
+                                    shrink: true, // Prevent label from floating
+                                }}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <FormControl fullWidth margin="normal">
+                                <InputLabel>Type</InputLabel>
+                                <Select value={type} onChange={(e) => setType(e.target.value)} fullWidth>
+                                    <MenuItem value="New">New</MenuItem>
+                                    <MenuItem value="Used">Used</MenuItem>
+                                    <MenuItem value="Refurbished">Refurbished</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                label="Purchase Date"
+                                value={purchaseDate}
+                                onChange={(e) => setPurchaseDate(e.target.value)}
+                                type="date"
+                                InputLabelProps={{
+                                    shrink: true, // Prevent label from floating
+                                }}
+                                fullWidth
+                                margin="normal"
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                label="Stock-In Date & Time"
+                                value={stockInDate}
+                                onChange={(e) => setStockInDate(e.target.value)}
+                                type="datetime-local"
+                                InputLabelProps={{
+                                    shrink: true, // Prevent label from floating
+                                }}
+                                fullWidth
+                                margin="normal"
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                label="Stock-In Person Details"
+                                value={stockInDetails}
+                                onChange={(e) => setStockInDetails(e.target.value)}
+                                fullWidth
+                                margin="normal"
+                                InputLabelProps={{
+                                    shrink: true, // Prevent label from floating
+                                }}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                label="Stock-Out Date & Time"
+                                value={stockOutDate}
+                                onChange={(e) => setStockOutDate(e.target.value)}
+                                type="datetime-local"
+                                InputLabelProps={{
+                                    shrink: true, // Prevent label from floating
+                                }}
+                                fullWidth
+                                margin="normal"
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                label="Stock-Out Person Details"
+                                value={stockOutDetails}
+                                onChange={(e) => setStockOutDetails(e.target.value)}
+                                fullWidth
+                                margin="normal"
+                                InputLabelProps={{
+                                    shrink: true, // Prevent label from floating
+                                }}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <input
+                                type="file"
+                                onChange={(e) => handleFileUpload(e, setInwardGatePass)}
+                                style={{ padding: '10px' }}
+                            />
+                            <Typography variant="caption" color="textSecondary">
+                                Inward Gate Pass
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <input
+                                type="file"
+                                onChange={(e) => handleFileUpload(e, setOutwardGatePass)}
+                                style={{ padding: '10px' }}
+                            />
+                            <Typography variant="caption" color="textSecondary">
+                                Outward Gate Pass
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <FormControl fullWidth margin="normal">
+                                <InputLabel>Store Location</InputLabel>
+                                <Select value={storeLocation} onChange={(e) => setStoreLocation(e.target.value)} fullWidth>
+                                    <MenuItem value="Lahore">Lahore</MenuItem>
+                                    <MenuItem value="Islamabad">Islamabad</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                label="Contact Person"
+                                value={contactPerson}
+                                onChange={(e) => setContactPerson(e.target.value)}
+                                fullWidth
+                                margin="normal"
+                                InputLabelProps={{
+                                    shrink: true, // Prevent label from floating
+                                }}
+                            />
+                        </Grid>
+                    </Grid>
+                    <Box sx={{ mt: 3 }}>
+                        <Button type="submit" variant="contained" color="primary" fullWidth>
+                            Add Stock
                         </Button>
-                        <FormControl fullWidth margin="normal">
-                            <InputLabel>Make</InputLabel>
-                            <Select value={make} onChange={(e) => setMake(e.target.value)}>
-                                <MenuItem value="In">In</MenuItem>
-                                <MenuItem value="Out">Out</MenuItem>
-                            </Select>
-                        </FormControl>
-                        <TextField
-                            label="Quantity"
-                            value={quantity}
-                            onChange={(e) => setQuantity(e.target.value)}
-                            type="number"
-                            fullWidth
-                            margin="normal"
-                        />
-                        <TextField
-                            label="Unit of Measurement"
-                            value={unit}
-                            onChange={(e) => setUnit(e.target.value)}
-                            fullWidth
-                            margin="normal"
-                        />
-                        <FormControl fullWidth margin="normal">
-                            <InputLabel>Type</InputLabel>
-                            <Select value={type} onChange={(e) => setType(e.target.value)}>
-                                <MenuItem value="New">New</MenuItem>
-                                <MenuItem value="Used">Used</MenuItem>
-                                <MenuItem value="Refurbished">Refurbished</MenuItem>
-                            </Select>
-                        </FormControl>
-                        <TextField
-                            label="Purchase Date"
-                            value={purchaseDate}
-                            onChange={(e) => setPurchaseDate(e.target.value)}
-                            type="date"
-                            InputLabelProps={{ shrink: true }}
-                            fullWidth
-                            margin="normal"
-                        />
-                        <TextField
-                            label="Stock-In Date & Time"
-                            value={stockInDate}
-                            onChange={(e) => setStockInDate(e.target.value)}
-                            type="datetime-local"
-                            InputLabelProps={{ shrink: true }}
-                            fullWidth
-                            margin="normal"
-                        />
-                        <TextField
-                            label="Stock-In Person Details"
-                            value={stockInDetails}
-                            onChange={(e) => setStockInDetails(e.target.value)}
-                            fullWidth
-                            margin="normal"
-                        />
-                        <TextField
-                            label="Stock-Out Date & Time"
-                            value={stockOutDate}
-                            onChange={(e) => setStockOutDate(e.target.value)}
-                            type="datetime-local"
-                            InputLabelProps={{ shrink: true }}
-                            fullWidth
-                            margin="normal"
-                        />
-                        <TextField
-                            label="Stock-Out Person Details"
-                            value={stockOutDetails}
-                            onChange={(e) => setStockOutDetails(e.target.value)}
-                            fullWidth
-                            margin="normal"
-                        />
-                        <Typography>Inward Gate Pass/Delivery Challan</Typography>
-                        <input type="file" onChange={(e) => handleFileUpload(e, setInwardGatePass)} />
-                        <Typography>Outward Gate Pass/Delivery Challan</Typography>
-                        <input type="file" onChange={(e) => handleFileUpload(e, setOutwardGatePass)} />
-                        <FormControl fullWidth margin="normal">
-                            <InputLabel>Store Location</InputLabel>
-                            <Select value={storeLocation} onChange={(e) => setStoreLocation(e.target.value)}>
-                                <MenuItem value="Lahore">Lahore</MenuItem>
-                                <MenuItem value="Islamabad">Islamabad</MenuItem>
-                                <MenuItem value="Other">Other</MenuItem>
-                            </Select>
-                        </FormControl>
-                        <TextField
-                            label="For Project/Contact Person"
-                            value={contactPerson}
-                            onChange={(e) => setContactPerson(e.target.value)}
-                            fullWidth
-                            margin="normal"
-                        />
-                        <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
-                            Submit
-                        </Button>
-                    </form>
-                </CardContent>
-            </Card>
-        </Box>
+                    </Box>
+                </form>
+            </Paper>
+        </Container>
     );
 };
 

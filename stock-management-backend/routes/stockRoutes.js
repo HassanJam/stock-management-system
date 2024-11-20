@@ -3,14 +3,13 @@ const router = express.Router();
 const pool = require('../db'); // Import the database connection pool
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
-
 router.post('/', upload.fields([{ name: 'inwardGatePass' }, { name: 'outwardGatePass' }]), async (req, res) => {
     // Destructure the request body data
     const {
         itemDescription,
         modelNumber,
         serialNumbers,
-        make,
+        make, // Represents the company name
         quantity,
         unit,
         type,
@@ -20,7 +19,8 @@ router.post('/', upload.fields([{ name: 'inwardGatePass' }, { name: 'outwardGate
         stockOutDate,
         stockOutDetails,
         storeLocation,
-        contactPerson
+        contactPerson,
+        stockStatus // The new field for stock status
     } = req.body;
 
     // Log incoming data for debugging
@@ -28,7 +28,7 @@ router.post('/', upload.fields([{ name: 'inwardGatePass' }, { name: 'outwardGate
     console.log('Request files:', req.files);
 
     // Check for missing fields
-    if (!itemDescription || !modelNumber || !make || !quantity || !unit || !type || !purchaseDate) {
+    if (!itemDescription || !modelNumber || !make || !quantity || !unit || !type || !purchaseDate || !stockStatus) {
         return res.status(400).json({ message: 'Missing required fields' });
     }
 
@@ -41,12 +41,12 @@ router.post('/', upload.fields([{ name: 'inwardGatePass' }, { name: 'outwardGate
             `INSERT INTO stocks (
                 item_description, model_number, make, quantity, unit_of_measurement, type, 
                 purchase_date, stock_in_date, stock_in_details, stock_out_date, 
-                stock_out_details, store_location, contact_person
+                stock_out_details, store_location, contact_person, stock_status
              ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [
                 itemDescription, modelNumber, make, quantity, unit, type,
                 purchaseDate, stockInDate, stockInDetails, stockOutDate,
-                stockOutDetails, storeLocation, contactPerson
+                stockOutDetails, storeLocation, contactPerson, stockStatus
             ]
         );
 
@@ -61,18 +61,17 @@ router.post('/', upload.fields([{ name: 'inwardGatePass' }, { name: 'outwardGate
             );
         }
 
-    // Insert files if provided
-    if (req.files && req.files.inwardGatePass && req.files.outwardGatePass) {
-        const fileValues = [
-            [stockId, 'inwardGatePass', req.files.inwardGatePass[0].path],
-            [stockId, 'outwardGatePass', req.files.outwardGatePass[0].path]
-        ];
-        await connection.query(
-            `INSERT INTO files (stock_id, file_type, file_path) VALUES ?`,
-            [fileValues]
-        );
-    }
-
+        // Insert files if provided
+        if (req.files && req.files.inwardGatePass && req.files.outwardGatePass) {
+            const fileValues = [
+                [stockId, 'inwardGatePass', req.files.inwardGatePass[0].path],
+                [stockId, 'outwardGatePass', req.files.outwardGatePass[0].path]
+            ];
+            await connection.query(
+                `INSERT INTO files (stock_id, file_type, file_path) VALUES ?`,
+                [fileValues]
+            );
+        }
 
         await connection.commit();
 
@@ -135,7 +134,7 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// Update a stock item
+// Update the stock item
 router.put('/:id', async (req, res) => {
     const { id } = req.params;
     const {
@@ -152,6 +151,7 @@ router.put('/:id', async (req, res) => {
         stockOutDetails,
         storeLocation,
         contactPerson,
+        stockStatus, // The new stock status field
         serialNumbers,
         files
     } = req.body;
@@ -168,12 +168,12 @@ router.put('/:id', async (req, res) => {
              SET item_description = ?, model_number = ?, make = ?, quantity = ?, 
                  unit_of_measurement = ?, type = ?, purchase_date = ?, stock_in_date = ?, 
                  stock_in_details = ?, stock_out_date = ?, stock_out_details = ?, 
-                 store_location = ?, contact_person = ?
+                 store_location = ?, contact_person = ?, stock_status = ?
              WHERE id = ?`,
             [
                 itemDescription, modelNumber, make, quantity, unitOfMeasurement, type,
                 purchaseDate, stockInDate, stockInDetails, stockOutDate,
-                stockOutDetails, storeLocation, contactPerson, id
+                stockOutDetails, storeLocation, contactPerson, stockStatus, id
             ]
         );
 
@@ -215,7 +215,6 @@ router.put('/:id', async (req, res) => {
         connection.release();
     }
 });
-
 // Delete a stock item
 router.delete('/:id', async (req, res) => {
     const { id } = req.params;
