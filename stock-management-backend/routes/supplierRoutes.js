@@ -107,6 +107,7 @@ router.post('/', async (req, res) => {
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)`,
             values
         );
+        console.log("adding supplier",values);
         res.status(201).json({ message: 'Supplier added successfully', supplierId: newSupplier.insertId });
     } catch (err) {
         console.error(err);
