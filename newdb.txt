@@ -1,3 +1,20 @@
+drop database stockmanagement;
+create database stockManagement;
+use stockManagement;
+
+-- Create Users Table
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    department VARCHAR(255) NOT NULL
+);
+
+-- Insert sample users
+INSERT INTO users (username, password, department) VALUES
+('stockUser', '123', 'stockManager'),
+('proUser', '123', 'procurement'),
+('salesUser', '123', 'sales');
 CREATE TABLE stocks (
     id INT AUTO_INCREMENT PRIMARY KEY,
     item_description VARCHAR(255) NOT NULL,
@@ -29,3 +46,56 @@ CREATE TABLE files (
     file_path VARCHAR(255) NOT NULL,
     FOREIGN KEY (stock_id) REFERENCES stocks(id) ON DELETE CASCADE
 );
+
+
+CREATE TABLE suppliers (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    company_name VARCHAR(255) NOT NULL,
+    address VARCHAR(255),
+    telephone_number VARCHAR(50),
+    fax_number VARCHAR(50),
+    email_address VARCHAR(255),
+    website_address VARCHAR(255),
+    representative_name VARCHAR(255),
+    representative_email VARCHAR(255),
+    representative_direct_number VARCHAR(50),
+    representative_mobile_number VARCHAR(50),
+    company_established_date DATE,
+    gross_annual_sales_year1 DECIMAL(15, 2),
+    gross_annual_sales_year2 DECIMAL(15, 2),
+    gross_annual_sales_year3 DECIMAL(15, 2),
+    organization_type VARCHAR(100),
+    business_type VARCHAR(100),
+    employee_count INT,
+    branch_count INT,
+    factory_location VARCHAR(255),
+    plant_count INT,
+    warehouse_count INT,
+    authorized_signer_name VARCHAR(255),
+    authorized_signer_position VARCHAR(255),
+    authorized_signer_telephone VARCHAR(50),
+    client_references JSON,
+    owners VARCHAR(255),
+    chief_executive_officer VARCHAR(255),
+    chief_financial_officer VARCHAR(255),
+    bank_name VARCHAR(255),
+    bank_address VARCHAR(255),
+    beneficiary_name VARCHAR(255),
+    bank_account_number VARCHAR(50),
+    nature_of_business TEXT,
+    quality_assurance_standard TEXT,
+    cert_name VARCHAR(255),
+    cert_title VARCHAR(255),
+    cert_signature TEXT,
+    cert_date DATE
+);
+
+DESCRIBE suppliers;
+
+
+ALTER TABLE stocks ADD COLUMN stock_status ENUM('In', 'Out') DEFAULT 'In';
+ALTER TABLE stocks MODIFY COLUMN make VARCHAR(255);
+
+
+select * from stocks;
+select * from suppliers;
