@@ -15,9 +15,7 @@ router.post('/', async (req, res) => {
         representativeDirectNumber,
         representativeMobileNumber,
         companyEstablishedDate,
-        grossAnnualSalesYear1,
-        grossAnnualSalesYear2,
-        grossAnnualSalesYear3,
+        grossAnnualSales, // Expect grossAnnualSales as an object
         organizationType,
         businessType,
         employeeCount,
@@ -44,6 +42,24 @@ router.post('/', async (req, res) => {
         certDate
     } = req.body;
 
+    // Destructure grossAnnualSales object
+    const { year1, year2, year3 } = grossAnnualSales || {};
+
+    // Ensure all required fields are present
+    if (
+        !companyName || !address || !telephoneNumber || !faxNumber || !emailAddress ||
+        !websiteAddress || !representativeName || !representativeEmail || !representativeDirectNumber ||
+        !representativeMobileNumber || !companyEstablishedDate || !year1 || !year2 || !year3 ||
+        !organizationType || !businessType || !employeeCount || !branchCount || !factoryLocation ||
+        !plantCount || !warehouseCount || !authorizedSignerName || !authorizedSignerPosition ||
+        !authorizedSignerTelephone || !clientReferences || !owners || !chiefExecutiveOfficer ||
+        !chiefFinancialOfficer || !bankName || !bankAddress || !beneficiaryName || !bankAccountNumber ||
+        !natureOfBusiness || !qualityAssuranceStandard || !certName || !certTitle || !certSignature || !certDate
+    ) {
+        return res.status(400).json({ error: 'All fields are required.' });
+    }
+
+    // Prepare values array for insertion
     const values = [
         companyName,
         address,
@@ -56,9 +72,9 @@ router.post('/', async (req, res) => {
         representativeDirectNumber,
         representativeMobileNumber,
         companyEstablishedDate,
-        grossAnnualSalesYear1,
-        grossAnnualSalesYear2,
-        grossAnnualSalesYear3,
+        year1,
+        year2,
+        year3,
         organizationType,
         businessType,
         employeeCount,
@@ -69,7 +85,7 @@ router.post('/', async (req, res) => {
         authorizedSignerName,
         authorizedSignerPosition,
         authorizedSignerTelephone,
-        JSON.stringify(clientReferences),  // Ensure this is a valid JSON string
+        JSON.stringify(clientReferences), // Convert clientReferences array to JSON
         owners,
         chiefExecutiveOfficer,
         chiefFinancialOfficer,
@@ -85,12 +101,8 @@ router.post('/', async (req, res) => {
         certDate
     ];
 
-    // Ensure values array length is exactly 36
-    if (values.length !== 38) {
-        return res.status(400).json({ error: `Column count mismatch. Expected 36 values, but got ${values.length}.` });
-    }
-
     try {
+        // Insert data into suppliers table
         const [newSupplier] = await pool.query(
             `INSERT INTO suppliers (
                 company_name, address, telephone_number, fax_number, email_address, 
@@ -107,10 +119,13 @@ router.post('/', async (req, res) => {
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)`,
             values
         );
-        console.log("adding supplier",values);
+
+        console.log("Adding supplier:", values);
+
+        // Respond with success
         res.status(201).json({ message: 'Supplier added successfully', supplierId: newSupplier.insertId });
     } catch (err) {
-        console.error(err);
+        console.error("Database error:", err);
         res.status(500).send('Server Error');
     }
 });
