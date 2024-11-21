@@ -42,7 +42,7 @@ router.post('/', upload.fields([{ name: 'inwardGatePass' }, { name: 'outwardGate
                 item_description, model_number, make, quantity, unit_of_measurement, type, 
                 purchase_date, stock_in_date, stock_in_details, stock_out_date, 
                 stock_out_details, store_location, contact_person, stock_status
-             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)`,
             [
                 itemDescription, modelNumber, make, quantity, unit, type,
                 purchaseDate, stockInDate, stockInDetails, stockOutDate,
