@@ -109,9 +109,9 @@ const AddRequisitionForm = () => {
                             type="submit"
                             sx={{
                                 mt: 3,
-                                bgcolor: '#1976d2',
+                                bgcolor: '#000000',
                                 '&:hover': {
-                                    bgcolor: '#115293',
+                                    bgcolor: '#444444',
                                 },
                             }}
                         >

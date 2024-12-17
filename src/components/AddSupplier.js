@@ -1,10 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TextField, Button, Box, Typography, Card, CardContent, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, Grid } from '@mui/material';
 import axios from 'axios';
 import api from '../api/api';
+import { useNavbar } from '../context/NavbarContext';
 
 const suppliersApi = api.suppliersApi;
 const AddSupplier = () => {
+    const { setNavbarTitle } = useNavbar();
+            
+    useEffect(() => {
+        setNavbarTitle("Add Supplier");
+        }, [setNavbarTitle]);
+
     const [formData, setFormData] = useState({
         companyName: '',
         address: '',
@@ -122,9 +129,6 @@ const AddSupplier = () => {
 
     return (
         <Box sx={{ p: 3 }}>
-            <Typography variant="h4" align="center" gutterBottom>
-                Add Supplier
-            </Typography>
             <Card variant="outlined" sx={{ maxWidth: 900, margin: '0 auto', boxShadow: 3, borderRadius: 2, bgcolor: 'white' }}>
                 <CardContent>
                     <form onSubmit={handleSubmit}>
@@ -705,7 +709,7 @@ const AddSupplier = () => {
                                 />
                             </Grid>
                         </Grid>
-                        <Button type="submit" variant="contained" color="primary" sx={{ mt: 3 }}>
+                        <Button type="submit" variant="contained" sx={{ mt: 3, backgroundColor: '#000000' }}>
                             Submit
                         </Button>
                     </form>

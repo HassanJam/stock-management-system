@@ -1,6 +1,8 @@
 import React from 'react';
+import { NavbarProvider } from './context/NavbarContext'; // New Navbar context
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { UserProvider } from './context/UserContext';
+import Header from './components/Header';
 import LoginPage from './pages/LoginPage';
 import Dashboard from './pages/Dashboard';
 import AddStockPage from './components/AddStock';
@@ -18,7 +20,9 @@ import EditPurchaseOrder from './components/editPurchaseOrder';
 const App = () => {
     return (
         <UserProvider>
+            <NavbarProvider> {/* Add the NavbarProvider here */}
             <Router>
+                <Header /> {/* Header or Navbar at the top */}
                 <Routes>
                     {/* Public route for login */}
                     <Route path="/" element={<LoginPage />} />
@@ -76,6 +80,7 @@ const App = () => {
                     </Route>
                 </Routes>
             </Router>
+            </NavbarProvider>
         </UserProvider>
     );
 };

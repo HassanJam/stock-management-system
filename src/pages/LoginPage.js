@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../context/UserContext';
 import { Container, Typography, TextField, Button, Box, Paper, Snackbar, Alert } from '@mui/material';
 import { login } from '../services/authService';
 import Header from '../components/Header'; 
+import { useNavbar } from '../context/NavbarContext';
 
 const LoginPage = () => {
     const [username, setUsername] = useState('');
@@ -12,6 +13,11 @@ const LoginPage = () => {
     const navigate = useNavigate();
     const [error, setError] = useState('');
     const [openSnackbar, setOpenSnackbar] = useState(false);
+    const { setNavbarTitle } = useNavbar();
+                        
+    useEffect(() => {
+        setNavbarTitle("");
+        }, [setNavbarTitle]);
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -34,9 +40,11 @@ const LoginPage = () => {
     };
 
     return (
-        <div style={{ 
-            background: 'linear-gradient(to bottom right, #e3f2fd, #bbdefb)', // Match gradient background from Dashboard
-            minHeight: '100vh' 
+        <div style={{
+            background: `url('/loginbg.jpg')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center center',
+            minHeight: '100vh'
         }}>
             <Header />
             <Container 
@@ -50,7 +58,7 @@ const LoginPage = () => {
                 }}
             >
                 <Paper elevation={3} sx={{ padding: 3, borderRadius: 2, bgcolor: '#f9f9f9', width: '100%' }}>
-                    <Typography variant="h4" gutterBottom align="center" sx={{ color: '#1976d2' }}>
+                    <Typography variant="h4" gutterBottom align="center" sx={{ color: '#000000' }}>
                         Login
                     </Typography>
                     <Box component="form" onSubmit={handleLogin} display="flex" flexDirection="column" gap={2}>
@@ -71,7 +79,7 @@ const LoginPage = () => {
                             onChange={(e) => setPassword(e.target.value)}
                             required
                         />
-                        <Button type="submit" variant="contained" color="primary" fullWidth>
+                        <Button type="submit" variant="contained" sx= {{ backgroundColor: '#92363E' }} fullWidth>
                             Login
                         </Button>
                     </Box>

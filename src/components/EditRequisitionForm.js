@@ -133,9 +133,8 @@ const EditRequisitionForm = () => {
                         <Button
                             fullWidth
                             variant="contained"
-                            color="primary"
                             type="submit"
-                            sx={{ mt: 2 }}
+                            sx={{ mt: 2, mb: 3, backgroundColor: '#000000' }}
                         >
                             Update Requisition Form
                         </Button>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavbar } from '../context/NavbarContext';
 import {
     Table,
     TableBody,
@@ -40,6 +41,11 @@ const ViewStock = () => {
 
     const navigate = useNavigate();
     const { user } = useUser();
+    const { setNavbarTitle } = useNavbar();
+
+    useEffect(() => {
+        setNavbarTitle("View Stock");
+    }, [setNavbarTitle]);
 
     useEffect(() => {
         const fetchStocks = async () => {
@@ -110,10 +116,7 @@ const ViewStock = () => {
     };
 
     return (
-        <Box sx={{ p: 3, bgcolor: '#f9f9f9', borderRadius: 2 }}>
-            <Typography variant="h4" align="center" gutterBottom>
-                View Stock
-            </Typography>
+        <Box sx={{ p: 3, bgcolor: '#FFFFFF', borderRadius: 2 }}>
 
             {/* Filters */}
             <Box sx={{ mb: 3, display: 'flex', gap: 2 }}>
@@ -156,14 +159,14 @@ const ViewStock = () => {
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell sx={{ fontWeight: 'bold', bgcolor: '#1976d2', color: '#fff' }}>Item Description</TableCell>
-                            <TableCell sx={{ fontWeight: 'bold', bgcolor: '#1976d2', color: '#fff' }}>Model Number</TableCell>
-                            <TableCell sx={{ fontWeight: 'bold', bgcolor: '#1976d2', color: '#fff' }}>Quantity</TableCell>
-                            <TableCell sx={{ fontWeight: 'bold', bgcolor: '#1976d2', color: '#fff' }}>Unit</TableCell>
-                            <TableCell sx={{ fontWeight: 'bold', bgcolor: '#1976d2', color: '#fff' }}>Type</TableCell>
-                            <TableCell sx={{ fontWeight: 'bold', bgcolor: '#1976d2', color: '#fff' }}>Store Location</TableCell>
-                            <TableCell sx={{ fontWeight: 'bold', bgcolor: '#1976d2', color: '#fff' }}>Serial Numbers</TableCell>
-                            <TableCell sx={{ fontWeight: 'bold', bgcolor: '#1976d2', color: '#fff' }}>Actions</TableCell>
+                            <TableCell sx={{ fontWeight: 'bold', bgcolor: '#f3f4f6', color: '#000000' }}>Item Description</TableCell>
+                            <TableCell sx={{ fontWeight: 'bold', bgcolor: '#f3f4f6', color: '#000000' }}>Model Number</TableCell>
+                            <TableCell sx={{ fontWeight: 'bold', bgcolor: '#f3f4f6', color: '#000000' }}>Quantity</TableCell>
+                            <TableCell sx={{ fontWeight: 'bold', bgcolor: '#f3f4f6', color: '#000000' }}>Unit</TableCell>
+                            <TableCell sx={{ fontWeight: 'bold', bgcolor: '#f3f4f6', color: '#000000' }}>Type</TableCell>
+                            <TableCell sx={{ fontWeight: 'bold', bgcolor: '#f3f4f6', color: '#000000' }}>Store Location</TableCell>
+                            <TableCell sx={{ fontWeight: 'bold', bgcolor: '#f3f4f6', color: '#000000' }}>Serial Numbers</TableCell>
+                            <TableCell sx={{ fontWeight: 'bold', bgcolor: '#f3f4f6', color: '#000000' }}>Actions</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -178,8 +181,8 @@ const ViewStock = () => {
                                 <TableCell>
                                     <Button
                                         variant="text"
-                                        color="primary"
                                         onClick={() => openModal(stock.serial_numbers)}
+                                        sx={{ mb: 3, backgroundColor: '#000000' }}
                                     >
                                         View Available Serial Numbers
                                     </Button>
@@ -190,9 +193,8 @@ const ViewStock = () => {
                                         <>
                                             <Button
                                                 variant="contained"
-                                                color="primary"
                                                 onClick={(event) => handleClick(event, stock.id)}
-                                                sx={{ mr: 1 }}
+                                                sx={{ mr: 1, mb: 3, backgroundColor: '#000000' }}
                                             >
                                                 Actions
                                             </Button>
@@ -279,9 +281,8 @@ const ViewStock = () => {
                     </Box>
                     <Button
                         variant="contained"
-                        color="secondary"
                         onClick={closeModal}
-                        sx={{ display: 'block', margin: '0 auto' }}
+                        sx={{ display: 'block', margin: '0 auto', mb: 3, backgroundColor: '#000000' }}
                     >
                         Close
                     </Button>

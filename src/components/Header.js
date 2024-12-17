@@ -1,24 +1,17 @@
 import React from 'react';
-import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { AppBar, Toolbar, Typography, Box } from '@mui/material';
 import { useUser } from '../context/UserContext';
+import { useNavbar } from '../context/NavbarContext';
 
 const Header = () => {
-    const { user, setUser, setToken } = useUser();
-    const navigate = useNavigate();
-
-    const handleLogout = () => {
-        setUser(null);
-        setToken(null);
-        localStorage.removeItem('token');
-        navigate('/');
-    };
+    const { user } = useUser();
+    const { navbarTitle } = useNavbar();
 
     return (
-        <AppBar position="fixed" sx={{ backgroundColor: '#3f51b5', boxShadow: 'none', zIndex: 1100 }}>
+        <AppBar position="fixed" sx={{ backgroundColor: '#000000', boxShadow: 'none', zIndex: 1100 }}>
             <Toolbar sx={{ height: '64px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Typography variant="h5" sx={{ fontWeight: 600, letterSpacing: 1, textAlign: 'center' }}>
-                    Inventory Management
+                <Typography variant="h5" sx={{ fontWeight: 600, letterSpacing: 1, textAlign: 'center', color: '#FFFFFF' }}>
+                    {navbarTitle} {/* Display the navbar title from context */}
                 </Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     {user && (
@@ -30,7 +23,7 @@ const Header = () => {
                                 py: 0.5,
                                 borderRadius: '5px',
                                 color: '#fff',
-                                backgroundColor: '#5c6bc0',
+                                backgroundColor: '#92363E',
                                 fontWeight: 500,
                                 fontSize: '1rem',
                                 letterSpacing: 0.5,
@@ -41,25 +34,6 @@ const Header = () => {
                             {user.username}
                         </Typography>
                     )}
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        onClick={handleLogout}
-                        sx={{
-                            ml: 2,
-                            color: '#fff',
-                            backgroundColor: '#f50057',
-                            height: '40px',
-                            fontWeight: 600,
-                            textTransform: 'none',
-                            boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
-                            '&:hover': {
-                                backgroundColor: '#c51162',
-                            },
-                        }}
-                    >
-                        Logout
-                    </Button>
                 </Box>
             </Toolbar>
         </AppBar>

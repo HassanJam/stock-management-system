@@ -225,22 +225,22 @@ const AddPurchaseOrder = () => {
                         <Button
                             startIcon={<Add />}
                             onClick={addItem}
-                            sx={{ mt: 2 }}
+                            sx={{ mt: 2, mb: 3, color: '#FFFFFF', backgroundColor: '#000000' }}
                             variant="outlined"
-                            color="primary"
                         >
                             Add Item
                         </Button>
                         <Button
                             fullWidth
                             variant="contained"
-                            color="primary"
                             type="submit"
                             sx={{
                                 mt: 3,
-                                bgcolor: '#1976d2',
+                                bgcolor: '#000000',
+                                mb: 3, 
+                                backgroundColor: '#000000',
                                 '&:hover': {
-                                    bgcolor: '#115293',
+                                    bgcolor: '#444444',
                                 },
                             }}
                         >
