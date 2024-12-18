@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { useUser } from '../context/UserContext';
 import AddStock from '../components/AddStock';
@@ -19,10 +19,15 @@ import { useNavbar } from '../context/NavbarContext';
 const Dashboard = () => {
     const { user } = useUser();
     const { setNavbarTitle } = useNavbar();
+    const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
                         
     useEffect(() => {
         setNavbarTitle("Stock Management");
         }, [setNavbarTitle]);
+    
+    const toggleSidebar = () => {
+            setIsSidebarCollapsed(!isSidebarCollapsed); // Toggle sidebar collapse
+        };
 
     if (!user) {
         return (
@@ -41,10 +46,14 @@ const Dashboard = () => {
                 flexDirection: 'column',
             }}
         >
-            <Header />
+            <Header isSidebarCollapsed={isSidebarCollapsed} />
             <Box sx={{ display: 'flex', marginTop: '64px' }}>
                 {/* Adjust to match the header height */}
-                <Sidebar department={user.department} />
+                <Sidebar 
+                        department={user.department}
+                        isCollapsed={isSidebarCollapsed} 
+                        toggleSidebar={toggleSidebar}
+                />
                 <Box
                     component="main"
                     sx={{

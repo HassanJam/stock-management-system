@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
-const Sidebar = ({ department }) => {
+const Sidebar = ({ department, isCollapsed, toggleSidebar }) => {
     const { setUser, setToken } = useUser();
     const navigate = useNavigate();
     const location = useLocation();
@@ -17,10 +17,6 @@ const Sidebar = ({ department }) => {
         setToken(null);
         localStorage.removeItem('token');
         navigate('/');
-    };
-
-    const toggleSidebar = () => {
-        setIsSidebarCollapsed(!isSidebarCollapsed);
     };
 
     const sidebarOptions = {
@@ -50,10 +46,10 @@ const Sidebar = ({ department }) => {
             variant="permanent"
             anchor="left"
             sx={{
-                width: isSidebarCollapsed ? 60 : 240,
+                width: isCollapsed ? 60 : 240,
                 flexShrink: 0,
                 [`& .MuiDrawer-paper`]: { 
-                    width: isSidebarCollapsed ? 60 : 240,
+                    width: isCollapsed ? 60 : 240,
                     boxSizing: 'border-box', 
                     background: '#92363E', // Background color of the sidebar
                     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' // Optional shadow for depth
@@ -69,12 +65,12 @@ const Sidebar = ({ department }) => {
                     }}
                 >
                     <IconButton onClick={toggleSidebar}>
-                        {isSidebarCollapsed ? <MenuIcon sx={{ color: 'white' }} /> : <ChevronLeftIcon sx={{ color: 'white' }} />}
+                        {isCollapsed ? <MenuIcon sx={{ color: 'white' }} /> : <ChevronLeftIcon sx={{ color: 'white' }} />}
                     </IconButton>
                 </ListItem>
 
             <List>
-            {!isSidebarCollapsed && sidebarOptions[department].map((option, index) => (
+            {!isCollapsed && sidebarOptions[department].map((option, index) => (
                     <ListItem 
                         button 
                         key={index} 
@@ -103,7 +99,7 @@ const Sidebar = ({ department }) => {
                     </ListItem>
                 ))}
 
-                {!isSidebarCollapsed && (
+                {!isCollapsed && (
                     <>
                 {/* Separator Line */}
                 <Divider sx={{ backgroundColor: '#ddd', marginY: 2 }} /> {/* Customize color and spacing */}
