@@ -41,10 +41,18 @@ const LoginPage = () => {
 
     return (
         <div style={{
-            background: `url('/loginbg.jpg')`,
+            background: `url('/loginbg.jpg') no-repeat center center`,
             backgroundSize: 'cover',
-            backgroundPosition: 'center center',
-            minHeight: '100vh'
+            minHeight: '100vh',
+            margin: 0,                // Removes default margin
+            padding: 0,               // Removes default padding
+            position: 'absolute',      // Positions the div relative to the body
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            width: '100%',            // Makes sure the div takes the full width
+            height: '100%',            // Makes sure the div takes the full height
         }}>
             <Header />
             <Container 
