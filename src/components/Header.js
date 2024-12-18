@@ -12,7 +12,41 @@ const Header = ({ isSidebarCollapsed }) => {
 
     // Only render the Header if the current page is not '/login'
     if (location.pathname === '/') {
-        return null; // Return null to hide the Header on the login page
+        return (
+            <AppBar 
+            position="fixed" 
+            sx={{   
+                    backgroundColor: '#00000000', 
+                    boxShadow: 'none', 
+                    width: '100%',
+                    transition: 'width 0.3s ease',
+                }}
+        >
+
+            <Toolbar 
+                sx={{ 
+                        height: '64px', 
+                        display: 'flex', 
+                        justifyContent: 'space-between', 
+                        alignItems: 'center' 
+                    }}
+            >
+                {/* Logo Section */}
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <img
+                        src="/logo.png" // Replace with the actual path to your logo image
+                        alt="Logo"
+                        style={{
+                            paddingTop: '40px',
+                            height: '80px', // Adjust the height of the logo
+                            width: 'auto',  // Maintains the aspect ratio
+                        }}
+                    />
+                </Box>
+
+            </Toolbar>
+        </AppBar>
+        )
     }
 
     return (
