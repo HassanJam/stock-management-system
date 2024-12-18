@@ -1,19 +1,26 @@
-import React from 'react';
-import {  Drawer, List, ListItem, ListItemText, Divider } from '@mui/material';
+import React, { useState } from 'react';
+import {  Drawer, List, ListItem, ListItemText, Divider, IconButton } from '@mui/material';
 import { Link, useLocation } from 'react-router-dom';
 import { useUser } from '../context/UserContext';
 import { useNavigate } from 'react-router-dom';
+import MenuIcon from '@mui/icons-material/Menu';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
 const Sidebar = ({ department }) => {
     const { setUser, setToken } = useUser();
     const navigate = useNavigate();
     const location = useLocation();
+    const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
     const handleLogout = () => {
         setUser(null);
         setToken(null);
         localStorage.removeItem('token');
         navigate('/');
+    };
+
+    const toggleSidebar = () => {
+        setIsSidebarCollapsed(!isSidebarCollapsed);
     };
 
     const sidebarOptions = {
@@ -43,19 +50,31 @@ const Sidebar = ({ department }) => {
             variant="permanent"
             anchor="left"
             sx={{
-                width: 240,
+                width: isSidebarCollapsed ? 60 : 240,
                 flexShrink: 0,
                 [`& .MuiDrawer-paper`]: { 
-                    width: 240, 
+                    width: isSidebarCollapsed ? 60 : 240,
                     boxSizing: 'border-box', 
-                    marginTop: '64px',
                     background: '#92363E', // Background color of the sidebar
                     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' // Optional shadow for depth
                 }
             }}
         >
+             {/* Toggle Button */}
+             <ListItem
+                    sx={{
+                        justifyContent: isSidebarCollapsed ? 'center' : 'flex-end',
+                        cursor: 'pointer',
+                        px: isSidebarCollapsed ? 0 : 2,
+                    }}
+                >
+                    <IconButton onClick={toggleSidebar}>
+                        {isSidebarCollapsed ? <MenuIcon sx={{ color: 'white' }} /> : <ChevronLeftIcon sx={{ color: 'white' }} />}
+                    </IconButton>
+                </ListItem>
+
             <List>
-                {sidebarOptions[department].map((option, index) => (
+            {!isSidebarCollapsed && sidebarOptions[department].map((option, index) => (
                     <ListItem 
                         button 
                         key={index} 
@@ -84,6 +103,8 @@ const Sidebar = ({ department }) => {
                     </ListItem>
                 ))}
 
+                {!isSidebarCollapsed && (
+                    <>
                 {/* Separator Line */}
                 <Divider sx={{ backgroundColor: '#ddd', marginY: 2 }} /> {/* Customize color and spacing */}
 
@@ -109,6 +130,8 @@ const Sidebar = ({ department }) => {
                         }}
                     />
                 </ListItem>
+                </>
+            )}
             </List>
         </Drawer>
     );
