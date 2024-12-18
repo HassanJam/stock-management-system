@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 import { AppBar, Toolbar, Typography, Box } from '@mui/material';
 import { useUser } from '../context/UserContext';
 import { useNavbar } from '../context/NavbarContext';
@@ -6,6 +7,13 @@ import { useNavbar } from '../context/NavbarContext';
 const Header = ({ isSidebarCollapsed }) => {
     const { user } = useUser();
     const { navbarTitle } = useNavbar();
+
+    const location = useLocation(); // Get the current location
+
+    // Only render the Header if the current page is not '/login'
+    if (location.pathname === '/') {
+        return null; // Return null to hide the Header on the login page
+    }
 
     return (
         <AppBar 
