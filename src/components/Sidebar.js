@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import {  Drawer, List, ListItem, ListItemText, Divider, IconButton } from '@mui/material';
+import React from 'react';
+import {  Drawer, List, ListItem, ListItemText, Divider, IconButton, Box, Typography } from '@mui/material';
 import { Link, useLocation } from 'react-router-dom';
 import HomeIcon from '@mui/icons-material/Home';
 import Inventory2Icon from '@mui/icons-material/Inventory2';
@@ -7,16 +7,16 @@ import PostAddIcon from '@mui/icons-material/PostAdd';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import { useUser } from '../context/UserContext';
 import { useNavigate } from 'react-router-dom';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import ChevronLeft from '@mui/icons-material/ChevronLeft';
+import ChevronRight from '@mui/icons-material/ChevronRight';
 
 const Sidebar = ({ department, isCollapsed, toggleSidebar }) => {
-    const { setUser, setToken } = useUser();
+    const { user, setUser, setToken } = useUser();
     const navigate = useNavigate();
     const location = useLocation();
-    const [isSidebarCollapsed] = useState(false);
 
     const handleLogout = () => {
         setUser(null);
@@ -57,22 +57,28 @@ const Sidebar = ({ department, isCollapsed, toggleSidebar }) => {
                     width: isCollapsed ? 60 : 240,
                     boxSizing: 'border-box', 
                     background: '#92363E', // Background color of the sidebar
-                    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' // Optional shadow for depth
+                    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', // Optional shadow for depth
+                    flexDirection: 'column',
                 }
             }}
         >
-             {/* Toggle Button */}
-             <ListItem
+            {/* Toggle Button */}
+            <ListItem
                     sx={{
-                        justifyContent: isSidebarCollapsed ? 'center' : 'flex-end',
+                        justifyContent: isCollapsed ? 'center' : 'flex-end',
                         cursor: 'pointer',
-                        px: isSidebarCollapsed ? 0 : 2,
+                        px: isCollapsed ? 0 : 2,
                     }}
                 >
-                    <IconButton onClick={toggleSidebar}>
-                        {isCollapsed ? <ChevronRightIcon sx={{ color: 'white' }} /> : <ChevronLeftIcon sx={{ color: 'white' }} />}
+                    <IconButton 
+                        onClick={toggleSidebar}
+                        style={{ color: "#92363E" }}
+                        className={`p-1.5 rounded-lg bg-gray-50 hover:bg-gray-100 ${!isCollapsed ? "" : "mb-1" // Add bottom margin when sidebar is collapsed
+                            }`}
+                    >
+                        {isCollapsed ? <ChevronRight sx={{ color: 'white' }} /> : <ChevronLeft sx={{ color: 'white' }} />}
                     </IconButton>
-                </ListItem>
+            </ListItem>
 
             <List>
 
@@ -117,7 +123,7 @@ const Sidebar = ({ department, isCollapsed, toggleSidebar }) => {
                 ))}
 
                 {/* Separator Line */}
-                <Divider sx={{ backgroundColor: '#ddd', marginY: 2 }} /> {/* Customize color and spacing */}
+                <Divider sx={{ backgroundColor: '#ddd', marginY: 2, marginX: 2 }} /> {/* Customize color and spacing */}
 
                     <>
                 {/* Logout Button */}
@@ -151,6 +157,38 @@ const Sidebar = ({ department, isCollapsed, toggleSidebar }) => {
                     </ListItem>
                 </>
             </List>
+
+            <Box sx={{ marginTop: 'auto' }}>
+                <Divider sx={{ backgroundColor: '#ddd', marginY: 2 }} />
+                <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: isCollapsed ? 'center' : 'flex-start', // Center icon when collapsed
+                        justifyContent: isCollapsed ? 'center' : 'flex-start', // Center icon when collapsed
+                        padding: 2,
+                        textAlign: isCollapsed ? 'center' : 'left', // Center text when collapsed
+                    }}
+                >
+                    <AccountCircleRoundedIcon sx={{ color: 'white', fontSize: '50px' }} />
+                    {!isCollapsed && (
+                        <Typography
+                            variant="body1"
+                            sx={{
+                                px: 1.5,
+                                py: 0.5,
+                                borderRadius: '5px',
+                                color: '#fff',
+                                fontWeight: 500,
+                                fontSize: '1rem',
+                                letterSpacing: 0.5,
+                            }}
+                        >
+                            {user.username}
+                        </Typography>
+                    )}
+                </Box>
+            </Box>
+
         </Drawer>
     );
 };
