@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
 import {  Drawer, List, ListItem, ListItemText, Divider, IconButton } from '@mui/material';
 import { Link, useLocation } from 'react-router-dom';
+import HomeIcon from '@mui/icons-material/Home';
+import Inventory2Icon from '@mui/icons-material/Inventory2';
+import PostAddIcon from '@mui/icons-material/PostAdd';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import AddBoxIcon from '@mui/icons-material/AddBox';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { useUser } from '../context/UserContext';
 import { useNavigate } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -10,7 +16,7 @@ const Sidebar = ({ department, isCollapsed, toggleSidebar }) => {
     const { setUser, setToken } = useUser();
     const navigate = useNavigate();
     const location = useLocation();
-    const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+    const [isSidebarCollapsed] = useState(false);
 
     const handleLogout = () => {
         setUser(null);
@@ -21,23 +27,22 @@ const Sidebar = ({ department, isCollapsed, toggleSidebar }) => {
 
     const sidebarOptions = {
         procurement: [
-            { text: 'Dashboard', path: '/dashboard' },
-            { text: 'Add Stock', path: '/dashboard/addStock' },
-            { text: 'View Stock', path: '/dashboard/viewStock' },
-            { text: 'Add Supplier', path: '/dashboard/addSupplier' },
-            { text: 'Requisition Form', path: '/dashboard/requisitionForm' },
-            { text: 'Purchase Order', path: '/dashboard/purchaseOrders' }
+            { text: 'Dashboard', path: '/dashboard', icon: <HomeIcon /> },
+            { text: 'Add Stock', path: '/dashboard/addStock', icon: <PostAddIcon /> },
+            { text: 'View Stock', path: '/dashboard/viewStock', icon: <Inventory2Icon /> },
+            { text: 'Add Supplier', path: '/dashboard/addSupplier', icon: <PersonAddIcon /> },
+            { text: 'Requisition Form', path: '/dashboard/requisitionForm', icon: <AddBoxIcon /> },
+            { text: 'Purchase Order', path: '/dashboard/purchaseOrders', icon: <AddBoxIcon /> }
         ],
         stock_manager: [
-            { text: 'Dashboard', path: '/dashboard' },
-            { text: 'Add Stock', path: '/dashboard/addStock' },
-            { text: 'View Stock', path: '/dashboard/viewStock' },
+            { text: 'Dashboard', path: '/dashboard', icon: <HomeIcon /> },
+            { text: 'Add Stock', path: '/dashboard/addStock', icon: <PostAddIcon /> },
+            { text: 'View Stock', path: '/dashboard/viewStock', icon: <Inventory2Icon /> }
         ],
         sales: [
-            { text: 'View Sales Stock', path: '/dashboard/viewStock' },
-            { text: 'Requisition Form', path: '/dashboard/requisitionForm' },
-            { text: 'Purchase orders', path: '/dashboard/purchaseOrders' }
-
+            { text: 'View Sales Stock', path: '/dashboard/viewStock', icon: <Inventory2Icon /> },
+            { text: 'Requisition Form', path: '/dashboard/requisitionForm', icon: <AddBoxIcon /> },
+            { text: 'Purchase orders', path: '/dashboard/purchaseOrders', icon: <AddBoxIcon /> }
         ]
     };
 
@@ -70,7 +75,8 @@ const Sidebar = ({ department, isCollapsed, toggleSidebar }) => {
                 </ListItem>
 
             <List>
-            {!isCollapsed && sidebarOptions[department].map((option, index) => (
+
+            {sidebarOptions[department].map((option, index) => (
                     <ListItem 
                         button 
                         key={index} 
@@ -86,24 +92,36 @@ const Sidebar = ({ department, isCollapsed, toggleSidebar }) => {
                             },
                         }}
                     >
-                        <ListItemText 
-                            primary={option.text} 
-                            primaryTypographyProps={{
-                                sx: {
-                                    color: 'white', 
-                                    fontWeight: 'bold',
-                                    fontSize: '1rem', // Default font size
-                                }
-                            }}
-                        />
+                        
+                        {/* Icon */}
+                        {option.icon && (
+                            <div style={{ marginRight: isCollapsed ? 0 : '16px', display: 'flex', alignItems: 'center', color: 'white' }}>
+                                {option.icon}
+                            </div>
+                        )}
+
+                        {/* Text */}
+                        {!isCollapsed && (
+                            <ListItemText
+                                primary={option.text}
+                                primaryTypographyProps={{
+                                    sx: {
+                                        color: 'white',
+                                        fontWeight: 'bold',
+                                        fontSize: '1rem',
+                                    },
+                                }}
+                            />
+                        )}
                     </ListItem>
                 ))}
 
-                {!isCollapsed && (
-                    <>
                 {/* Separator Line */}
                 <Divider sx={{ backgroundColor: '#ddd', marginY: 2 }} /> {/* Customize color and spacing */}
 
+                    <>
+                {/* Logout Button */}
+                
                 <ListItem 
                     button 
                     onClick={handleLogout}
@@ -116,18 +134,22 @@ const Sidebar = ({ department, isCollapsed, toggleSidebar }) => {
                         },
                     }}
                 >
-                    <ListItemText 
-                        primary="Logout" 
-                        primaryTypographyProps={{
-                            sx: { 
-                                color: 'white', 
-                                fontWeight: 'bold' 
-                            }
-                        }}
-                    />
-                </ListItem>
+                    <ExitToAppIcon sx={{ color: 'white', marginRight: 2 }} />
+                        {/* Text */}
+                        {!isCollapsed && (
+                            <ListItemText
+                                primary="Logout"
+                                primaryTypographyProps={{
+                                    sx: {
+                                        color: 'white',
+                                        fontWeight: 'bold',
+                                        fontSize: '1rem',
+                                    },
+                                }}
+                            />
+                        )}
+                    </ListItem>
                 </>
-            )}
             </List>
         </Drawer>
     );

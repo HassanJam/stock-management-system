@@ -22,7 +22,7 @@ const Dashboard = () => {
     const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
                         
     useEffect(() => {
-        setNavbarTitle("Stock Management");
+        setNavbarTitle("Dashboard");
         }, [setNavbarTitle]);
     
     const toggleSidebar = () => {
