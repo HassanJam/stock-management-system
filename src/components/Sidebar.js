@@ -62,23 +62,40 @@ const Sidebar = ({ department, isCollapsed, toggleSidebar }) => {
                 }
             }}
         >
-            {/* Toggle Button */}
-            <ListItem
-                    sx={{
-                        justifyContent: isCollapsed ? 'center' : 'flex-end',
-                        cursor: 'pointer',
-                        px: isCollapsed ? 0 : 2,
-                    }}
-                >
-                    <IconButton 
-                        onClick={toggleSidebar}
-                        style={{ color: "#92363E" }}
-                        className={`p-1.5 rounded-lg bg-gray-50 hover:bg-gray-100 ${!isCollapsed ? "" : "mb-1" // Add bottom margin when sidebar is collapsed
-                            }`}
+
+            {/* Logo Box with Black Background */}
+            <Box sx={{ bgcolor: 'black', width: '100%', height: isCollapsed ? '64px' : '120px' , display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                {!isCollapsed && (
+                    <img
+                        src="/logo.png" // Replace with the actual path to your logo image
+                        alt="Logo"
+                        style={{
+                            height: '80px', // Adjust the height of the logo
+                            width: 'auto',  // Maintains the aspect ratio
+                        }}
+                    />
+                )}
+                {/* Toggle Button */}
+                <ListItem
+                        sx={{
+                            justifyContent: isCollapsed ? 'center' : 'flex-end',
+                            cursor: 'pointer',
+                            px: isCollapsed ? 0 : 2,
+                        }}
                     >
-                        {isCollapsed ? <ChevronRight sx={{ color: 'white' }} /> : <ChevronLeft sx={{ color: 'white' }} />}
-                    </IconButton>
-            </ListItem>
+                        <IconButton 
+                            onClick={toggleSidebar}
+                            style={{ color: "#92363E" }}
+                            className={`p-1.5 rounded-lg bg-gray-50 hover:bg-gray-100 ${!isCollapsed ? "" : "mb-1" // Add bottom margin when sidebar is collapsed
+                                }`}
+                        >
+                            {isCollapsed ? <ChevronRight sx={{ color: '#92363E' }} /> : <ChevronLeft sx={{ color: '#92363E' }} />}
+                        </IconButton>
+                </ListItem>
+            </Box>
+
+            {/* Divider */}
+            <Divider sx={{ backgroundColor: '#FFF', marginY: 2, width: '100%', height: '1px', marginTop: 0, marginBottom: 0 }} />
 
             <List>
 
@@ -157,7 +174,8 @@ const Sidebar = ({ department, isCollapsed, toggleSidebar }) => {
                     </ListItem>
                 </>
             </List>
-
+            
+            {/* User */}
             <Box sx={{ marginTop: 'auto' }}>
                 <Divider sx={{ backgroundColor: '#ddd', marginY: 2 }} />
                 <Box
