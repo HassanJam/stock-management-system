@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavbar } from '../context/NavbarContext';
 import {
     Table,
     TableBody,
@@ -41,11 +40,6 @@ const ViewStock = () => {
 
     const navigate = useNavigate();
     const { user } = useUser();
-    const { setNavbarTitle } = useNavbar();
-
-    useEffect(() => {
-        setNavbarTitle("View Stock");
-    }, [setNavbarTitle]);
 
     useEffect(() => {
         const fetchStocks = async () => {

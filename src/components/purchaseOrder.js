@@ -4,7 +4,6 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
 import api from '../api/api.js';
-import { useNavbar } from '../context/NavbarContext';
 
 const { poApi } = api;
 
@@ -15,11 +14,6 @@ const PurchaseOrder = () => {
     const [selectedOrder, setSelectedOrder] = useState(null); // State for the selected order
     const [isDialogOpen, setDialogOpen] = useState(false);    // State for dialog open/close
     const navigate = useNavigate();
-    const { setNavbarTitle } = useNavbar();
-                    
-    useEffect(() => {
-        setNavbarTitle("Purchase Order Dashboard");
-        }, [setNavbarTitle]);
         
     useEffect(() => {
         const fetchOrders = async () => {

@@ -2,16 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { TextField, Button, Box, Typography, Card, CardContent, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, Grid } from '@mui/material';
 import axios from 'axios';
 import api from '../api/api';
-import { useNavbar } from '../context/NavbarContext';
 
 const suppliersApi = api.suppliersApi;
 const AddSupplier = () => {
-    const { setNavbarTitle } = useNavbar();
-            
-    useEffect(() => {
-        setNavbarTitle("Add Supplier");
-        }, [setNavbarTitle]);
-
     const [formData, setFormData] = useState({
         companyName: '',
         address: '',

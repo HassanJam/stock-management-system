@@ -5,17 +5,10 @@ import { useNavigate } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
 import { useUser } from '../context/UserContext';
 import api from '../api/api.js';
-import { useNavbar } from '../context/NavbarContext';
 
 const { requisitionApi } = api;
 
 const RequisitionForm = () => {
-    const { setNavbarTitle } = useNavbar();
-                    
-    useEffect(() => {
-        setNavbarTitle("Requisition Form Dashboard");
-        }, [setNavbarTitle]);
-        
     const [pendingOrders, setPendingOrders] = useState([]);
     const [completedOrders, setCompletedOrders] = useState([]);
     const [rejectedOrders, setRejectedOrders] = useState([]);

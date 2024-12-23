@@ -14,6 +14,7 @@ import EditRequisitionOrder from '../components/EditRequisitionForm';
 import PurchaseOrder from '../components/purchaseOrder';
 import AddPurchaseOrder from '../components/addPurchaseOrder';
 import EditPurchaseOrder from '../components/editPurchaseOrder';
+import { useLocation } from 'react-router-dom';
 import { useNavbar } from '../context/NavbarContext';
 
 const Dashboard = () => {
@@ -21,9 +22,23 @@ const Dashboard = () => {
     const { setNavbarTitle } = useNavbar();
     const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
                         
+    const location = useLocation(); // Access current location
+
     useEffect(() => {
-        setNavbarTitle("Dashboard");
-        }, [setNavbarTitle]);
+        const path = location.pathname; // Extract route from path
+        let title = 'Dashboard'; // Default title
+
+        if (path.includes('addStock')) title = 'Add stock';
+        else if (path.includes('viewStock')) title = 'View stock';
+        else if (path.includes('editStock')) title = 'Edit stock';
+        else if (path.includes('addSupplier')) title = 'Add Supplier';
+        else if (path.includes('purchaseOrders')) title = 'Purchase Orders';
+        else if (path.includes('editPurchaseOrders')) title = 'Purchase Orders';
+        else if (path.includes('addpurchaseOrders')) title = 'Add Purchase Orders';
+        else if (path.includes('editRequisitionForm')) title = 'Edit Requisition Form';
+        else if (path.includes('requisitionForm')) title = 'Requisition Form';
+        setNavbarTitle(title);
+    }, [location, setNavbarTitle]);
     
     const toggleSidebar = () => {
             setIsSidebarCollapsed(!isSidebarCollapsed); // Toggle sidebar collapse

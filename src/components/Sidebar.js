@@ -9,8 +9,8 @@ import AddBoxIcon from '@mui/icons-material/AddBox';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { useUser } from '../context/UserContext';
 import { useNavigate } from 'react-router-dom';
-import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 const Sidebar = ({ department, isCollapsed, toggleSidebar }) => {
     const { setUser, setToken } = useUser();
@@ -70,7 +70,7 @@ const Sidebar = ({ department, isCollapsed, toggleSidebar }) => {
                     }}
                 >
                     <IconButton onClick={toggleSidebar}>
-                        {isCollapsed ? <MenuIcon sx={{ color: 'white' }} /> : <ChevronLeftIcon sx={{ color: 'white' }} />}
+                        {isCollapsed ? <ChevronRightIcon sx={{ color: 'white' }} /> : <ChevronLeftIcon sx={{ color: 'white' }} />}
                     </IconButton>
                 </ListItem>
 

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { TextField, MenuItem, Select, FormControl, InputLabel, Button, Box, Typography, Paper, Grid, Container } from '@mui/material';
 import axios from 'axios';
 import api from '../api/api'; // Import your API file
-import { useNavbar } from '../context/NavbarContext';
 const { stocks_api } = api;
 
 const AddStock = () => {
@@ -23,11 +22,6 @@ const AddStock = () => {
     const [storeLocation, setStoreLocation] = useState('');
     const [contactPerson, setContactPerson] = useState('');
     const [stockStatus, setStockStatus] = useState('');
-    const { setNavbarTitle } = useNavbar();
-    
-    useEffect(() => {
-        setNavbarTitle("Add Stock");
-    }, [setNavbarTitle]);
 
     const handleSerialNumberChange = (index, value) => {
         const updatedSerialNumbers = [...serialNumbers];
