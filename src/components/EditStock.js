@@ -191,8 +191,9 @@ const EditStock = () => {
                         <Button
                             fullWidth
                             variant="contained"
+                            color="primary"
                             type="submit"
-                            sx={{ mt: 2, mb: 3, backgroundColor: '#000000' }}
+                            sx={{ mt: 2 }}
                         >
                             Update Stock
                         </Button>

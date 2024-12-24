@@ -299,9 +299,9 @@ const EditPurchaseOrder = ({ orderId }) => {
                             type="submit"
                             sx={{
                                 mt: 3,
-                                bgcolor: '#000000',
+                                bgcolor: '#1976d2',
                                 '&:hover': {
-                                    bgcolor: '#444444',
+                                    bgcolor: '#115293',
                                 },
                             }}
                         >

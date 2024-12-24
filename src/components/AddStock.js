@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { TextField, MenuItem, Select, FormControl, InputLabel, Button, Box, Typography, Paper, Grid, Container } from '@mui/material';
 import axios from 'axios';
 import api from '../api/api'; // Import your API file
-import { useNavbar } from '../context/NavbarContext';
 const { stocks_api } = api;
 
 const AddStock = () => {
@@ -23,11 +22,6 @@ const AddStock = () => {
     const [storeLocation, setStoreLocation] = useState('');
     const [contactPerson, setContactPerson] = useState('');
     const [stockStatus, setStockStatus] = useState('');
-    const { setNavbarTitle } = useNavbar();
-    
-    useEffect(() => {
-        setNavbarTitle("Add Stock");
-    }, [setNavbarTitle]);
 
     const handleSerialNumberChange = (index, value) => {
         const updatedSerialNumbers = [...serialNumbers];
@@ -82,6 +76,9 @@ const AddStock = () => {
 
     return (
         <Container sx={{ mt: 4, mb: 4 }}>
+            <Typography variant="h4" align="center" gutterBottom>
+                Add Stock
+            </Typography>
             <Paper sx={{ padding: 3, borderRadius: 2, boxShadow: 3 }}>
                 <form onSubmit={handleSubmit}>
                     <Grid container spacing={3}>
@@ -130,14 +127,14 @@ const AddStock = () => {
                                             shrink: true, // Prevent label from floating
                                         }}
                                     />
-                                    <Button onClick={() => removeSerialField(index)} color="error" sx={{ ml: 1, backgroundColor: '#000000', color: '#FFFFFF' }}>
+                                    <Button onClick={() => removeSerialField(index)} color="error" sx={{ ml: 1 }}>
                                         Remove
                                     </Button>
                                 </Box>
                             </Grid>
                         ))}
                         <Grid item xs={12}>
-                            <Button onClick={addSerialField} variant="outlined" sx={{ mb: 2, backgroundColor: '#000000', color: '#FFFFFF' }}>
+                            <Button onClick={addSerialField} variant="outlined" color="primary" sx={{ mb: 2 }}>
                                 Add Serial Number
                             </Button>
                         </Grid>
@@ -294,7 +291,7 @@ const AddStock = () => {
                         </Grid>
                     </Grid>
                     <Box sx={{ mt: 3 }}>
-                        <Button type="submit" variant="contained" sx={{ backgroundColor: '#000000' }} fullWidth>
+                        <Button type="submit" variant="contained" color="primary" fullWidth>
                             Add Stock
                         </Button>
                     </Box>

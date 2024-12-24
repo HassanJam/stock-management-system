@@ -4,7 +4,6 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
 import api from '../api/api.js';
-import { useNavbar } from '../context/NavbarContext';
 
 const { poApi } = api;
 
@@ -15,12 +14,7 @@ const PurchaseOrder = () => {
     const [selectedOrder, setSelectedOrder] = useState(null); // State for the selected order
     const [isDialogOpen, setDialogOpen] = useState(false);    // State for dialog open/close
     const navigate = useNavigate();
-    const { setNavbarTitle } = useNavbar();
-                    
-    useEffect(() => {
-        setNavbarTitle("Purchase Order Dashboard");
-        }, [setNavbarTitle]);
-        
+
     useEffect(() => {
         const fetchOrders = async () => {
             try {
@@ -60,15 +54,15 @@ const PurchaseOrder = () => {
             <Box sx={{ display: 'flex', gap: 1, mt: 2 }}>
                 <Button
                     variant="outlined"
+                    color="primary"
                     onClick={() => handleViewDetails(order)}
-                    sx={{ mb: 3, backgroundColor: '#000000' }}
                 >
                     View Details
                 </Button>
                 <Button
                     variant="contained"
+                    color="secondary"
                     onClick={() => navigate(`/dashboard/editpurchaseOrders/${order.id}`)}
-                    sx={{ mb: 3, backgroundColor: '#000000' }}
                 >
                     Edit Order
                 </Button>
@@ -81,10 +75,14 @@ const PurchaseOrder = () => {
 
     return (
         <Box sx={{ p: 3 }}>
+            <Typography variant="h4" align="center" gutterBottom>
+                Purchase Order Dashboard
+            </Typography>
             <Button
                 variant="contained"
+                color="primary"
                 onClick={() => navigate(`/dashboard/addpurchaseOrders`)}
-                sx={{ mb: 3, backgroundColor: '#000000' }}
+                sx={{ mb: 3 }}
             >
                 Add New PO
             </Button>
@@ -196,7 +194,7 @@ const PurchaseOrder = () => {
                     )}
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleCloseDialog} sx={{ mb: 3, backgroundColor: '#000000' }}>
+                    <Button onClick={handleCloseDialog} color="primary">
                         Close
                     </Button>
                 </DialogActions>

@@ -5,17 +5,10 @@ import { useNavigate } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
 import { useUser } from '../context/UserContext';
 import api from '../api/api.js';
-import { useNavbar } from '../context/NavbarContext';
 
 const { requisitionApi } = api;
 
 const RequisitionForm = () => {
-    const { setNavbarTitle } = useNavbar();
-                    
-    useEffect(() => {
-        setNavbarTitle("Requisition Form Dashboard");
-        }, [setNavbarTitle]);
-        
     const [pendingOrders, setPendingOrders] = useState([]);
     const [completedOrders, setCompletedOrders] = useState([]);
     const [rejectedOrders, setRejectedOrders] = useState([]);
@@ -69,15 +62,15 @@ const RequisitionForm = () => {
             <Box sx={{ display: 'flex', gap: 1, mt: 2 }}>
                 <Button
                     variant="outlined"
+                    color="primary"
                     onClick={() => handleViewDetails(order)}
-                    sx={{ mb: 3, backgroundColor: '#000000' }}
                 >
                     View Details
                 </Button>
                 <Button
                     variant="contained"
+                    color="secondary"
                     onClick={() => navigate(`/dashboard/editrequisitionForm/${order.id}`)}
-                    sx={{ mb: 3, backgroundColor: '#000000' }}
                 >
                     Edit Order
                 </Button>
@@ -87,11 +80,16 @@ const RequisitionForm = () => {
 
     return (
         <Box sx={{ p: 3 }}>
+            <Typography variant="h4" align="center" gutterBottom>
+                Requisition Form Dashboard
+            </Typography>
+
             {user?.department === 'sales' && (
                 <Button
                     variant="contained"
+                    color="primary"
                     onClick={() => navigate(`/dashboard/addrequisitionForm`)}
-                    sx={{ mb: 3, backgroundColor: '#000000' }}
+                    sx={{ mb: 3 }}
                 >
                     Add New Form
                 </Button>

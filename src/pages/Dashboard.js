@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { useUser } from '../context/UserContext';
 import AddStock from '../components/AddStock';
@@ -14,15 +14,9 @@ import EditRequisitionOrder from '../components/EditRequisitionForm';
 import PurchaseOrder from '../components/purchaseOrder';
 import AddPurchaseOrder from '../components/addPurchaseOrder';
 import EditPurchaseOrder from '../components/editPurchaseOrder';
-import { useNavbar } from '../context/NavbarContext';
 
 const Dashboard = () => {
     const { user } = useUser();
-    const { setNavbarTitle } = useNavbar();
-                        
-    useEffect(() => {
-        setNavbarTitle("Stock Management");
-        }, [setNavbarTitle]);
 
     if (!user) {
         return (
@@ -36,7 +30,7 @@ const Dashboard = () => {
         <div
             style={{
                 minHeight: '100vh',
-                background: 'linear-gradient(to bottom right, #FFFFFF, #FFFFFF)', // Example gradient background
+                background: 'linear-gradient(to bottom right, #e3f2fd, #bbdefb)', // Example gradient background
                 display: 'flex',
                 flexDirection: 'column',
             }}

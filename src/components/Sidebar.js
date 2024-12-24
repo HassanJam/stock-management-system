@@ -1,20 +1,9 @@
 import React from 'react';
-import {  Drawer, List, ListItem, ListItemText, Divider } from '@mui/material';
+import {  Drawer, List, ListItem, ListItemText } from '@mui/material';
 import { Link, useLocation } from 'react-router-dom';
-import { useUser } from '../context/UserContext';
-import { useNavigate } from 'react-router-dom';
 
 const Sidebar = ({ department }) => {
-    const { setUser, setToken } = useUser();
-    const navigate = useNavigate();
     const location = useLocation();
-
-    const handleLogout = () => {
-        setUser(null);
-        setToken(null);
-        localStorage.removeItem('token');
-        navigate('/');
-    };
 
     const sidebarOptions = {
         procurement: [
@@ -49,7 +38,7 @@ const Sidebar = ({ department }) => {
                     width: 240, 
                     boxSizing: 'border-box', 
                     marginTop: '64px',
-                    background: '#92363E', // Background color of the sidebar
+                    background: '#ffffff', // Background color of the sidebar
                     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' // Optional shadow for depth
                 }
             }}
@@ -63,52 +52,25 @@ const Sidebar = ({ department }) => {
                         to={option.path}
                         selected={location.pathname === option.path}
                         sx={{
-                            '&:hover': {
-                                backgroundColor: '#92363E', // Light color on hover
-                                '& .MuiTypography-root': {
-                                    fontSize: '1.1rem', // Increase font size on hover
+                            '&.Mui-selected': {
+                                backgroundColor: '#5c6bc0', // Change background color when selected
+                                '&:hover': {
+                                    backgroundColor: '#5c6bc0', // Keep selected background color on hover
                                 },
+                            },
+                            '&:hover': {
+                                backgroundColor: '#7e99d0', // Light color on hover
                             },
                         }}
                     >
                         <ListItemText 
                             primary={option.text} 
                             primaryTypographyProps={{
-                                sx: {
-                                    color: 'white', 
-                                    fontWeight: 'bold',
-                                    fontSize: '1rem', // Default font size
-                                }
+                                sx: { color: 'black', fontWeight: 'bold' } // Set text color and weight
                             }}
                         />
                     </ListItem>
                 ))}
-
-                {/* Separator Line */}
-                <Divider sx={{ backgroundColor: '#ddd', marginY: 2 }} /> {/* Customize color and spacing */}
-
-                <ListItem 
-                    button 
-                    onClick={handleLogout}
-                    sx={{
-                        '&:hover': {
-                            backgroundColor: '#92363E', // Light color on hover
-                            '& .MuiTypography-root': {
-                                fontSize: '1.1rem', // Increase font size on hover
-                            },
-                        },
-                    }}
-                >
-                    <ListItemText 
-                        primary="Logout" 
-                        primaryTypographyProps={{
-                            sx: { 
-                                color: 'white', 
-                                fontWeight: 'bold' 
-                            }
-                        }}
-                    />
-                </ListItem>
             </List>
         </Drawer>
     );
