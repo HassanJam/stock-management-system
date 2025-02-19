@@ -4,7 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 
 const Sidebar = ({ department }) => {
     const location = useLocation();
-
+    console.log(department);
     const sidebarOptions = {
         procurement: [
             { text: 'Dashboard', path: '/dashboard' },
@@ -14,7 +14,7 @@ const Sidebar = ({ department }) => {
             { text: 'Requisition Form', path: '/dashboard/requisitionForm' },
             { text: 'Purchase Order', path: '/dashboard/purchaseOrders' }
         ],
-        stock_manager: [
+        stockManager: [
             { text: 'Dashboard', path: '/dashboard' },
             { text: 'Add Stock', path: '/dashboard/addStock' },
             { text: 'View Stock', path: '/dashboard/viewStock' },
