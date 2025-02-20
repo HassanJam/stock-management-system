@@ -5,7 +5,7 @@ const pool = require('../db'); // Import the database connection pool
 // Create a new purchase order with items
 router.post('/', async (req, res) => {
     console.log("New PO added", req.body);
-    const { client, userId, tax, shipping, other, subtotal, total, items } = req.body;
+    const { client, userId, status, tax, shipping, other, subtotal, total, items } = req.body;
 
     if (!items || !Array.isArray(items) || items.length === 0) {
         return res.status(400).json({ message: 'Items are required for a purchase order.' });
@@ -19,9 +19,9 @@ router.post('/', async (req, res) => {
 
         // Step 1: Insert the purchase order
         const [purchaseOrderResult] = await connection.query(
-            `INSERT INTO purchaseOrders (client, userId, tax, shipping, other, subtotal, total) 
-             VALUES (?, ?, ?, ?, ?, ?, ?)`,
-            [client, userId, tax, shipping, other, subtotal, total]
+            `INSERT INTO purchaseOrders (client, userId, status, tax, shipping, other, subtotal, total) 
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+            [client, userId, status, tax, shipping, other, subtotal, total]
         );
         console.log("PO added in backend");
         const purchaseOrderId = purchaseOrderResult.insertId;
