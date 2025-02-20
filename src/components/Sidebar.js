@@ -34,7 +34,7 @@ const Sidebar = ({ department, isCollapsed, toggleSidebar }) => {
             { text: 'Requisition Form', path: '/dashboard/requisitionForm', icon: <AddBoxIcon /> },
             { text: 'Purchase Order', path: '/dashboard/purchaseOrders', icon: <AddBoxIcon /> }
         ],
-        stock_manager: [
+        stockManager: [
             { text: 'Dashboard', path: '/dashboard', icon: <HomeIcon /> },
             { text: 'Add Stock', path: '/dashboard/addStock', icon: <PostAddIcon /> },
             { text: 'View Stock', path: '/dashboard/viewStock', icon: <Inventory2Icon /> }

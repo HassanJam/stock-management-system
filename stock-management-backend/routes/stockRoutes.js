@@ -36,7 +36,8 @@ router.post('/', upload.fields([{ name: 'inwardGatePass' }, { name: 'outwardGate
 
     try {
         await connection.beginTransaction();
-
+        const stockOutDateValue = stockOutDate === '' ? null : stockOutDate;
+        const stockOutDetailsValue = stockOutDetails === '' ? null : stockOutDetails;
         const [stockResult] = await connection.query(
             `INSERT INTO stocks (
                 item_description, model_number, make, quantity, unit_of_measurement, type, 
@@ -45,8 +46,8 @@ router.post('/', upload.fields([{ name: 'inwardGatePass' }, { name: 'outwardGate
              ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)`,
             [
                 itemDescription, modelNumber, make, quantity, unit, type,
-                purchaseDate, stockInDate, stockInDetails, stockOutDate,
-                stockOutDetails, storeLocation, contactPerson, stockStatus
+                purchaseDate, stockInDate, stockInDetails, stockOutDateValue,
+                stockOutDetailsValue, storeLocation, contactPerson, stockStatus
             ]
         );
 
